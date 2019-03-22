@@ -5,8 +5,7 @@ all: build
 build:
 	docker build -t deploy-wizard-ui:latest .
 
-.PHONY: run
-run:
+run: build
 	docker run -it \
 		-v ${PWD}:/usr/src/app \
 		-v /usr/src/app/node_modules \
