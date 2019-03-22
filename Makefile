@@ -14,8 +14,7 @@ run:
 		--rm \
 		deploy-wizard-ui:latest
 
-.PHONY: bootstrap
-bootstrap:
+bootstrap: build
 	docker run -it \
 		-v ${PWD}:/usr/src/app \
 		--rm \
