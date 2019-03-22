@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Layout from './Layout'
 
 const theme = createMuiTheme({
   palette: {
@@ -16,9 +16,7 @@ class App extends Component {
         <CssBaseline />
         <div>
           <MuiThemeProvider theme={theme}>
-            <Typography component="h2" variant="h1" gutterBottom>
-              Kruise
-            </Typography>
+            <Layout />
           </MuiThemeProvider>
         </div>
       </React.Fragment>
