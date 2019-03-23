@@ -4,7 +4,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { Route, Switch } from "react-router-dom";
 import WizardTabs from './WizardTabs';
+import AppDetails from './AppDetails';
+import Service from './Service';
+import StepPlaceholder from './StepPlaceholder';
 
 const styles = theme => ({
   root: {
@@ -48,6 +52,17 @@ class Layout extends Component {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <WizardTabs />
+          <Switch>
+            <Route exact path="/" component={AppDetails} />
+            <Route path="/service" component={Service} />
+            <Route path="/ingress" component={StepPlaceholder} />
+            <Route path="/volumes" component={StepPlaceholder} />
+            <Route path="/performance" component={StepPlaceholder} />
+            <Route path="/health" component={StepPlaceholder} />
+            <Route path="/container" component={StepPlaceholder} />
+            <Route path="/optimize" component={StepPlaceholder} />
+            <Route path="/submit" component={StepPlaceholder} />
+          </Switch>
         </main>
       </div>
     )

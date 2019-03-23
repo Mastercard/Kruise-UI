@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import Layout from './Layout'
+import { HashRouter } from "react-router-dom";
+import Layout from './Layout';
 
 const theme = createMuiTheme({
   palette: {
@@ -16,7 +17,9 @@ class App extends Component {
         <CssBaseline />
         <div>
           <MuiThemeProvider theme={theme}>
-            <Layout />
+            <HashRouter>
+              <Layout />
+            </HashRouter>
           </MuiThemeProvider>
         </div>
       </React.Fragment>
