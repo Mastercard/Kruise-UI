@@ -7,6 +7,8 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
   root: {
@@ -32,10 +34,14 @@ const styles = theme => ({
     minWidth: 400,
     textAlign: 'left',
   },
+  button: {
+    marginRight: theme.spacing.unit,
+  },
 });
 
 const envs = ["Dev", "Stage", "Prod"];
 const regions = ["STL", "KCI", "BEL"];
+const next = "/service";
 
 class AppDetails extends Component {
   state = {
@@ -60,7 +66,7 @@ class AppDetails extends Component {
     return (
       <div className={classes.root}>
         <Grid container spacing={24}>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <Paper className={classes.paper}>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
@@ -128,7 +134,7 @@ class AppDetails extends Component {
               </form>
             </Paper>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <Paper className={classes.paper}>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
@@ -157,6 +163,25 @@ class AppDetails extends Component {
                 />
               </form>
             </Paper>
+          </Grid>
+          <Grid item xs={2}>
+            <Button
+              disabled={true}
+              className={classes.button}
+            >
+              Back
+            </Button>
+            <Button
+              size="large"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              fullWidth={false}
+              component={Link}
+              to={next}
+            >
+              Next
+            </Button>
           </Grid>
         </Grid>
       </div>
