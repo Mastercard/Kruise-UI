@@ -15,10 +15,8 @@ function rootReducer(state = initialState, action) {
         name: action.payload
       }
     });
-    console.log(newState);
     return newState;
   }
-  console.log(state);
   return state;
 }
 

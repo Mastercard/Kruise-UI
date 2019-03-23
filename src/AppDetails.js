@@ -8,9 +8,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { setName } from './actions/index'
+import { withRouter } from "react-router-dom";
 
 const mapStateToProps = state => {
   return { application: state.application };
@@ -53,7 +53,6 @@ const styles = theme => ({
 
 const envs = ["Dev", "Stage", "Prod"];
 const regions = ["STL", "KCI", "BEL"];
-const next = "/service";
 
 class AppDetails extends Component {
   state = {
@@ -72,12 +71,25 @@ class AppDetails extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const { history } = this.props;
+    history.push("/service")
+  };
+
+  constructor() {
+    super();
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.root}>
-        <form noValidate autoComplete="off">
+        <form onSubmit={this.handleSubmit} noValidate autoComplete="off">
           <Grid container spacing={24}>
             <Grid item xs={5}>
               <Paper className={classes.paper}>
@@ -185,13 +197,12 @@ class AppDetails extends Component {
                 Back
               </Button>
               <Button
+                type="submit"
                 size="large"
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 fullWidth={false}
-                component={Link}
-                to={next}
               >
                 Next
               </Button>
@@ -203,4 +214,4 @@ class AppDetails extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppDetails));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(AppDetails)));
