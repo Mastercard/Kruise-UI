@@ -82,7 +82,8 @@ class AppDetails extends Component {
   };
 
   handleChange = event => {
-    this.setState({ [event.target.id || event.target.name]: event.target.value });
+    this.setState({ [event.target.name]: event.target.value });
+  };
   };
 
   render() {
@@ -95,7 +96,7 @@ class AppDetails extends Component {
             <Paper className={classes.paper}>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
-                  id="name"
+                  name="name"
                   label="Application Name"
                   className={classes.textField}
                   value={this.state.name}
@@ -103,7 +104,7 @@ class AppDetails extends Component {
                   margin="normal"
                 />
                 <TextField
-                  id="release"
+                  name="release"
                   label="Release / Version"
                   className={classes.textField}
                   value={this.state.release}
@@ -111,7 +112,7 @@ class AppDetails extends Component {
                   margin="normal"
                 />
                 <TextField
-                  id="tenant"
+                  name="tenant"
                   label="Team Organization"
                   className={classes.textField}
                   value={this.state.tenant}
@@ -149,7 +150,7 @@ class AppDetails extends Component {
                   </Select>
                 </FormControl>
                 <TextField
-                  id="namespace"
+                  name="namespace"
                   label="Target Namespace"
                   className={classes.textField}
                   value={this.state.namespace}
@@ -163,7 +164,7 @@ class AppDetails extends Component {
             <Paper className={classes.paper}>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
-                  id="repoURL"
+                  name="repoURL"
                   label="Deployment Git Repo URL"
                   className={classes.textField}
                   value={this.state.repoURL}
@@ -171,7 +172,7 @@ class AppDetails extends Component {
                   margin="normal"
                 />
                 <TextField
-                  id="path"
+                  name="path"
                   label="Deployment Git Path"
                   className={classes.textField}
                   value={this.state.path}
@@ -179,7 +180,7 @@ class AppDetails extends Component {
                   margin="normal"
                 />
                 <TextField
-                  id="targetRevision"
+                  name="targetRevision"
                   label="Deployment Git Revision"
                   className={classes.textField}
                   value={this.state.targetRevision}
