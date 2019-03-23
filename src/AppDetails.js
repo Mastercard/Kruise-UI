@@ -70,7 +70,7 @@ class AppDetails extends Component {
    */
 
   state = {
-    appName: '',
+    name: '',
     release: '',
     tenant: '',
     environment: 'Dev',
@@ -81,8 +81,8 @@ class AppDetails extends Component {
     targetRevision: "HEAD",
   };
 
-  handleChange = name => event => {
-    this.setState({ [name]: event.target.value });
+  handleChange = event => {
+    this.setState({ [event.target.id || event.target.name]: event.target.value });
   };
 
   render() {
@@ -95,11 +95,11 @@ class AppDetails extends Component {
             <Paper className={classes.paper}>
               <form className={classes.container} noValidate autoComplete="off">
                 <TextField
-                  id="application-name"
+                  id="name"
                   label="Application Name"
                   className={classes.textField}
-                  value={this.props.application.name}
-                  onChange={this.props.setName}
+                  value={this.state.name}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
                 <TextField
@@ -107,7 +107,7 @@ class AppDetails extends Component {
                   label="Release / Version"
                   className={classes.textField}
                   value={this.state.release}
-                  onChange={this.handleChange('release')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
                 <TextField
@@ -115,14 +115,14 @@ class AppDetails extends Component {
                   label="Team Organization"
                   className={classes.textField}
                   value={this.state.tenant}
-                  onChange={this.handleChange('tenant')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
                 <FormControl className={classes.formControl}>
                   <InputLabel htmlFor="environment">TargetEnvironment</InputLabel>
                   <Select
                     value={this.state.environment}
-                    onChange={this.handleChange('environment')}
+                    onChange={this.handleChange}
                     inputProps={{
                       name: 'environment',
                       id: 'environment',
@@ -137,7 +137,7 @@ class AppDetails extends Component {
                   <InputLabel htmlFor="environment">Target Region</InputLabel>
                   <Select
                     value={this.state.region}
-                    onChange={this.handleChange('region')}
+                    onChange={this.handleChange}
                     inputProps={{
                       name: 'region',
                       id: 'region',
@@ -153,7 +153,7 @@ class AppDetails extends Component {
                   label="Target Namespace"
                   className={classes.textField}
                   value={this.state.namespace}
-                  onChange={this.handleChange('namespace')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
               </form>
@@ -167,7 +167,7 @@ class AppDetails extends Component {
                   label="Deployment Git Repo URL"
                   className={classes.textField}
                   value={this.state.repoURL}
-                  onChange={this.handleChange('repoURL')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
                 <TextField
@@ -175,7 +175,7 @@ class AppDetails extends Component {
                   label="Deployment Git Path"
                   className={classes.textField}
                   value={this.state.path}
-                  onChange={this.handleChange('path')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
                 <TextField
@@ -183,7 +183,7 @@ class AppDetails extends Component {
                   label="Deployment Git Revision"
                   className={classes.textField}
                   value={this.state.targetRevision}
-                  onChange={this.handleChange('targetRevision')}
+                  onChange={this.handleChange}
                   margin="normal"
                 />
               </form>
