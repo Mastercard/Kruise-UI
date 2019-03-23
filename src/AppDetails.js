@@ -8,7 +8,19 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setName } from './actions/index'
+
+const mapStateToProps = state => {
+  return { application: state.application };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setName: e => dispatch(setName(e.target.value))
+  };
+}
 
 const styles = theme => ({
   root: {
@@ -86,8 +98,8 @@ class AppDetails extends Component {
                   id="application-name"
                   label="Application Name"
                   className={classes.textField}
-                  value={this.state.appName}
-                  onChange={this.handleChange('appName')}
+                  value={this.props.application.name}
+                  onChange={this.props.setName}
                   margin="normal"
                 />
                 <TextField
@@ -202,4 +214,4 @@ class AppDetails extends Component {
   }
 }
 
-export default withStyles(styles)(AppDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AppDetails));

@@ -11,6 +11,7 @@ run: build
 		-v /usr/src/app/node_modules \
 		-p 3001:3000 \
 		--rm \
+		--name=deploy-wizard \
 		deploy-wizard-ui:latest
 
 bootstrap: build
