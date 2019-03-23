@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -93,6 +94,9 @@ class AppDetails extends Component {
           <Grid container spacing={24}>
             <Grid item xs={5}>
               <Paper className={classes.paper}>
+                <Typography variant="overline" align="left" gutterBottom>
+                  application details
+                </Typography>
                 <div className={classes.container}>
                   <TextField
                     name="name"
@@ -161,6 +165,9 @@ class AppDetails extends Component {
             </Grid>
             <Grid item xs={5}>
               <Paper className={classes.paper}>
+                <Typography variant="overline" align="left" gutterBottom>
+                  repository settings
+                </Typography>
                 <div className={classes.container}>
                   <TextField
                     name="repoURL"
