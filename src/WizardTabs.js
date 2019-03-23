@@ -33,7 +33,7 @@ class WizardTabs extends React.Component {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="Application Details" component={Link} value="/" to="/" />
+          <Tab label="App Details" component={Link} value="/" to="/" />
           <Tab label="Service" component={Link} value="/service" to="/service" />
           <Tab label="Ingress" component={Link} value="/ingress" to="/ingress" />
           <Tab label="Volumes" component={Link} value="/volumes" to="/volumes" />

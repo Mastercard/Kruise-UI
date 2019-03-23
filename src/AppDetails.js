@@ -44,15 +44,28 @@ const regions = ["STL", "KCI", "BEL"];
 const next = "/service";
 
 class AppDetails extends Component {
+  /* state = {
+   *   appName: 'molly-data',
+   *   release: 'v1',
+   *   tenant: 'molly',
+   *   environment: 'Dev',
+   *   region: 'STL',
+   *   namespace: 'molly',
+   *   repoURL: 'github.com/ryane/molly-data',
+   *   path: '/',
+   *   targetRevision: "HEAD",
+   * };
+   */
+
   state = {
-    appName: 'molly-data',
-    release: 'v1',
-    tenant: 'molly',
+    appName: '',
+    release: '',
+    tenant: '',
     environment: 'Dev',
     region: 'STL',
-    namespace: 'molly',
-    repoURL: 'github.com/ryane/molly-data',
-    path: '/',
+    namespace: '',
+    repoURL: '',
+    path: '',
     targetRevision: "HEAD",
   };
 
