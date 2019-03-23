@@ -9,6 +9,9 @@ import WizardTabs from './WizardTabs';
 import AppDetails from './AppDetails';
 import Service from './Service';
 import StepPlaceholder from './StepPlaceholder';
+import grey from '@material-ui/core/colors/grey';
+
+const contentBackgroundColor = grey[200];
 
 const styles = theme => ({
   root: {
@@ -28,11 +31,15 @@ const styles = theme => ({
     }),
   },
   appBarSpacer: theme.mixins.toolbar,
+  tabBarSpacer: {
+    minHeight: '12px',
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing.unit * 3,
     height: '100vh',
     overflow: 'auto',
+    backgroundColor: contentBackgroundColor,
   },
 });
 
@@ -52,6 +59,7 @@ class Layout extends Component {
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <WizardTabs />
+          <div className={classes.tabBarSpacer} />
           <Switch>
             <Route exact path="/" component={AppDetails} />
             <Route path="/service" component={Service} />
