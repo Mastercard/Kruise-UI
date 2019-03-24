@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Route, Switch } from "react-router-dom";
 import WizardTabs from './WizardTabs';
-import AppDetails from './AppDetails';
-import Service from './Service';
-import StepPlaceholder from './StepPlaceholder';
 import grey from '@material-ui/core/colors/grey';
 
 const contentBackgroundColor = grey[200];
@@ -43,9 +41,13 @@ const styles = theme => ({
   },
 });
 
+const mapStateToProps = state => {
+  return { routes: state.routes };
+};
+
 class Layout extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, routes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -61,15 +63,9 @@ class Layout extends Component {
           <WizardTabs />
           <div className={classes.tabBarSpacer} />
           <Switch>
-            <Route exact path="/" component={AppDetails} />
-            <Route path="/service" component={Service} />
-            <Route path="/ingress" component={StepPlaceholder} />
-            <Route path="/volumes" component={StepPlaceholder} />
-            <Route path="/performance" component={StepPlaceholder} />
-            <Route path="/health" component={StepPlaceholder} />
-            <Route path="/container" component={StepPlaceholder} />
-            <Route path="/optimize" component={StepPlaceholder} />
-            <Route path="/submit" component={StepPlaceholder} />
+            {routes.map((r) =>
+              <Route exact key={r.path} path={r.path} component={r.component} />
+            )}
           </Switch>
         </main>
       </div>
@@ -77,4 +73,4 @@ class Layout extends Component {
   }
 }
 
-export default withStyles(styles)(Layout);
+export default connect(mapStateToProps)(withStyles(styles)(Layout));

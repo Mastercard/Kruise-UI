@@ -1,8 +1,23 @@
+import AppDetails from '../AppDetails';
+import Service from '../Service';
+import StepPlaceholder from '../StepPlaceholder';
+
 import { SET_NAME } from '../constants/actionTypes';
 
 const initialState = {
+  routes: [
+    { path: "/", component: AppDetails },
+    { path: "/service", component: Service },
+    { path: "/ingress", component: StepPlaceholder },
+    { path: "/volumes", component: StepPlaceholder },
+    { path: "/performance", component: StepPlaceholder},
+    { path: "/health", component: StepPlaceholder},
+    { path: "/container", component: StepPlaceholder},
+    { path: "/optimize", component: StepPlaceholder},
+    { path: "/submit", component: StepPlaceholder},
+  ],
   application: {
-    name: "heyo",
+    name: "molly-data",
     release: "v1",
   },
 };

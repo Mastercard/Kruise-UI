@@ -8,13 +8,17 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { setName } from './actions/index'
-import { withRouter } from "react-router-dom";
+import { withRouter } from 'react-router-dom';
+import WizardNav from './WizardNav'
+import { goToNext } from './helpers'
 
 const mapStateToProps = state => {
-  return { application: state.application };
+  return {
+    application: state.application,
+    routes: state.routes,
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -75,8 +79,7 @@ class AppDetails extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { history } = this.props;
-    history.push("/service")
+    goToNext(this.props.routes, this.props.location, this.props.history);
   };
 
   constructor() {
@@ -86,11 +89,11 @@ class AppDetails extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { routes, classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <form onSubmit={this.handleSubmit} noValidate autoComplete="off">
+      <form onSubmit={this.handleSubmit} noValidate autoComplete="off">
+        <div className={classes.root}>
           <Grid container spacing={24}>
             <Grid item xs={5}>
               <Paper className={classes.paper}>
@@ -197,26 +200,11 @@ class AppDetails extends Component {
               </Paper>
             </Grid>
             <Grid item xs={2}>
-              <Button
-                disabled={true}
-                className={classes.button}
-              >
-                Back
-              </Button>
-              <Button
-                type="submit"
-                size="large"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                fullWidth={false}
-              >
-                Next
-              </Button>
+              <WizardNav routes={routes} />
             </Grid>
           </Grid>
-        </form>
-      </div>
+        </div>
+      </form>
     )
   }
 }
