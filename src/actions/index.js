@@ -1,5 +1,5 @@
-import { SET_NAME } from '../constants/actionTypes'
+import { SET_APP_DETAILS } from '../constants/actionTypes'
 
-export function setName(payload) {
-  return { type: SET_NAME, payload };
+export function setAppDetails(payload) {
+  return { type: SET_APP_DETAILS, payload };
 }

@@ -9,7 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { connect } from 'react-redux';
-import { setName } from './actions/index'
+import { setAppDetails } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
 import { goToNext } from './helpers'
@@ -23,7 +23,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setName: e => dispatch(setName(e.target.value))
+    setAppDetails: payload => dispatch(setAppDetails(payload)),
   };
 }
 
@@ -60,18 +60,6 @@ const envs = ["Dev", "Stage", "Prod"];
 const regions = ["STL", "KCI", "BEL"];
 
 class AppDetails extends Component {
-  state = {
-    name: '',
-    release: '',
-    tenant: '',
-    environment: 'Dev',
-    region: 'STL',
-    namespace: '',
-    repoURL: '',
-    path: '',
-    targetRevision: "HEAD",
-  };
-
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -79,11 +67,15 @@ class AppDetails extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+    this.props.setAppDetails(this.state);
     goToNext(this.props.routes, this.props.location, this.props.history);
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    // initialize local state from application
+    this.state = Object.assign({}, props.application);
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
