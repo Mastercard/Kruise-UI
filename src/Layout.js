@@ -6,8 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Route, Switch } from "react-router-dom";
-import WizardTabs from './WizardTabs';
 import grey from '@material-ui/core/colors/grey';
+import WizardTabs from './WizardTabs';
+import ErrorNotifications from './ErrorNotification';
 
 const contentBackgroundColor = grey[200];
 
@@ -42,7 +43,10 @@ const styles = theme => ({
 });
 
 const mapStateToProps = state => {
-  return { routes: state.routes };
+  return {
+    ui: state.ui,
+    routes: state.routes,
+  };
 };
 
 class Layout extends Component {
@@ -51,6 +55,7 @@ class Layout extends Component {
 
     return (
       <div className={classes.root}>
+        <ErrorNotifications />
         <AppBar position="absolute" className={classNames(classes.appBar)}>
           <Toolbar className={classes.toolbar}>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>

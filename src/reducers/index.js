@@ -2,7 +2,7 @@ import AppDetails from '../AppDetails';
 import Service from '../Service';
 import StepPlaceholder from '../StepPlaceholder';
 
-import { SET_APP_DETAILS } from '../constants/actionTypes';
+import { SET_APP_DETAILS, INVALID_REPO_URL, DISMISS_ERROR } from '../constants/actionTypes';
 
 const initialState = {
   routes: [
@@ -27,6 +27,10 @@ const initialState = {
     path: "",
     targetRevision: "",
   },
+  ui: {
+    warning: null,
+    error: null,
+  }
 };
 
 function rootReducer(state = initialState, action) {
@@ -34,6 +38,25 @@ function rootReducer(state = initialState, action) {
     let newState = Object.assign({}, state, { application: action.payload });
     return newState;
   }
+
+  if (action.type === INVALID_REPO_URL) {
+    return Object.assign({}, state, {
+      ui: {
+        ...state.ui,
+        error: "Invalid Repo URL",
+      }
+    });
+  }
+
+  if (action.type === DISMISS_ERROR) {
+    return Object.assign({}, state, {
+      ui: {
+        ...state.ui,
+        error: null,
+      }
+    });
+  }
+
   return state;
 }
 
