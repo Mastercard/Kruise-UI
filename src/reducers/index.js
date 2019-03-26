@@ -1,3 +1,6 @@
+import { combineReducers } from 'redux'
+
+// components for routing
 import AppDetails from '../AppDetails';
 import Service from '../Service';
 import StepPlaceholder from '../StepPlaceholder';
@@ -33,31 +36,37 @@ const initialState = {
   }
 };
 
-function rootReducer(state = initialState, action) {
+export function application(state = initialState.application, action) {
   if (action.type === SET_APP_DETAILS) {
-    let newState = Object.assign({}, state, { application: action.payload });
+    let newState = Object.assign({}, state, action.payload);
     return newState;
   }
 
+  return state;
+}
+
+export function ui(state = initialState.ui, action) {
   if (action.type === INVALID_REPO_URL) {
     return Object.assign({}, state, {
-      ui: {
-        ...state.ui,
-        error: "Invalid Repo URL",
-      }
+      error: "Invalid Repo URL",
     });
   }
 
   if (action.type === DISMISS_ERROR) {
     return Object.assign({}, state, {
-      ui: {
-        ...state.ui,
-        error: null,
-      }
+      error: null,
     });
   }
 
   return state;
 }
 
-export default rootReducer;
+export function routes(state = initialState.routes, action) {
+  return state;
+}
+
+export default combineReducers({
+  application,
+  ui,
+  routes,
+});
