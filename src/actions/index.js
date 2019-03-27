@@ -20,6 +20,7 @@ export function submitApp(payload) {
 
         // SET_APP_DETAILS was not skipped in middleware, let's proceed
         if (dispatched.type === SET_APP_DETAILS) {
+          dispatch(dismissError());
           dispatch(goStep("/service"));
         }
       })
