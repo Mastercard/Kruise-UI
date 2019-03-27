@@ -9,7 +9,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { connect } from 'react-redux';
-import { submitApp } from './actions/index'
+import { submitApp, goStep } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
 
@@ -23,6 +23,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     submitApp: payload => dispatch(submitApp(payload)),
+    goStep: path => dispatch(goStep(path)),
   };
 }
 
@@ -189,7 +190,7 @@ class AppDetails extends Component {
               </Paper>
             </Grid>
             <Grid item xs={2}>
-              <WizardNav routes={routes} />
+              <WizardNav routes={routes} goStep={this.props.goStep} />
             </Grid>
           </Grid>
         </div>

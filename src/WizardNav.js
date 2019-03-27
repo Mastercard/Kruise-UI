@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { prevRoute, nextRoute } from './helpers'
 
 const styles = theme => ({
@@ -11,6 +11,10 @@ const styles = theme => ({
 });
 
 class WizardNav extends React.Component {
+  handleBack = path => event => {
+    this.props.goStep(path);
+  };
+
   render() {
     const { routes, location, classes } = this.props;
 
@@ -29,8 +33,7 @@ class WizardNav extends React.Component {
         <Button
           disabled={false}
           className={classes.button}
-          component={Link}
-          to={prev}
+          onClick={this.handleBack(prev)}
         >
           Back
         </Button>;

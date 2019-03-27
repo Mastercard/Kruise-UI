@@ -26,23 +26,7 @@ const prevRoute = (routes, location) => {
   return null;
 };
 
-const goToNext = (routes, location, history) => {
-  let next = nextRoute(routes, location);
-  if (next !== location.pathname) {
-    history.push(next);
-  }
-};
-
-const goToPrev = (routes, location, history) => {
-  let prev = prevRoute(routes, location);
-  if (prev) {
-    history.push(prev);
-  }
-};
-
 export {
   nextRoute,
   prevRoute,
-  goToNext,
-  goToPrev,
 };

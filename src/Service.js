@@ -5,7 +5,8 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import WizardNav from './WizardNav'
-import { goToNext } from './helpers'
+import { nextRoute } from './helpers'
+import { goStep } from './actions/index'
 
 const mapStateToProps = state => {
   return {
@@ -13,6 +14,12 @@ const mapStateToProps = state => {
     routes: state.routes,
   };
 };
+
+const mapDispatchToProps = dispatch => {
+  return {
+    goStep: path => dispatch(goStep(path)),
+  };
+}
 
 const styles = theme => ({
   root: {
@@ -35,8 +42,8 @@ const styles = theme => ({
 class Service extends Component {
   handleSubmit = event => {
     event.preventDefault();
-
-    goToNext(this.props.routes, this.props.location, this.props.history);
+    const { goStep, routes, location } = this.props;
+    goStep(nextRoute(routes, location));
   };
 
   constructor() {
@@ -60,7 +67,7 @@ class Service extends Component {
               </Paper>
             </Grid>
             <Grid item xs={2}>
-              <WizardNav routes={routes} />
+              <WizardNav routes={routes} goStep={this.props.goStep} />
             </Grid>
           </Grid>
         </div>
@@ -69,4 +76,4 @@ class Service extends Component {
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Service));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Service));
