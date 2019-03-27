@@ -1,5 +1,5 @@
 import { SET_APP_DETAILS } from '../constants/actionTypes';
-import { invalidRepoURL } from '../actions/index'
+import { setError } from '../actions/index'
 
 export function allowedReposMiddleware({ dispatch }) {
   return function(next) {
@@ -7,7 +7,7 @@ export function allowedReposMiddleware({ dispatch }) {
 
       if (action.type === SET_APP_DETAILS) {
         if (!action.payload.repoURL.includes("bitbucket")) {
-          return dispatch(invalidRepoURL());
+          return dispatch(setError("git repo URL must be a bitbucket URL"));
         }
       }
 

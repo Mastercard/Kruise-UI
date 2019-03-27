@@ -1,6 +1,6 @@
 import {
   SET_APP_DETAILS,
-  INVALID_REPO_URL,
+  SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
 } from '../constants/actionTypes';
@@ -20,7 +20,6 @@ export function submitApp(payload) {
 
         // SET_APP_DETAILS was not skipped in middleware, let's proceed
         if (dispatched.type === SET_APP_DETAILS) {
-          dispatch(dismissError());
           dispatch(goStep("/service"));
         }
       })
@@ -41,8 +40,8 @@ export function goStep(path) {
   };
 }
 
-export function invalidRepoURL() {
-  return { type: INVALID_REPO_URL };
+export function setError(message) {
+  return { type: SET_ERROR, message: message };
 }
 
 export function dismissError() {

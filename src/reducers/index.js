@@ -7,7 +7,7 @@ import StepPlaceholder from '../StepPlaceholder';
 
 import {
   SET_APP_DETAILS,
-  INVALID_REPO_URL,
+  SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
 } from '../constants/actionTypes';
@@ -34,6 +34,7 @@ const initialState = {
     repoURL: "",
     path: "",
     targetRevision: "",
+    errors: [],
   },
   ui: {
     warning: null,
@@ -52,9 +53,9 @@ export function application(state = initialState.application, action) {
 }
 
 export function ui(state = initialState.ui, action) {
-  if (action.type === INVALID_REPO_URL) {
+  if (action.type === SET_ERROR) {
     return Object.assign({}, state, {
-      error: "Invalid Repo URL",
+      error: action.message,
     });
   }
 
@@ -67,6 +68,7 @@ export function ui(state = initialState.ui, action) {
   if (action.type === NEXT_STEP) {
     return Object.assign({}, state, {
       step: action.payload,
+      error: null, // dismiss error when navigating away
     });
   }
 
