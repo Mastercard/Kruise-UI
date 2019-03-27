@@ -4,7 +4,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Link, withRouter } from "react-router-dom";
+import { connect } from 'react-redux';
+import { withRouter } from "react-router-dom";
+import { goStep } from './actions/index'
 
 const styles = {
   root: {
@@ -12,13 +14,15 @@ const styles = {
   },
 };
 
-class WizardTabs extends React.Component {
-  state = {
-    value: 0,
-  };
+const mapDispatchToProps = dispatch => {
+  return {
+    goStep: path => dispatch(goStep(path)),
+  }
+};
 
+class WizardTabs extends React.Component {
   handleChange = (event, value) => {
-    this.setState({ value });
+    this.props.goStep(value);
   };
 
   render() {
@@ -33,15 +37,16 @@ class WizardTabs extends React.Component {
           textColor="primary"
           variant="fullWidth"
         >
-          <Tab label="App Details" component={Link} value="/" to="/" />
-          <Tab label="Service" component={Link} value="/service" to="/service" />
-          <Tab label="Ingress" component={Link} value="/ingress" to="/ingress" />
-          <Tab label="Volumes" component={Link} value="/volumes" to="/volumes" />
-          <Tab label="Performance" component={Link} value="/performance" to="/performance" />
-          <Tab label="Health" component={Link} value="/health" to="/health" />
-          <Tab label="Container" component={Link} value="/container" to="/container" />
-          <Tab label="Optimize" component={Link} value="/optimize" to="/optimize" />
-          <Tab label="Submit" component={Link} value="/submit" to="/submit" />
+          {/* TODO: do I need to the "to" attribute? */}
+          <Tab label="App Details" value="/" to="/" />
+          <Tab label="Service" value="/service" to="/service" />
+          <Tab label="Ingress" value="/ingress" to="/ingress" />
+          <Tab label="Volumes" value="/volumes" to="/volumes" />
+          <Tab label="Performance" value="/performance" to="/performance" />
+          <Tab label="Health" value="/health" to="/health" />
+          <Tab label="Container" value="/container" to="/container" />
+          <Tab label="Optimize" value="/optimize" to="/optimize" />
+          <Tab label="Submit" value="/submit" to="/submit" />
         </Tabs>
       </Paper>
     );
@@ -52,4 +57,4 @@ WizardTabs.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRouter(withStyles(styles)(WizardTabs));
+export default connect(null, mapDispatchToProps)(withRouter(withStyles(styles)(WizardTabs)));

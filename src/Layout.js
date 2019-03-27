@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Route, Switch } from "react-router-dom";
+import { withRouter, Route, Redirect, Switch } from "react-router-dom";
 import grey from '@material-ui/core/colors/grey';
 import WizardTabs from './WizardTabs';
 import ErrorNotifications from './ErrorNotification';
@@ -51,7 +51,11 @@ const mapStateToProps = state => {
 
 class Layout extends Component {
   render() {
-    const { classes, routes } = this.props;
+    const { ui, classes, routes, location } = this.props;
+
+    if (ui.step !== "" && ui.step !== location.pathname) {
+      return <Redirect to={ui.step} />;
+    }
 
     return (
       <div className={classes.root}>
@@ -78,4 +82,4 @@ class Layout extends Component {
   }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Layout));
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(Layout)));

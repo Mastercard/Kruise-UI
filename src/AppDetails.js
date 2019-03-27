@@ -9,10 +9,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { connect } from 'react-redux';
-import { setAppDetails } from './actions/index'
+import { submitApp } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
-import { goToNext } from './helpers'
 
 const mapStateToProps = state => {
   return {
@@ -23,7 +22,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setAppDetails: payload => dispatch(setAppDetails(payload)),
+    submitApp: payload => dispatch(submitApp(payload)),
   };
 }
 
@@ -66,9 +65,7 @@ class AppDetails extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-
-    this.props.setAppDetails(this.state);
-    goToNext(this.props.routes, this.props.location, this.props.history);
+    this.props.submitApp(this.state);
   };
 
   constructor(props) {
