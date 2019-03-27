@@ -7,6 +7,8 @@ import StepPlaceholder from '../StepPlaceholder';
 
 import {
   SET_APP_DETAILS,
+  SET_VALIDATION_ERRORS,
+  CLEAR_VALIDATION_ERROR,
   SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
@@ -34,12 +36,12 @@ const initialState = {
     repoURL: "",
     path: "",
     targetRevision: "",
-    errors: [],
   },
   ui: {
     warning: null,
     error: null,
     step: "",
+    validationErrors: {},
   }
 };
 
@@ -70,6 +72,16 @@ export function ui(state = initialState.ui, action) {
       step: action.payload,
       error: null, // dismiss error when navigating away
     });
+  }
+
+  if (action.type === SET_VALIDATION_ERRORS) {
+    return Object.assign({}, state, { validationErrors: action.errors });
+  }
+
+  if (action.type === CLEAR_VALIDATION_ERROR) {
+    var vErrors = Object.assign({}, state.validationErrors);
+    delete vErrors[action.field];
+    return Object.assign({}, state, { validationErrors: vErrors });
   }
 
   return state;

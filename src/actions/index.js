@@ -1,5 +1,8 @@
 import {
   SET_APP_DETAILS,
+  FINALIZE_APP,
+  SET_VALIDATION_ERRORS,
+  CLEAR_VALIDATION_ERROR,
   SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
@@ -7,6 +10,13 @@ import {
 
 export function submitApp(payload) {
   return function(dispatch, getState) {
+    // update state from form
+    dispatch(setAppDetails(payload));
+
+    // clear validation errors
+    dispatch(clearValidationErrors(payload));
+
+    // run server side validation
     return fetch("http://localhost:9801/validates/application", {
       method: "post",
       body: JSON.stringify(payload),
@@ -15,14 +25,47 @@ export function submitApp(payload) {
       }
     })
       .then(response => response.json())
-      .then(json => {
-        var dispatched = dispatch(setAppDetails(payload));
+      .then(validationResponse => {
+        // if there are validation errors, short circuit and show errors
+        if (validationResponse.errors && Object.keys(validationResponse.errors).length > 0) {
+          dispatch(setValidationErrors(validationResponse.errors));
+          return dispatch(setError("Application is not valid"));
+        }
 
-        // SET_APP_DETAILS was not skipped in middleware, let's proceed
-        if (dispatched.type === SET_APP_DETAILS) {
+        // no validation errors, finalize
+        var dispatched = dispatch(finalizeApp(getState().application));
+        if (dispatched.type === FINALIZE_APP) {
           dispatch(goStep("/service"));
         }
       })
+  };
+}
+
+export function finalizeApp(app) {
+  return {
+    type: FINALIZE_APP,
+    application: app,
+  }
+}
+
+export function clearValidationErrors(errors) {
+  return {
+    type: SET_VALIDATION_ERRORS,
+    errors: {},
+  };
+}
+
+export function clearValidationError(field) {
+  return {
+    type: CLEAR_VALIDATION_ERROR,
+    field: field,
+  };
+}
+
+export function setValidationErrors(errors) {
+  return {
+    type: SET_VALIDATION_ERRORS,
+    errors: errors,
   };
 }
 

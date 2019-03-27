@@ -9,13 +9,14 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { connect } from 'react-redux';
-import { submitApp, goStep } from './actions/index'
+import { submitApp, goStep, clearValidationError } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
 
 const mapStateToProps = state => {
   return {
     application: state.application,
+    ui: state.ui,
     routes: state.routes,
   };
 };
@@ -24,6 +25,7 @@ const mapDispatchToProps = dispatch => {
   return {
     submitApp: payload => dispatch(submitApp(payload)),
     goStep: path => dispatch(goStep(path)),
+    clearValidationError: field => dispatch(clearValidationError(field)),
   };
 }
 
@@ -61,12 +63,20 @@ const regions = ["STL", "KCI", "BEL"];
 
 class AppDetails extends Component {
   handleChange = event => {
+    if (this.hasError(event.target.name)) {
+      this.props.clearValidationError(event.target.name);
+    }
     this.setState({ [event.target.name]: event.target.value });
   };
 
   handleSubmit = event => {
     event.preventDefault();
     this.props.submitApp(this.state);
+  };
+
+  hasError = field => {
+    const appErrors = this.props.ui.validationErrors;
+    return appErrors.hasOwnProperty(field);
   };
 
   constructor(props) {
@@ -98,6 +108,8 @@ class AppDetails extends Component {
                     value={this.state.name}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("name")}
                   />
                   <TextField
                     name="release"
@@ -106,6 +118,8 @@ class AppDetails extends Component {
                     value={this.state.release}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("release")}
                   />
                   <TextField
                     name="tenant"
@@ -114,11 +128,14 @@ class AppDetails extends Component {
                     value={this.state.tenant}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("tenant")}
                   />
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="environment">TargetEnvironment</InputLabel>
                     <Select
                       value={this.state.environment}
+                      required
                       onChange={this.handleChange}
                       inputProps={{
                         name: 'environment',
@@ -134,6 +151,7 @@ class AppDetails extends Component {
                     <InputLabel htmlFor="environment">Target Region</InputLabel>
                     <Select
                       value={this.state.region}
+                      required
                       onChange={this.handleChange}
                       inputProps={{
                         name: 'region',
@@ -152,6 +170,8 @@ class AppDetails extends Component {
                     value={this.state.namespace}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("namespace")}
                   />
                 </div>
               </Paper>
@@ -169,6 +189,8 @@ class AppDetails extends Component {
                     value={this.state.repoURL}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("repoURL")}
                   />
                   <TextField
                     name="path"
@@ -177,6 +199,8 @@ class AppDetails extends Component {
                     value={this.state.path}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("path")}
                   />
                   <TextField
                     name="targetRevision"
@@ -185,6 +209,8 @@ class AppDetails extends Component {
                     value={this.state.targetRevision}
                     onChange={this.handleChange}
                     margin="normal"
+                    required
+                    error={this.hasError("targetRevision")}
                   />
                 </div>
               </Paper>
