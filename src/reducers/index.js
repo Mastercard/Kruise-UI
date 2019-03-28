@@ -12,6 +12,8 @@ import {
   SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
+  TOGGLE_PREVIEW,
+  TOGGLE_PREVIEW_ENABLED,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -42,6 +44,8 @@ const initialState = {
     error: null,
     step: "",
     validationErrors: {},
+    showPreview: false,
+    previewEnabled: false,
   }
 };
 
@@ -75,13 +79,28 @@ export function ui(state = initialState.ui, action) {
   }
 
   if (action.type === SET_VALIDATION_ERRORS) {
-    return Object.assign({}, state, { validationErrors: action.errors });
+    const errs = action.errors;
+    return Object.assign({}, state, {
+      validationErrors: errs,
+      previewEnabled: (!errs || Object.keys(errs).length === 0),
+    });
   }
 
   if (action.type === CLEAR_VALIDATION_ERROR) {
-    var vErrors = Object.assign({}, state.validationErrors);
-    delete vErrors[action.field];
-    return Object.assign({}, state, { validationErrors: vErrors });
+    var errs = Object.assign({}, state.validationErrors);
+    delete errs[action.field];
+    return Object.assign({}, state, {
+      validationErrors: errs,
+      previewEnabled: (!errs || Object.keys(errs).length === 0),
+    });
+  }
+
+  if (action.type === TOGGLE_PREVIEW) {
+    return Object.assign({}, state, { showPreview: action.show });
+  }
+
+  if (action.type === TOGGLE_PREVIEW_ENABLED) {
+    return Object.assign({}, state, { previewEnabled: action.show });
   }
 
   return state;

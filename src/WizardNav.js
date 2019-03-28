@@ -1,14 +1,30 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from "react-router-dom";
 import { prevRoute, nextRoute } from './helpers'
+import { goStep } from './actions/index'
 
 const styles = theme => ({
   button: {
     marginRight: theme.spacing.unit,
   },
 });
+
+const mapStateToProps = state => {
+  return {
+    routes: state.routes,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    goStep: path => dispatch(goStep(path)),
+  };
+}
 
 class WizardNav extends React.Component {
   handleBack = path => event => {
@@ -26,30 +42,12 @@ class WizardNav extends React.Component {
     }
 
     let prev = prevRoute(routes, location);
-    let backButton;
-
-    if (prev) {
-      backButton =
-        <Button
-          disabled={false}
-          className={classes.button}
-          onClick={this.handleBack(prev)}
-        >
-          Back
-        </Button>;
-    } else {
-      backButton =
-        <Button
-          disabled={true}
-          className={classes.button}
-        >
-          Back
-        </Button>;
-    }
 
     return (
       <div>
-        {backButton}
+        <IconButton disabled={!prev} className={classes.button} onClick={this.handleBack(prev)}>
+          <ArrowBack />
+        </IconButton>
         <Button
           type="submit"
           disabled={nextButtonDisabled}
@@ -66,4 +64,4 @@ class WizardNav extends React.Component {
   }
 }
 
-export default withRouter(withStyles(styles)(WizardNav));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(WizardNav)));

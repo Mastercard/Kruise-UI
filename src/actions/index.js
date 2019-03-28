@@ -6,6 +6,8 @@ import {
   SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
+  TOGGLE_PREVIEW,
+  TOGGLE_PREVIEW_ENABLED,
 } from '../constants/actionTypes';
 
 export function submitApp(payload) {
@@ -16,16 +18,7 @@ export function submitApp(payload) {
     // clear validation errors
     dispatch(clearValidationErrors(payload));
 
-    // run server side validation
-    // TODO: configurable api server
-    return fetch("http://localhost:9801/validates/application", {
-      method: "post",
-      body: JSON.stringify(payload),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-      .then(response => response.json())
+    return validateApplication(payload)
       .then(validationResponse => {
         // if there are validation errors, short circuit and show errors
         if (validationResponse.errors && Object.keys(validationResponse.errors).length > 0) {
@@ -38,7 +31,18 @@ export function submitApp(payload) {
         if (dispatched.type === FINALIZE_APP) {
           dispatch(goStep("/service"));
         }
-      })
+      });
+  };
+}
+
+export function canPreview(payload) {
+  return function(dispatch, getState) {
+    return validateApplication(payload)
+      .then(validationResponse => {
+        // if there are validation errors, preview is disabled
+        const errs = validationResponse.errors;
+        dispatch(togglePreviewEnabled(!errs || Object.keys(errs).length === 0));
+      });
   };
 }
 
@@ -90,4 +94,25 @@ export function setError(message) {
 
 export function dismissError() {
   return { type: DISMISS_ERROR };
+}
+
+export function togglePreview(show) {
+  return { type: TOGGLE_PREVIEW, show };
+}
+
+export function togglePreviewEnabled(show) {
+  return { type: TOGGLE_PREVIEW_ENABLED, show };
+}
+
+function validateApplication(payload) {
+  // run server side validation
+  // TODO: configurable api server
+  return fetch("http://localhost:9801/validates/application", {
+    method: "post",
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => response.json())
 }

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -8,8 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { connect } from 'react-redux';
-import { submitApp, goStep, clearValidationError } from './actions/index'
+import { submitApp, clearValidationError, canPreview } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
 
@@ -17,15 +17,14 @@ const mapStateToProps = state => {
   return {
     application: state.application,
     ui: state.ui,
-    routes: state.routes,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     submitApp: payload => dispatch(submitApp(payload)),
-    goStep: path => dispatch(goStep(path)),
     clearValidationError: field => dispatch(clearValidationError(field)),
+    canPreview: show => dispatch(canPreview(show)),
   };
 }
 
@@ -88,8 +87,12 @@ class AppDetails extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    this.props.canPreview(this.state);
+  }
+
   render() {
-    const { routes, classes } = this.props;
+    const { classes } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit} noValidate autoComplete="off">
@@ -216,7 +219,7 @@ class AppDetails extends Component {
               </Paper>
             </Grid>
             <Grid item xs={2}>
-              <WizardNav routes={routes} goStep={this.props.goStep} />
+              <WizardNav />
             </Grid>
           </Grid>
         </div>
