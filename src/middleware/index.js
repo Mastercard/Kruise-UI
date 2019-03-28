@@ -17,3 +17,17 @@ export function allowedReposMiddleware({ dispatch }) {
     }
   }
 }
+
+export function localStorageMiddleware({ getState }) {
+  return next => action => {
+    console.log("running localStorageMiddleware")
+    const result = next(action);
+
+    if ([ FINALIZE_APP ].includes(result.type)) {
+      console.log("running localStorageMiddleware write")
+      localStorage.setItem("application", JSON.stringify(getState().application));
+    }
+
+    return result;
+  };
+};

@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { allowedReposMiddleware } from '../middleware/index'
+import { allowedReposMiddleware, localStorageMiddleware } from '../middleware/index'
 import rootReducer from '../reducers/index'
 
 const composeEnhancers = composeWithDevTools({
@@ -9,8 +9,26 @@ const composeEnhancers = composeWithDevTools({
   trace: true,
 });
 
-const store = createStore(rootReducer, composeEnhancers(
-  applyMiddleware(allowedReposMiddleware, thunk),
-));
+const reHydrateStore = () => {
+  if (localStorage.getItem('application') !== null) {
+    return {
+      application: JSON.parse(
+        localStorage.getItem('application'),
+      )
+    };
+  }
+}
+
+const store = createStore(
+  rootReducer,
+  reHydrateStore(),
+  composeEnhancers(
+    applyMiddleware(
+      thunk,
+      allowedReposMiddleware,
+      localStorageMiddleware,
+    ),
+  )
+);
 
 export default store;

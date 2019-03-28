@@ -17,6 +17,7 @@ export function submitApp(payload) {
     dispatch(clearValidationErrors(payload));
 
     // run server side validation
+    // TODO: configurable api server
     return fetch("http://localhost:9801/validates/application", {
       method: "post",
       body: JSON.stringify(payload),

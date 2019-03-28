@@ -27,8 +27,8 @@ const initialState = {
     { path: "/submit", component: StepPlaceholder},
   ],
   application: {
-    name: "molly-data",
-    release: "v1",
+    name: "",
+    release: "",
     tenant: "",
     environment: "Dev",
     region: "STL",
