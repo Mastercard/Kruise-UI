@@ -14,6 +14,7 @@ import {
   NEXT_STEP,
   TOGGLE_PREVIEW,
   TOGGLE_PREVIEW_ENABLED,
+  SET_PREVIEW_CONTENT,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -46,6 +47,7 @@ const initialState = {
     validationErrors: {},
     showPreview: false,
     previewEnabled: false,
+    previewContent: "",
   }
 };
 
@@ -102,6 +104,11 @@ export function ui(state = initialState.ui, action) {
   if (action.type === TOGGLE_PREVIEW_ENABLED) {
     return Object.assign({}, state, { previewEnabled: action.show });
   }
+
+  if (action.type === SET_PREVIEW_CONTENT) {
+    return Object.assign({}, state, { previewContent: action.payload });
+  }
+
 
   return state;
 }

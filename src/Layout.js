@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import { withRouter, Route, Redirect, Switch } from "react-router-dom";
 import grey from '@material-ui/core/colors/grey';
-import { togglePreview } from './actions/index'
+import { showPreview, togglePreview } from './actions/index'
 import WizardTabs from './WizardTabs';
 import PreviewDialog from './PreviewDialog'
 import ErrorNotifications from './ErrorNotification';
@@ -59,6 +59,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     togglePreview: show => dispatch(togglePreview(show)),
+    showPreview: () => dispatch(showPreview()),
   };
 };
 
@@ -68,7 +69,7 @@ class Layout extends Component {
   };
 
   showPreview = event => {
-    this.props.togglePreview(true);
+    this.props.showPreview(true);
   };
 
   render() {
@@ -100,7 +101,7 @@ class Layout extends Component {
               <Route exact key={r.path} path={r.path} component={r.component} />
             )}
           </Switch>
-          <PreviewDialog open={ui.showPreview} onClose={this.closePreview} />
+          <PreviewDialog content={ui.previewContent} open={ui.showPreview} onClose={this.closePreview} />
         </main>
       </div>
     )

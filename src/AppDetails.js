@@ -185,6 +185,7 @@ class AppDetails extends Component {
                   repository settings
                 </Typography>
                 <div className={classes.container}>
+                  {/* TODO: validate that this is a url (the server does currently) */}
                   <TextField
                     name="repoURL"
                     label="Deployment Git Repo URL"

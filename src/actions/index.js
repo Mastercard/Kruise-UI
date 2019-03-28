@@ -8,6 +8,7 @@ import {
   NEXT_STEP,
   TOGGLE_PREVIEW,
   TOGGLE_PREVIEW_ENABLED,
+  SET_PREVIEW_CONTENT,
 } from '../constants/actionTypes';
 
 export function submitApp(payload) {
@@ -96,6 +97,26 @@ export function dismissError() {
   return { type: DISMISS_ERROR };
 }
 
+export function showPreview() {
+  return function(dispatch, getState) {
+
+    // TODO: configurable api server
+    // TODO: error handling
+    return fetch("http://localhost:9801/apps", {
+      method: "post",
+      body: JSON.stringify(getState().application),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.text())
+      .then(payload => {
+        dispatch(setPreviewContent(payload));
+        dispatch(togglePreview(true));
+      })
+  }
+}
+
 export function togglePreview(show) {
   return { type: TOGGLE_PREVIEW, show };
 }
@@ -104,9 +125,14 @@ export function togglePreviewEnabled(show) {
   return { type: TOGGLE_PREVIEW_ENABLED, show };
 }
 
+export function setPreviewContent(content) {
+  return { type: SET_PREVIEW_CONTENT, payload: content };
+}
+
 function validateApplication(payload) {
   // run server side validation
   // TODO: configurable api server
+  // TODO: error handling
   return fetch("http://localhost:9801/validates/application", {
     method: "post",
     body: JSON.stringify(payload),
@@ -114,5 +140,5 @@ function validateApplication(payload) {
       'Content-Type': 'application/json',
     }
   })
-    .then(response => response.json())
+    .then(response => response.json());
 }
