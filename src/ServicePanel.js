@@ -72,11 +72,16 @@ const styles = theme => ({
 const serviceTypes = ["ClusterIP", "ExternalName", "LoadBalancer"];
 
 class ServicePanel extends Component {
+  hasError = field => {
+    const appErrors = this.props.validationErrors;
+    return appErrors.hasOwnProperty(field);
+  };
+
   render() {
     const { service, classes } = this.props;
 
     return (
-      <Card key={"service-"+service.name} className={classNames(classes.card, classes.panel)}>
+      <Card className={classNames(classes.card, classes.panel)}>
         <CardContent>
           <Typography variant="overline" align="left" gutterBottom>
             service
@@ -89,16 +94,18 @@ class ServicePanel extends Component {
                   label="Service / Component Name"
                   className={classes.textField}
                   value={service.name}
+                  onChange={this.props.onChange}
                   margin="normal"
                   required
                   fullWidth
+                  error={this.hasError("name")}
                 />
                 <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="environment">TargetEnvironment</InputLabel>
+                  <InputLabel htmlFor="environment">Service Type</InputLabel>
                   <Select
                     value={service.type}
                     required
-                    onChange={this.handleChange}
+                    onChange={this.props.onChange}
                     fullWidth
                     inputProps={{
                       name: 'type',
@@ -121,27 +128,32 @@ class ServicePanel extends Component {
                   <div className={classes.container}>
                     <TextField
                       name="name"
+                      id="portName"
                       label="Name"
                       className={classes.textField}
                       value={service.ports[0].name}
+                      onChange={this.props.onChange}
                       margin="normal"
-                      required
                       fullWidth
                     />
                     <TextField
                       name="port"
+                      id="port"
                       label="Port"
                       className={classes.textField}
                       value={service.ports[0].port}
+                      onChange={this.handleChange}
                       margin="normal"
                       required
                       fullWidth
                     />
                     <TextField
+                      id="targetPort"
                       name="targetPort"
                       label="Target Port"
                       className={classes.textField}
-                      value=""
+                      value={service.ports[0].targetPort}
+                      onChange={this.handleChange}
                       margin="normal"
                       fullWidth
                     />
@@ -163,7 +175,7 @@ class ServicePanel extends Component {
           </Grid>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton className={classes.deleteService} aria-label="delete service" onClick={this.props.delete}>
+          <IconButton className={classes.deleteService} aria-label="delete service" onClick={this.props.onDelete}>
             <DeleteIcon />
           </IconButton>
         </CardActions>

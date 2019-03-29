@@ -135,7 +135,7 @@ class AppDetails extends Component {
                     error={this.hasError("tenant")}
                   />
                   <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="environment">TargetEnvironment</InputLabel>
+                    <InputLabel htmlFor="environment">Target Environment</InputLabel>
                     <Select
                       value={this.state.environment}
                       required

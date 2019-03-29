@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { nextRoute } from './helpers'
-import { goStep, addService, deleteService } from './actions/index'
+import { goStep, submitApp, addService, deleteService } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -29,6 +28,7 @@ const styles = theme => ({
 const mapStateToProps = state => {
   return {
     application: state.application,
+    ui: state.ui,
     routes: state.routes,
   };
 };
@@ -38,14 +38,16 @@ const mapDispatchToProps = dispatch => {
     goStep: path => dispatch(goStep(path)),
     addService: service => dispatch(addService(service)),
     deleteService: service => dispatch(deleteService(service)),
+    submitApp: payload => dispatch(submitApp(payload)),
   };
 }
 
 class Service extends Component {
   handleSubmit = event => {
     event.preventDefault();
-    const { goStep, routes, location } = this.props;
-    goStep(nextRoute(routes, location));
+
+    const app = Object.assign({}, this.props.application, this.state);
+    this.props.submitApp(app);
   };
 
   constructor(props) {
@@ -57,27 +59,68 @@ class Service extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleChange = idx => event => {
+    if (this.hasError(event.target.name)) {
+      this.props.clearValidationError(event.target.name);
+    }
+
+    this.setState({
+      services: this.state.services.map((s, i) => {
+        if (i !== idx) {
+          return s;
+        }
+
+        if (["portName", "port", "targetPort"].includes(event.target.id)) {
+          return {
+            ...s,
+            ports: (s.ports.map((p, j) => {
+              return {
+                ...p,
+                [ event.target.name ]: event.target.value,
+              }
+            })),
+          };
+        } else {
+          return {
+            ...s,
+            [ event.target.name ]: event.target.value,
+          };
+        }
+      }),
+    });
+  };
+
   handleAddService = event => {
-    this.props.addService({
-      name: "",
-      type: "ClusterIP",
-      ports: [
+    this.setState({
+      services: [
+        ...this.state.services,
         {
           name: "",
-          port: 8080,
-          targetPort: "",
+          type: "ClusterIP",
+          ports: [
+            {
+              name: "",
+              port: 8080,
+              targetPort: "",
+            }
+          ]
         }
-      ]
-    });
+      ],
+    })
   }
 
   handleDeleteService = idx => event => {
     this.props.deleteService(idx);
   }
 
+  hasError = field => {
+    const appErrors = this.props.ui.validationErrors;
+    return appErrors.hasOwnProperty(field);
+  };
+
   render() {
-    const { routes, classes, goStep } = this.props;
-    const { services } = this.props.application;
+    const { ui, routes, classes, goStep } = this.props;
+    const { services } = this.state;
 
     let view;
     if (services.length > 0) {
@@ -86,7 +129,9 @@ class Service extends Component {
                classes={classes}
                routes={routes}
                goStep={goStep}
+               validationErrors={ui.validationErrors.services || {}}
                addService={this.handleAddService}
+               handleChange={this.handleChange}
                deleteService={this.handleDeleteService}
       />;
     } else {
@@ -109,12 +154,17 @@ class Service extends Component {
 }
 
 function ServicesView(props) {
-  const { routes, services, goStep, classes, addService, deleteService } = props;
+  const { routes, services, goStep, classes, addService, deleteService, handleChange, validationErrors } = props;
   return (
     <Grid container spacing={24}>
       <Grid item xs={10}>
         {services.map((service, idx) =>
-          <ServicePanel key={"service-"+idx} service={service} delete={deleteService(idx)} />
+          <ServicePanel
+            key={"service-"+idx}
+            validationErrors={validationErrors[idx] || {}}
+            service={service}
+            onChange={handleChange(idx)}
+            onDelete={deleteService(idx)} />
         )}
       </Grid>
       <Grid item xs={2}>
