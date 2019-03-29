@@ -16,6 +16,7 @@ import {
   TOGGLE_PREVIEW_ENABLED,
   SET_PREVIEW_CONTENT,
   ADD_SERVICE,
+  DELETE_SERVICE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -67,6 +68,15 @@ export function application(state = initialState.application, action) {
     };
   }
 
+  if (action.type === DELETE_SERVICE) {
+    return {
+      ...state,
+      services: [
+        ...state.services.slice(0, action.payload),
+        ...state.services.slice(action.payload + 1),
+      ],
+    };
+  }
   return state;
 }
 

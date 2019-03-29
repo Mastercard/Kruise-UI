@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import { nextRoute } from './helpers'
-import { goStep, addService } from './actions/index'
+import { goStep, addService, deleteService } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -37,6 +37,7 @@ const mapDispatchToProps = dispatch => {
   return {
     goStep: path => dispatch(goStep(path)),
     addService: service => dispatch(addService(service)),
+    deleteService: service => dispatch(deleteService(service)),
   };
 }
 
@@ -52,20 +53,6 @@ class Service extends Component {
 
     // initialize local state from application
     this.state = Object.assign({}, { services: props.application.services });
-    /* if (this.state.services.length === 0) {
-     *   this.state.services.push({
-     *     name: "",
-     *     type: "ClusterIP",
-     *     ports: [
-     *       {
-     *         name: "",
-     *         port: 8080,
-     *         targetPort: "",
-     *       }
-     *     ]
-     *   });
-     * } */
-    console.log("service", this.state);
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -84,8 +71,11 @@ class Service extends Component {
     });
   }
 
+  handleDeleteService = idx => event => {
+    this.props.deleteService(idx);
+  }
+
   render() {
-    console.log(this.props);
     const { routes, classes, goStep } = this.props;
     const { services } = this.props.application;
 
@@ -96,13 +86,16 @@ class Service extends Component {
                classes={classes}
                routes={routes}
                goStep={goStep}
-               addService={this.handleAddService} />;
+               addService={this.handleAddService}
+               deleteService={this.handleDeleteService}
+      />;
     } else {
       view = <NoServicesView
                classes={classes}
                routes={routes}
                goStep={goStep}
-               addService={this.handleAddService} />;
+               addService={this.handleAddService}
+      />;
     }
 
     return (
@@ -116,12 +109,12 @@ class Service extends Component {
 }
 
 function ServicesView(props) {
-  const { routes, services, goStep, classes, addService } = props;
+  const { routes, services, goStep, classes, addService, deleteService } = props;
   return (
     <Grid container spacing={24}>
       <Grid item xs={10}>
         {services.map((service, idx) =>
-          <ServicePanel key={"service-"+idx} service={service} />
+          <ServicePanel key={"service-"+idx} service={service} delete={deleteService(idx)} />
         )}
       </Grid>
       <Grid item xs={2}>

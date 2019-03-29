@@ -10,6 +10,7 @@ import {
   TOGGLE_PREVIEW_ENABLED,
   SET_PREVIEW_CONTENT,
   ADD_SERVICE,
+  DELETE_SERVICE,
 } from '../constants/actionTypes';
 
 export function submitApp(payload) {
@@ -132,6 +133,10 @@ export function setPreviewContent(content) {
 
 export function addService(service) {
   return { type: ADD_SERVICE, payload: service };
+}
+
+export function deleteService(idx) {
+  return { type: DELETE_SERVICE, payload: idx };
 }
 
 function validateApplication(payload) {
