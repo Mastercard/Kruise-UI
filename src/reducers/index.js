@@ -39,6 +39,8 @@ const initialState = {
     repoURL: "",
     path: "",
     targetRevision: "",
+    services: [],
+    ingresses: [],
   },
   ui: {
     warning: null,
