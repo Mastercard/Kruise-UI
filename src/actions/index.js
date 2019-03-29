@@ -24,8 +24,8 @@ export function submitApp(payload) {
     return validateApplication(payload)
       .then(validationResponse => {
         // if there are validation errors, short circuit and show errors
-        if (validationResponse.errors && Object.keys(validationResponse.errors).length > 0) {
-          dispatch(setValidationErrors(validationResponse.errors));
+        if (validationResponse && Object.keys(validationResponse).length > 0) {
+          dispatch(setValidationErrors(validationResponse));
           return dispatch(setError("Application is not valid"));
         }
 
@@ -33,6 +33,31 @@ export function submitApp(payload) {
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
           dispatch(goStep("/service"));
+        }
+      });
+  };
+}
+
+export function submitServices(payload) {
+  return function(dispatch, getState) {
+    // update state from form
+    dispatch(setAppDetails(payload));
+
+    // clear validation errors
+    dispatch(clearValidationErrors(payload));
+
+    return validateServices(payload)
+      .then(validationResponse => {
+        // if there are validation errors, short circuit and show errors
+        if (Object.keys(validationResponse).length > 0) {
+          dispatch(setValidationErrors(validationResponse));
+          return dispatch(setError("Services are not valid"));
+        }
+
+        // no validation errors, finalize
+        var dispatched = dispatch(finalizeApp(getState().application));
+        if (dispatched.type === FINALIZE_APP) {
+          /* dispatch(goStep("/ingress")); */
         }
       });
   };
@@ -139,7 +164,7 @@ export function deleteService(idx) {
   return { type: DELETE_SERVICE, payload: idx };
 }
 
-function validateApplication(payload) {
+function serverValidate(payload) {
   // run server side validation
   // TODO: configurable api server
   // TODO: error handling
@@ -151,4 +176,23 @@ function validateApplication(payload) {
     }
   })
     .then(response => response.json());
+}
+
+function validateApplication(payload) {
+  return serverValidate(payload)
+    .then(json => {
+      const { services, ...appErrors } = json.errors;
+      return appErrors;
+    });
+}
+
+function validateServices(payload) {
+  return serverValidate(payload)
+    .then(json => {
+      let serviceErrors = {}
+      if (json.errors && json.errors.services) {
+        serviceErrors = json.errors.services;
+      }
+      return serviceErrors;
+    });
 }

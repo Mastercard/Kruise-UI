@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { goStep, submitApp, addService, deleteService } from './actions/index'
+import { goStep, submitServices, addService, deleteService } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => {
     goStep: path => dispatch(goStep(path)),
     addService: service => dispatch(addService(service)),
     deleteService: service => dispatch(deleteService(service)),
-    submitApp: payload => dispatch(submitApp(payload)),
+    submitServices: payload => dispatch(submitServices(payload)),
   };
 }
 
@@ -47,7 +47,7 @@ class Service extends Component {
     event.preventDefault();
 
     const app = Object.assign({}, this.props.application, this.state);
-    this.props.submitApp(app);
+    this.props.submitServices(app);
   };
 
   constructor(props) {
@@ -129,7 +129,7 @@ class Service extends Component {
                classes={classes}
                routes={routes}
                goStep={goStep}
-               validationErrors={ui.validationErrors.services || {}}
+               validationErrors={ui.validationErrors}
                addService={this.handleAddService}
                handleChange={this.handleChange}
                deleteService={this.handleDeleteService}

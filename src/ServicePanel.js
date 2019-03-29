@@ -80,6 +80,8 @@ class ServicePanel extends Component {
   render() {
     const { service, classes } = this.props;
 
+
+
     return (
       <Card className={classNames(classes.card, classes.panel)}>
         <CardContent>
@@ -101,12 +103,13 @@ class ServicePanel extends Component {
                   error={this.hasError("name")}
                 />
                 <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="environment">Service Type</InputLabel>
+                  <InputLabel htmlFor="type">Service Type</InputLabel>
                   <Select
                     value={service.type}
                     required
                     onChange={this.props.onChange}
                     fullWidth
+                    error={this.hasError("type")}
                     inputProps={{
                       name: 'type',
                       id: 'type',
@@ -135,6 +138,7 @@ class ServicePanel extends Component {
                       onChange={this.props.onChange}
                       margin="normal"
                       fullWidth
+                      error={this.hasError("name")}
                     />
                     <TextField
                       name="port"
@@ -146,6 +150,7 @@ class ServicePanel extends Component {
                       margin="normal"
                       required
                       fullWidth
+                      error={this.hasError("port")}
                     />
                     <TextField
                       id="targetPort"
@@ -156,6 +161,7 @@ class ServicePanel extends Component {
                       onChange={this.handleChange}
                       margin="normal"
                       fullWidth
+                      error={this.hasError("port")}
                     />
                   </div>
                 </CardContent>
