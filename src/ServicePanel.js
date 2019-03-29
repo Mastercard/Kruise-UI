@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -61,6 +62,9 @@ const styles = theme => ({
   card: {
     minWidth: 275,
   },
+  panel: {
+    marginBottom: theme.spacing.unit * 4,
+  },
 });
 
 const serviceTypes = ["ClusterIP", "ExternalName", "LoadBalancer"];
@@ -70,7 +74,7 @@ class ServicePanel extends Component {
     const { service, classes } = this.props;
 
     return (
-      <Paper key={"service-"+service.name} className={classes.paper}>
+      <Paper key={"service-"+service.name} className={classNames(classes.paper, classes.panel)}>
         <Typography variant="overline" align="left" gutterBottom>
           service
         </Typography>

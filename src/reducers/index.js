@@ -15,6 +15,7 @@ import {
   TOGGLE_PREVIEW,
   TOGGLE_PREVIEW_ENABLED,
   SET_PREVIEW_CONTENT,
+  ADD_SERVICE,
 } from '../constants/actionTypes';
 
 const initialState = {
@@ -57,6 +58,13 @@ export function application(state = initialState.application, action) {
   if (action.type === SET_APP_DETAILS) {
     let newState = Object.assign({}, state, action.payload);
     return newState;
+  }
+
+  if (action.type === ADD_SERVICE) {
+    return {
+      ...state,
+      services: [...state.services, action.payload],
+    };
   }
 
   return state;

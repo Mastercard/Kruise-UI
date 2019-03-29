@@ -9,6 +9,7 @@ import {
   TOGGLE_PREVIEW,
   TOGGLE_PREVIEW_ENABLED,
   SET_PREVIEW_CONTENT,
+  ADD_SERVICE,
 } from '../constants/actionTypes';
 
 export function submitApp(payload) {
@@ -127,6 +128,10 @@ export function togglePreviewEnabled(show) {
 
 export function setPreviewContent(content) {
   return { type: SET_PREVIEW_CONTENT, payload: content };
+}
+
+export function addService(service) {
+  return { type: ADD_SERVICE, payload: service };
 }
 
 function validateApplication(payload) {

@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import { nextRoute } from './helpers'
-import { goStep } from './actions/index'
+import { goStep, addService } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -36,6 +36,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     goStep: path => dispatch(goStep(path)),
+    addService: service => dispatch(addService(service)),
   };
 }
 
@@ -69,15 +70,39 @@ class Service extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleAddService = event => {
+    this.props.addService({
+      name: "",
+      type: "ClusterIP",
+      ports: [
+        {
+          name: "",
+          port: 8080,
+          targetPort: "",
+        }
+      ]
+    });
+  }
+
   render() {
+    console.log(this.props);
     const { routes, classes, goStep } = this.props;
-    const { services } = this.state;
+    const { services } = this.props.application;
 
     let view;
     if (services.length > 0) {
-      view = <ServicesView services={services} classes={classes} routes={routes} goStep={goStep} />;
+      view = <ServicesView
+               services={services}
+               classes={classes}
+               routes={routes}
+               goStep={goStep}
+               addService={this.handleAddService} />;
     } else {
-      view = <NoServicesView routes={routes} classes={classes} goStep={goStep} />;
+      view = <NoServicesView
+               classes={classes}
+               routes={routes}
+               goStep={goStep}
+               addService={this.handleAddService} />;
     }
 
     return (
@@ -91,27 +116,27 @@ class Service extends Component {
 }
 
 function ServicesView(props) {
-  const { routes, services, goStep, classes } = props;
+  const { routes, services, goStep, classes, addService } = props;
   return (
     <Grid container spacing={24}>
       <Grid item xs={10}>
-        {services.map((service) =>
-          <ServicePanel key={"service-"+service.name} service={service} />
+        {services.map((service, idx) =>
+          <ServicePanel key={"service-"+idx} service={service} />
         )}
       </Grid>
       <Grid item xs={2}>
         <WizardNav routes={routes} goStep={goStep} />
       </Grid>
-      <AddServiceButton cols={12} classes={classes} />
+      <AddServiceButton cols={12} classes={classes} onClick={addService} />
     </Grid>
   );
 }
 
 function NoServicesView(props) {
-  const { routes, goStep, classes } = props;
+  const { routes, goStep, classes, addService } = props;
   return (
     <Grid container spacing={24}>
-      <AddServiceButton cols={10} classes={classes} />
+      <AddServiceButton cols={10} classes={classes} onClick={addService} />
       <Grid item xs={2}>
         <WizardNav routes={routes} goStep={goStep} />
       </Grid>
@@ -120,11 +145,11 @@ function NoServicesView(props) {
 }
 
 function AddServiceButton(props) {
-  const { cols, classes } = props;
+  const { cols, classes, onClick } = props;
   return (
     <Grid item xs={cols}>
       <div className={classes.actionRow}>
-        <Button variant="contained" color="primary" className={classes.button}>
+        <Button variant="contained" color="primary" className={classes.button} onClick={onClick}>
           Add Service
           <Icon className={classes.rightIcon}>add_circle</Icon>
         </Button>
