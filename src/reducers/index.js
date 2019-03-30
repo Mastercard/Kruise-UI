@@ -9,6 +9,7 @@ import {
   SET_APP_DETAILS,
   SET_VALIDATION_ERRORS,
   CLEAR_VALIDATION_ERROR,
+  NORMALIZED_APP,
   SET_ERROR,
   DISMISS_ERROR,
   NEXT_STEP,
@@ -19,17 +20,29 @@ import {
   DELETE_SERVICE,
 } from '../constants/actionTypes';
 
+import {
+  ROUTE_APP_DETAILS,
+  ROUTE_SERVICE,
+  ROUTE_INGRESS,
+  ROUTE_VOLUMES,
+  ROUTE_PERFORMANCE,
+  ROUTE_HEALTH,
+  ROUTE_CONTAINER,
+  ROUTE_OPTIMIZE,
+  ROUTE_SUBMIT,
+} from '../constants/routes';
+
 const initialState = {
   routes: [
-    { path: "/", component: AppDetails },
-    { path: "/service", component: Service },
-    { path: "/ingress", component: StepPlaceholder },
-    { path: "/volumes", component: StepPlaceholder },
-    { path: "/performance", component: StepPlaceholder},
-    { path: "/health", component: StepPlaceholder},
-    { path: "/container", component: StepPlaceholder},
-    { path: "/optimize", component: StepPlaceholder},
-    { path: "/submit", component: StepPlaceholder},
+    { path: ROUTE_APP_DETAILS, component: AppDetails },
+    { path: ROUTE_SERVICE, component: Service },
+    { path: ROUTE_INGRESS, component: StepPlaceholder },
+    { path: ROUTE_VOLUMES, component: StepPlaceholder },
+    { path: ROUTE_PERFORMANCE, component: StepPlaceholder},
+    { path: ROUTE_HEALTH, component: StepPlaceholder},
+    { path: ROUTE_CONTAINER, component: StepPlaceholder},
+    { path: ROUTE_OPTIMIZE, component: StepPlaceholder},
+    { path: ROUTE_SUBMIT, component: StepPlaceholder},
   ],
   application: {
     name: "",
@@ -77,6 +90,11 @@ export function application(state = initialState.application, action) {
       ],
     };
   }
+
+  if (action.type === NORMALIZED_APP) {
+    return action.application;
+  }
+
   return state;
 }
 

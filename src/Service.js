@@ -60,8 +60,10 @@ class Service extends Component {
   }
 
   handleChange = idx => event => {
-    if (this.hasError(event.target.name)) {
-      this.props.clearValidationError(event.target.name);
+    const { name, value, id } = event.target;
+
+    if (this.hasError(name)) {
+      this.props.clearValidationError(name);
     }
 
     this.setState({
@@ -70,20 +72,20 @@ class Service extends Component {
           return s;
         }
 
-        if (["portName", "port", "targetPort"].includes(event.target.id)) {
+        if (["portName", "port", "targetPort"].includes(id)) {
           return {
             ...s,
             ports: (s.ports.map((p, j) => {
               return {
                 ...p,
-                [ event.target.name ]: event.target.value,
+                [ name ]: value,
               }
             })),
           };
         } else {
           return {
             ...s,
-            [ event.target.name ]: event.target.value,
+            [ name ]: value,
           };
         }
       }),

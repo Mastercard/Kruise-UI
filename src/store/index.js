@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { allowedReposMiddleware, localStorageMiddleware } from '../middleware/index'
+import { allowedReposMiddleware, normalizeAppMiddleware, localStorageMiddleware } from '../middleware/index'
 import rootReducer from '../reducers/index'
 
 const composeEnhancers = composeWithDevTools({
@@ -25,6 +25,7 @@ const store = createStore(
   composeEnhancers(
     applyMiddleware(
       thunk,
+      normalizeAppMiddleware,
       allowedReposMiddleware,
       localStorageMiddleware,
     ),

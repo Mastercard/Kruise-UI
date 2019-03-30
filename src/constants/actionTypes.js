@@ -1,5 +1,7 @@
 export const SET_APP_DETAILS = "SET_APP_DETAILS";
 export const FINALIZE_APP = "FINALIZE_APP";
+export const NORMALIZE_APP = "NORMALIZE_APP";
+export const NORMALIZED_APP = "NORMALIZED_APP";
 export const SET_ERROR = "SET_ERROR";
 export const DISMISS_ERROR = "DISMISS_ERROR";
 export const NEXT_STEP = "NEXT_STEP";

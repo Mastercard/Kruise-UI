@@ -8,6 +8,18 @@ import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import { goStep } from './actions/index'
 
+import {
+  ROUTE_APP_DETAILS,
+  ROUTE_SERVICE,
+  ROUTE_INGRESS,
+  ROUTE_VOLUMES,
+  ROUTE_PERFORMANCE,
+  ROUTE_HEALTH,
+  ROUTE_CONTAINER,
+  ROUTE_OPTIMIZE,
+  ROUTE_SUBMIT,
+} from './constants/routes';
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -38,15 +50,15 @@ class WizardTabs extends React.Component {
           variant="fullWidth"
         >
           {/* TODO: do I need to the "to" attribute? */}
-          <Tab label="App Details" value="/" to="/" />
-          <Tab label="Service" value="/service" to="/service" />
-          <Tab label="Ingress" value="/ingress" to="/ingress" />
-          <Tab label="Volumes" value="/volumes" to="/volumes" />
-          <Tab label="Performance" value="/performance" to="/performance" />
-          <Tab label="Health" value="/health" to="/health" />
-          <Tab label="Container" value="/container" to="/container" />
-          <Tab label="Optimize" value="/optimize" to="/optimize" />
-          <Tab label="Submit" value="/submit" to="/submit" />
+          <Tab label="App Details" value={ROUTE_APP_DETAILS} to={ROUTE_APP_DETAILS} />
+          <Tab label="Service" value={ROUTE_SERVICE} to={ROUTE_SERVICE} />
+          <Tab label="Ingress" value={ROUTE_INGRESS} to={ROUTE_INGRESS} />
+          <Tab label="Volumes" value={ROUTE_VOLUMES} to={ROUTE_VOLUMES} />
+          <Tab label="Performance" value={ROUTE_PERFORMANCE} to={ROUTE_PERFORMANCE} />
+          <Tab label="Health" value={ROUTE_HEALTH} to={ROUTE_HEALTH} />
+          <Tab label="Container" value={ROUTE_CONTAINER} to={ROUTE_CONTAINER} />
+          <Tab label="Optimize" value={ROUTE_OPTIMIZE} to={ROUTE_OPTIMIZE} />
+          <Tab label="Submit" value={ROUTE_SUBMIT} to={ROUTE_SUBMIT} />
         </Tabs>
       </Paper>
     );

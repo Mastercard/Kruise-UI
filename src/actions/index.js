@@ -1,6 +1,8 @@
 import {
   SET_APP_DETAILS,
   FINALIZE_APP,
+  NORMALIZE_APP,
+  NORMALIZED_APP,
   SET_VALIDATION_ERRORS,
   CLEAR_VALIDATION_ERROR,
   SET_ERROR,
@@ -13,6 +15,11 @@ import {
   DELETE_SERVICE,
 } from '../constants/actionTypes';
 
+import {
+  ROUTE_SERVICE,
+  ROUTE_INGRESS,
+} from '../constants/routes';
+
 export function submitApp(payload) {
   return function(dispatch, getState) {
     // update state from form
@@ -21,7 +28,10 @@ export function submitApp(payload) {
     // clear validation errors
     dispatch(clearValidationErrors(payload));
 
-    return validateApplication(payload)
+    // normalize payload
+    dispatch(normalizeApplication(payload));
+
+    return validateApplication(getState().application)
       .then(validationResponse => {
         // if there are validation errors, short circuit and show errors
         if (validationResponse && Object.keys(validationResponse).length > 0) {
@@ -32,7 +42,7 @@ export function submitApp(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          dispatch(goStep("/service"));
+          dispatch(goStep(ROUTE_SERVICE));
         }
       });
   };
@@ -46,7 +56,10 @@ export function submitServices(payload) {
     // clear validation errors
     dispatch(clearValidationErrors(payload));
 
-    return validateServices(payload)
+    // normalize payload
+    dispatch(normalizeApplication(payload));
+
+    return validateServices(getState().application)
       .then(validationResponse => {
         // if there are validation errors, short circuit and show errors
         if (Object.keys(validationResponse).length > 0) {
@@ -57,7 +70,7 @@ export function submitServices(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          /* dispatch(goStep("/ingress")); */
+          dispatch(goStep(ROUTE_INGRESS));
         }
       });
   };
@@ -78,7 +91,21 @@ export function finalizeApp(app) {
   return {
     type: FINALIZE_APP,
     application: app,
-  }
+  };
+}
+
+export function normalizeApplication(app) {
+  return {
+    type: NORMALIZE_APP,
+    application: app,
+  };
+}
+
+export function normalizedApplication(app) {
+  return {
+    type: NORMALIZED_APP,
+    application: app,
+  };
 }
 
 export function clearValidationErrors(errors) {
@@ -181,7 +208,11 @@ function serverValidate(payload) {
 function validateApplication(payload) {
   return serverValidate(payload)
     .then(json => {
-      const { services, ...appErrors } = json.errors;
+      const appErrors = {};
+      if (json.errors) {
+        const { services, ...errors } = json.errors;
+        return errors;
+      }
       return appErrors;
     });
 }

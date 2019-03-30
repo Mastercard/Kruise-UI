@@ -15,6 +15,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ServicePortPanel from './ServicePortPanel'
 
 const styles = theme => ({
   root: {
@@ -78,9 +79,11 @@ class ServicePanel extends Component {
   };
 
   render() {
-    const { service, classes } = this.props;
+    const { service, validationErrors, classes } = this.props;
 
-
+    let portValidationErrors = {};
+    if (validationErrors.ports)
+      portValidationErrors = validationErrors.ports;
 
     return (
       <Card className={classNames(classes.card, classes.panel)}>
@@ -123,54 +126,14 @@ class ServicePanel extends Component {
               </div>
             </Grid>
             <Grid item xs={6}>
-              <Card className={classes.card}>
-                <CardContent>
-                  <Typography variant="overline" align="left" color="textSecondary" gutterBottom>
-                    Port
-                  </Typography>
-                  <div className={classes.container}>
-                    <TextField
-                      name="name"
-                      id="portName"
-                      label="Name"
-                      className={classes.textField}
-                      value={service.ports[0].name}
-                      onChange={this.props.onChange}
-                      margin="normal"
-                      fullWidth
-                      error={this.hasError("name")}
-                    />
-                    <TextField
-                      name="port"
-                      id="port"
-                      label="Port"
-                      className={classes.textField}
-                      value={service.ports[0].port}
-                      onChange={this.handleChange}
-                      margin="normal"
-                      required
-                      fullWidth
-                      error={this.hasError("port")}
-                    />
-                    <TextField
-                      id="targetPort"
-                      name="targetPort"
-                      label="Target Port"
-                      className={classes.textField}
-                      value={service.ports[0].targetPort}
-                      onChange={this.handleChange}
-                      margin="normal"
-                      fullWidth
-                      error={this.hasError("port")}
-                    />
-                  </div>
-                </CardContent>
-                <CardActions className={classes.actions} disableActionSpacing>
-                  <IconButton className={classes.deletePort} aria-label="delete port">
-                    <DeleteIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
+              {service.ports.map((port, idx) =>
+                <ServicePortPanel
+                  key={"service-port-"+idx}
+                  servicePort={port}
+                  onChange={this.props.onChange}
+                  validationErrors={portValidationErrors[idx] || {}}
+                />
+              )}
               <div className={classes.actionRow}>
                 <Button variant="contained" size="small" color="primary" className={classes.button}>
                   Add Port
