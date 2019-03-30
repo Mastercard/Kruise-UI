@@ -112,7 +112,12 @@ class Service extends Component {
   }
 
   handleDeleteService = idx => event => {
-    this.props.deleteService(idx);
+    this.setState({
+      services: [
+        ...this.state.services.slice(0, idx),
+        ...this.state.services.slice(idx + 1),
+      ],
+    });
   }
 
   hasError = field => {
