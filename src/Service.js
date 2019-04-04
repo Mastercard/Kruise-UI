@@ -120,6 +120,18 @@ class Service extends Component {
     });
   }
 
+  handleAddServicePort = idx => event => {
+    this.setState({
+      services: this.state.services.map((s, i) => {
+        if (i !== idx) {
+          return s
+        }
+
+        return { ...s, ports: [...s.ports, { port: 8080 }] };
+      }),
+    });
+  }
+
   hasError = field => {
     const appErrors = this.props.ui.validationErrors;
     return appErrors.hasOwnProperty(field);
@@ -138,6 +150,7 @@ class Service extends Component {
                goStep={goStep}
                validationErrors={ui.validationErrors}
                addService={this.handleAddService}
+               addServicePort={this.handleAddServicePort}
                handleChange={this.handleChange}
                deleteService={this.handleDeleteService}
       />;
@@ -161,7 +174,7 @@ class Service extends Component {
 }
 
 function ServicesView(props) {
-  const { routes, services, goStep, classes, addService, deleteService, handleChange, validationErrors } = props;
+  const { routes, services, goStep, classes, addService, addServicePort, deleteService, handleChange, validationErrors } = props;
   return (
     <Grid container spacing={24}>
       <Grid item xs={10}>
@@ -170,6 +183,7 @@ function ServicesView(props) {
             key={"service-"+idx}
             validationErrors={validationErrors[idx] || {}}
             service={service}
+            addServicePort={addServicePort(idx)}
             onChange={handleChange(idx)}
             onDelete={deleteService(idx)} />
         )}

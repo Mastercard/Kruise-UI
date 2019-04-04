@@ -129,13 +129,14 @@ class ServicePanel extends Component {
               {service.ports.map((port, idx) =>
                 <ServicePortPanel
                   key={"service-port-"+idx}
+                  servicePortIndex={idx}
                   servicePort={port}
                   onChange={this.props.onChange}
                   validationErrors={portValidationErrors[idx] || {}}
                 />
               )}
               <div className={classes.actionRow}>
-                <Button variant="contained" size="small" color="primary" className={classes.button}>
+                <Button variant="contained" size="small" color="primary" className={classes.button} onClick={this.props.addServicePort}>
                   Add Port
                   <Icon className={classes.rightIcon}>add_circle</Icon>
                 </Button>

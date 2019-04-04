@@ -11,6 +11,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 const styles = theme => ({
   card: {
     minWidth: 275,
+    marginTop: 16,
+  },
+  firstCard: {
+    marginTop: 0,
   },
   container: {
     display: 'flex',
@@ -39,7 +43,7 @@ class ServicePortPanel extends Component {
   render() {
     const { servicePort, classes } = this.props;
     return (
-      <Card className={classes.card}>
+      <Card className={this.props.servicePortIndex === 0 ? classes.firstCard : classes.card}>
         <CardContent>
           <Typography variant="overline" align="left" color="textSecondary" gutterBottom>
             Port
