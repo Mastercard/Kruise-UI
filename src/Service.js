@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { goStep, submitServices, addService, deleteService } from './actions/index'
+import { goStep, submitServices, deleteService } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -38,7 +38,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     goStep: path => dispatch(goStep(path)),
-    addService: service => dispatch(addService(service)),
     deleteService: service => dispatch(deleteService(service)),
     submitServices: payload => dispatch(submitServices(payload)),
   };

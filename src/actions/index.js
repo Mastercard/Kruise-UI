@@ -42,8 +42,10 @@ export function submitApp(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          dispatch(goStep(ROUTE_SERVICE));
+          return dispatch(goStep(ROUTE_SERVICE));
         }
+
+        return null;
       });
   };
 }
@@ -70,8 +72,10 @@ export function submitServices(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          dispatch(goStep(ROUTE_INGRESS));
+          return dispatch(goStep(ROUTE_INGRESS));
         }
+
+        return null;
       });
   };
 }
