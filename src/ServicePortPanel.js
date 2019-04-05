@@ -57,7 +57,6 @@ class ServicePortPanel extends Component {
               value={servicePort.name}
               onChange={this.props.onChange}
               margin="normal"
-              fullWidth
               error={this.hasError("name")}
             />
             <TextField
@@ -70,7 +69,6 @@ class ServicePortPanel extends Component {
               onChange={this.props.onChange}
               margin="normal"
               required
-              fullWidth
               error={this.hasError("port")}
             />
             <TextField
@@ -81,7 +79,6 @@ class ServicePortPanel extends Component {
               value={servicePort.targetPort}
               onChange={this.props.onChange}
               margin="normal"
-              fullWidth
               error={this.hasError("targetPort")}
             />
           </div>
