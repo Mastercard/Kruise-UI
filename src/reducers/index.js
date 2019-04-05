@@ -3,6 +3,7 @@ import { combineReducers } from 'redux'
 // components for routing
 import AppDetails from '../AppDetails';
 import Service from '../Service';
+import Ingress from '../Ingress';
 import StepPlaceholder from '../StepPlaceholder';
 
 import {
@@ -36,7 +37,7 @@ const initialState = {
   routes: [
     { path: ROUTE_APP_DETAILS, component: AppDetails },
     { path: ROUTE_SERVICE, component: Service },
-    { path: ROUTE_INGRESS, component: StepPlaceholder },
+    { path: ROUTE_INGRESS, component: Ingress },
     { path: ROUTE_VOLUMES, component: StepPlaceholder },
     { path: ROUTE_PERFORMANCE, component: StepPlaceholder},
     { path: ROUTE_HEALTH, component: StepPlaceholder},
