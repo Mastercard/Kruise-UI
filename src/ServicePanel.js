@@ -132,6 +132,7 @@ class ServicePanel extends Component {
                   servicePortIndex={idx}
                   servicePort={port}
                   onChange={this.props.onChange("port", this.props.serviceIndex, idx)}
+                  onDelete={this.props.deleteServicePort(this.props.serviceIndex, idx)}
                   validationErrors={portValidationErrors[idx] || {}}
                 />
               )}

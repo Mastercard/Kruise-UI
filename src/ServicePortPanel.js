@@ -87,7 +87,7 @@ class ServicePortPanel extends Component {
           </div>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton className={classes.deletePort} aria-label="delete port">
+          <IconButton className={classes.deletePort} aria-label="delete port" onClick={this.props.onDelete}>
             <DeleteIcon />
           </IconButton>
         </CardActions>

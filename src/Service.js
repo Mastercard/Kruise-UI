@@ -124,23 +124,42 @@ class Service extends Component {
     })
   }
 
-  handleDeleteService = idx => event => {
+  handleDeleteService = serviceIdx => event => {
     this.setState({
       services: [
-        ...this.state.services.slice(0, idx),
-        ...this.state.services.slice(idx + 1),
+        ...this.state.services.slice(0, serviceIdx),
+        ...this.state.services.slice(serviceIdx + 1),
       ],
     });
   }
 
-  handleAddServicePort = idx => event => {
+  handleAddServicePort = serviceIdx => event => {
     this.setState({
       services: this.state.services.map((s, i) => {
-        if (i !== idx) {
-          return s
+        if (i !== serviceIdx) {
+          return s;
         }
 
         return { ...s, ports: [...s.ports, { port: 8080 }] };
+      }),
+    });
+  }
+
+  handleDeleteServicePort = (serviceIdx, portIdx) => event => {
+    console.log("handleDeleteServicePort");
+    this.setState({
+      services: this.state.services.map((s, i) => {
+        if (i !== serviceIdx) {
+          return s;
+        }
+
+        return {
+          ...s,
+          ports: [
+            ...s.ports.slice(0, portIdx),
+            ...s.ports.slice(portIdx + 1),
+          ],
+        };
       }),
     });
   }
@@ -151,6 +170,8 @@ class Service extends Component {
   };
 
   render() {
+    /* TODO: rename handlers to onAddService, etc */
+
     const { ui, routes, classes, goStep } = this.props;
     const { services } = this.state;
 
@@ -166,6 +187,7 @@ class Service extends Component {
                addServicePort={this.handleAddServicePort}
                handleChange={this.handleChange}
                deleteService={this.handleDeleteService}
+               deleteServicePort={this.handleDeleteServicePort}
       />;
     } else {
       view = <NoServicesView
@@ -187,19 +209,32 @@ class Service extends Component {
 }
 
 function ServicesView(props) {
-  const { routes, services, goStep, classes, addService, addServicePort, deleteService, handleChange, validationErrors } = props;
+  const {
+    routes,
+    services,
+    goStep,
+    classes,
+    addService,
+    addServicePort,
+    deleteService,
+    deleteServicePort,
+    handleChange,
+    validationErrors,
+  } = props;
+
   return (
     <Grid container spacing={24}>
       <Grid item xs={10}>
-        {services.map((service, idx) =>
+        {services.map((service, serviceIdx) =>
           <ServicePanel
-            key={"service-"+idx}
-            validationErrors={validationErrors[idx] || {}}
+            key={"service-"+serviceIdx}
+            validationErrors={validationErrors[serviceIdx] || {}}
             service={service}
-            serviceIndex={idx}
-            addServicePort={addServicePort(idx)}
+            serviceIndex={serviceIdx}
+            addServicePort={addServicePort(serviceIdx)}
+            deleteServicePort={deleteServicePort}
             onChange={handleChange}
-            onDelete={deleteService(idx)} />
+            onDelete={deleteService} />
         )}
       </Grid>
       <Grid item xs={2}>
