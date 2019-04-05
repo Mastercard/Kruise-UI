@@ -59,37 +59,50 @@ class Service extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange = idx => event => {
-    const { name, value, id } = event.target;
+  handleChange = (type, serviceIdx, portIdx) => event => {
+    const { name, value } = event.target;
 
     if (this.hasError(name)) {
       this.props.clearValidationError(name);
     }
 
-    this.setState({
-      services: this.state.services.map((s, i) => {
-        if (i !== idx) {
-          return s;
-        }
+    if (type === "service") {
+      this.setState({
+        services: this.state.services.map((s, i) => {
+          if (i !== serviceIdx) {
+            return s;
+          }
 
-        if (["portName", "port", "targetPort"].includes(id)) {
+          return {
+            ...s,
+            [ name ]: value,
+          };
+        }),
+      });
+    }
+
+    if (type === "port") {
+      this.setState({
+        services: this.state.services.map((s, i) => {
+          if (i !== serviceIdx) {
+            return s;
+          }
+
           return {
             ...s,
             ports: (s.ports.map((p, j) => {
+              if (j !== portIdx) {
+                return p;
+              }
               return {
                 ...p,
                 [ name ]: value,
               }
             })),
           };
-        } else {
-          return {
-            ...s,
-            [ name ]: value,
-          };
-        }
-      }),
-    });
+        }),
+      });
+    }
   };
 
   handleAddService = event => {
@@ -183,8 +196,9 @@ function ServicesView(props) {
             key={"service-"+idx}
             validationErrors={validationErrors[idx] || {}}
             service={service}
+            serviceIndex={idx}
             addServicePort={addServicePort(idx)}
-            onChange={handleChange(idx)}
+            onChange={handleChange}
             onDelete={deleteService(idx)} />
         )}
       </Grid>

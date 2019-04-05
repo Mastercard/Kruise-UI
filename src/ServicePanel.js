@@ -99,7 +99,7 @@ class ServicePanel extends Component {
                   label="Service / Component Name"
                   className={classes.textField}
                   value={service.name}
-                  onChange={this.props.onChange}
+                  onChange={this.props.onChange("service", this.props.serviceIndex)}
                   margin="normal"
                   required
                   fullWidth
@@ -110,7 +110,7 @@ class ServicePanel extends Component {
                   <Select
                     value={service.type}
                     required
-                    onChange={this.props.onChange}
+                    onChange={this.props.onChange("service", this.props.serviceIndex)}
                     fullWidth
                     error={this.hasError("type")}
                     inputProps={{
@@ -131,7 +131,7 @@ class ServicePanel extends Component {
                   key={"service-port-"+idx}
                   servicePortIndex={idx}
                   servicePort={port}
-                  onChange={this.props.onChange}
+                  onChange={this.props.onChange("port", this.props.serviceIndex, idx)}
                   validationErrors={portValidationErrors[idx] || {}}
                 />
               )}
