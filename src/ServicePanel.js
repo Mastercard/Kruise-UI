@@ -15,6 +15,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import ServicePortPanel from './ServicePortPanel'
 
 const styles = theme => ({
@@ -56,11 +57,6 @@ const styles = theme => ({
   },
   deleteService: {
     marginRight: 'auto',
-  },
-  actionRow: {
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    textAlign: 'center',
   },
   card: {
     minWidth: 275,
@@ -136,19 +132,20 @@ class ServicePanel extends Component {
                   validationErrors={portValidationErrors[idx] || {}}
                 />
               )}
-              <div className={classes.actionRow}>
-                <Button variant="contained" size="small" color="primary" className={classes.button} onClick={this.props.addServicePort}>
-                  Add Port
-                  <Icon className={classes.rightIcon}>add_circle</Icon>
-                </Button>
-              </div>
             </Grid>
           </Grid>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
+          <IconButton className={classes.addService} aria-label="add service" onClick={this.props.onAddService}>
+            <AddCircleIcon />
+          </IconButton>
           <IconButton className={classes.deleteService} aria-label="delete service" onClick={this.props.onDelete}>
             <DeleteIcon />
           </IconButton>
+          <Button variant="contained" size="small" color="primary" className={classes.button} onClick={this.props.addServicePort}>
+            Add Port
+            <Icon className={classes.rightIcon}>add_circle</Icon>
+          </Button>
         </CardActions>
       </Card>
     );

@@ -213,7 +213,6 @@ function ServicesView(props) {
     routes,
     services,
     goStep,
-    classes,
     addService,
     addServicePort,
     deleteService,
@@ -233,14 +232,14 @@ function ServicesView(props) {
             serviceIndex={serviceIdx}
             addServicePort={addServicePort(serviceIdx)}
             deleteServicePort={deleteServicePort}
+            onAddService={addService}
             onChange={handleChange}
-            onDelete={deleteService} />
+            onDelete={deleteService(serviceIdx)} />
         )}
       </Grid>
       <Grid item xs={2}>
         <WizardNav routes={routes} goStep={goStep} />
       </Grid>
-      <AddServiceButton cols={12} classes={classes} onClick={addService} />
     </Grid>
   );
 }
