@@ -128,7 +128,14 @@ export function ui(state = initialState.ui, action) {
   }
 
   if (action.type === CLEAR_VALIDATION_ERROR) {
-    var errs = Object.assign({}, state.validationErrors);
+    let errs = Object.assign({}, state.validationErrors);
+
+    action.payload.forEach((k) => {
+      if (errs.hasOwnProperty(k)) {
+        errs = errs[k];
+      }
+    });
+
     delete errs[action.field];
     return Object.assign({}, state, {
       validationErrors: errs,

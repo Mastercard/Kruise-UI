@@ -23,7 +23,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     submitApp: payload => dispatch(submitApp(payload)),
-    clearValidationError: field => dispatch(clearValidationError(field)),
+    clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
     canPreview: show => dispatch(canPreview(show)),
   };
 }
@@ -63,7 +63,7 @@ const regions = ["STL", "KCI", "BEL"];
 class AppDetails extends Component {
   handleChange = event => {
     if (this.hasError(event.target.name)) {
-      this.props.clearValidationError(event.target.name);
+      this.props.clearValidationError([], event.target.name);
     }
     this.setState({ [event.target.name]: event.target.value });
   };

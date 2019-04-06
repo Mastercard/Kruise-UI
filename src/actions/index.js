@@ -150,9 +150,10 @@ export function clearValidationErrors(errors) {
   };
 }
 
-export function clearValidationError(field) {
+export function clearValidationError(keys, field) {
   return {
     type: CLEAR_VALIDATION_ERROR,
+    payload: keys,
     field: field,
   };
 }

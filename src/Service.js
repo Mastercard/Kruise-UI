@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { goStep, submitServices, deleteService } from './actions/index'
+import { goStep, submitServices, deleteService, clearValidationError } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -40,6 +40,7 @@ const mapDispatchToProps = dispatch => {
     goStep: path => dispatch(goStep(path)),
     deleteService: service => dispatch(deleteService(service)),
     submitServices: payload => dispatch(submitServices(payload)),
+    clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
   };
 }
 
@@ -63,8 +64,8 @@ class Service extends Component {
   handleChange = (type, serviceIdx, portIdx) => event => {
     const { name, value } = event.target;
 
-    if (this.hasError(name)) {
-      this.props.clearValidationError(name);
+    if (this.hasError(serviceIdx, portIdx)(name)) {
+      this.props.clearValidationError([ serviceIdx, "ports", portIdx], name);
     }
 
     if (type === "service") {
@@ -147,7 +148,6 @@ class Service extends Component {
   }
 
   handleDeleteServicePort = (serviceIdx, portIdx) => event => {
-    console.log("handleDeleteServicePort");
     this.setState({
       services: this.state.services.map((s, i) => {
         if (i !== serviceIdx) {
@@ -165,9 +165,12 @@ class Service extends Component {
     });
   }
 
-  hasError = field => {
-    const appErrors = this.props.ui.validationErrors;
-    return appErrors.hasOwnProperty(field);
+  hasError = (serviceIndex, servicePortIndex) => field => {
+    let appErrors = this.props.ui.validationErrors[serviceIndex];
+    if (appErrors && servicePortIndex !== undefined) {
+      appErrors = (appErrors["ports"] || {})[servicePortIndex];
+    }
+    return appErrors && appErrors.hasOwnProperty(field);
   };
 
   render() {

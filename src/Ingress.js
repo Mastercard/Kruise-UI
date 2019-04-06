@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { submitIngress } from './actions/index'
+import { submitIngress, clearValidationError } from './actions/index'
 import WizardNav from './WizardNav'
 import IngressRulePanel from './IngressRulePanel'
 
@@ -36,6 +36,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     submitIngress: payload => dispatch(submitIngress(payload)),
+    clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
   };
 }
 
@@ -93,6 +94,8 @@ class Ingress extends Component {
 
   handleChange = ingressRuleIdx => event => {
     const { name, value } = event.target;
+
+    this.props.clearValidationError([ "rules", ingressRuleIdx ], name);
 
     let update = {
       ingress: {
