@@ -49,7 +49,7 @@ const styles = theme => ({
 class IngressRulePanel extends Component {
   hasError = field => {
     const appErrors = this.props.validationErrors;
-    return appErrors.hasOwnProperty(field);
+    return appErrors && appErrors.hasOwnProperty(field);
   };
 
   render() {

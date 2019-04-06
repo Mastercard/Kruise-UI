@@ -18,6 +18,7 @@ import {
 import {
   ROUTE_SERVICE,
   ROUTE_INGRESS,
+  ROUTE_VOLUMES,
 } from '../constants/routes';
 
 export function submitApp(payload) {
@@ -73,6 +74,36 @@ export function submitServices(payload) {
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
           return dispatch(goStep(ROUTE_INGRESS));
+        }
+
+        return null;
+      });
+  };
+}
+
+export function submitIngress(payload) {
+  return function(dispatch, getState) {
+    // update state from form
+    dispatch(setAppDetails(payload));
+
+    // clear validation errors
+    dispatch(clearValidationErrors(payload));
+
+    // normalize payload
+    dispatch(normalizeApplication(payload));
+
+    return validateIngress(getState().application)
+      .then(validationResponse => {
+        // if there are validation errors, short circuit and show errors
+        if (Object.keys(validationResponse).length > 0) {
+          dispatch(setValidationErrors(validationResponse));
+          return dispatch(setError("Ingress is not valid"));
+        }
+
+        // no validation errors, finalize
+        var dispatched = dispatch(finalizeApp(getState().application));
+        if (dispatched.type === FINALIZE_APP) {
+          return dispatch(goStep(ROUTE_VOLUMES));
         }
 
         return null;
@@ -229,5 +260,16 @@ function validateServices(payload) {
         serviceErrors = json.errors.services;
       }
       return serviceErrors;
+    });
+}
+
+function validateIngress(payload) {
+  return serverValidate(payload)
+    .then(json => {
+      let ingressErrors = {}
+      if (json.errors && json.errors.ingress) {
+        ingressErrors = json.errors.ingress;
+      }
+      return ingressErrors;
     });
 }

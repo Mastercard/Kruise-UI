@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import { submitIngress } from './actions/index'
 import WizardNav from './WizardNav'
 import IngressRulePanel from './IngressRulePanel'
 
@@ -32,12 +33,18 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    submitIngress: payload => dispatch(submitIngress(payload)),
+  };
+}
+
 class Ingress extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
     const app = Object.assign({}, this.props.application, this.state);
-    console.log("ingress handleSubmit", app)
+    this.props.submitIngress(app);
   };
 
   constructor(props) {
@@ -71,6 +78,7 @@ class Ingress extends Component {
     this.setState({
       ingress: {
         ...this.state.ingress,
+        name: this.props.application.name + "-ingress",
         rules: [
           ...this.state.ingress.rules,
           {
@@ -88,6 +96,7 @@ class Ingress extends Component {
 
     let update = {
       ingress: {
+        ...this.state.ingress,
         rules: this.state.ingress.rules.map((ingressRule, i) => {
           if (i !== ingressRuleIdx) {
             return ingressRule;
@@ -104,6 +113,7 @@ class Ingress extends Component {
     if (name === "serviceName" && value !== this.state.ingress.rules[ingressRuleIdx].serviceName) {
       const servicePorts = this.servicePortMap();
       update.ingress = {
+        ...this.state.ingress,
         rules: this.state.ingress.rules.map((ingressRule, i) => {
           if (i !== ingressRuleIdx) {
             return ingressRule;
@@ -136,7 +146,7 @@ class Ingress extends Component {
                routes={routes}
                goStep={goStep}
                handleChange={this.handleChange}
-               validationErrors={ui.validationErrors}
+               validationErrors={ui.validationErrors.rules || {}}
       />
     } else {
       view = <NoIngressRulesView
@@ -169,7 +179,7 @@ function IngressView(props) {
             servicePorts={props.servicePorts}
             ingressRuleIndex={ingressRuleIdx}
             onChange={props.handleChange}
-            validationErrors={props.validationErrors}
+            validationErrors={props.validationErrors[ingressRuleIdx]}
           />
         )}
       </Grid>
@@ -212,4 +222,4 @@ function AddIngressRuleButton(props) {
   );
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(Ingress));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Ingress));
