@@ -149,6 +149,7 @@ class Ingress extends Component {
                routes={routes}
                goStep={goStep}
                handleChange={this.handleChange}
+               handleAddIngressRule={this.handleAddIngressRule}
                validationErrors={ui.validationErrors.rules || {}}
       />
     } else {
@@ -182,6 +183,7 @@ function IngressView(props) {
             servicePorts={props.servicePorts}
             ingressRuleIndex={ingressRuleIdx}
             onChange={props.handleChange}
+            onAdd={props.handleAddIngressRule}
             validationErrors={props.validationErrors[ingressRuleIdx]}
           />
         )}
