@@ -92,6 +92,18 @@ class Ingress extends Component {
     });
   };
 
+  handleDeleteIngressRule = ingressRuleIdx => event => {
+    this.setState({
+      ingress: {
+        ...this.state.ingress,
+        rules: [
+          ...this.state.ingress.rules.slice(0, ingressRuleIdx),
+          ...this.state.ingress.rules.slice(ingressRuleIdx + 1),
+        ],
+      },
+    });
+  };
+
   handleChange = ingressRuleIdx => event => {
     const { name, value } = event.target;
 
@@ -150,6 +162,7 @@ class Ingress extends Component {
                goStep={goStep}
                handleChange={this.handleChange}
                handleAddIngressRule={this.handleAddIngressRule}
+               handleDeleteIngressRule={this.handleDeleteIngressRule}
                validationErrors={ui.validationErrors.rules || {}}
       />
     } else {
@@ -184,6 +197,7 @@ function IngressView(props) {
             ingressRuleIndex={ingressRuleIdx}
             onChange={props.handleChange}
             onAdd={props.handleAddIngressRule}
+            onDelete={props.handleDeleteIngressRule(ingressRuleIdx)}
             validationErrors={props.validationErrors[ingressRuleIdx]}
           />
         )}
