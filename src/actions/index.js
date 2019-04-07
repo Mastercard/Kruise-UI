@@ -18,7 +18,7 @@ import {
 import {
   ROUTE_SERVICE,
   ROUTE_INGRESS,
-  ROUTE_VOLUMES,
+  ROUTE_CONTAINER,
 } from '../constants/routes';
 
 export function submitApp(payload) {
@@ -43,6 +43,7 @@ export function submitApp(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
+          // TODO: can I calculate next route instead of hardcoding?
           return dispatch(goStep(ROUTE_SERVICE));
         }
 
@@ -103,7 +104,7 @@ export function submitIngress(payload) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          return dispatch(goStep(ROUTE_VOLUMES));
+          return dispatch(goStep(ROUTE_CONTAINER));
         }
 
         return null;
