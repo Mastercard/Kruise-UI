@@ -56,7 +56,6 @@ const initialState = {
     path: "",
     targetRevision: "",
     services: [],
-    ingresses: [],
   },
   ui: {
     warning: null,

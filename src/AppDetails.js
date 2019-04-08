@@ -70,7 +70,11 @@ class AppDetails extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.submitApp(this.state);
+    let payload = Object.assign({}, this.state);
+    if (!this.state.ingress) {
+      payload.ingress = { name: this.state.name+"-ingress", rules: [] };
+    }
+    this.props.submitApp(payload);
   };
 
   hasError = field => {

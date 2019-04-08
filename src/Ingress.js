@@ -79,7 +79,6 @@ class Ingress extends Component {
     this.setState({
       ingress: {
         ...this.state.ingress,
-        name: this.props.application.name + "-ingress",
         rules: [
           ...this.state.ingress.rules,
           {
