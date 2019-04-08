@@ -56,7 +56,10 @@ class Service extends Component {
     super(props);
 
     // initialize local state from application
-    this.state = Object.assign({}, { services: props.application.services });
+    this.state = Object.assign({}, {
+      services: props.application.services,
+      ingress: props.application.ingress,
+    });
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -69,7 +72,21 @@ class Service extends Component {
     }
 
     if (type === "service") {
+      const oldService = this.state.services[serviceIdx];
+
       this.setState({
+        ingress: {
+          ...this.state.ingress,
+          rules: this.state.ingress.rules.map((r, i) => {
+            if (name === "name") {
+              // service name is changing
+              if (oldService.name === r.serviceName) {
+                return Object.assign({}, r, { serviceName: value });
+              }
+            }
+            return i;
+          }),
+        },
         services: this.state.services.map((s, i) => {
           if (i !== serviceIdx) {
             return s;
