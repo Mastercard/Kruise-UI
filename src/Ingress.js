@@ -54,7 +54,6 @@ class Ingress extends Component {
     // initialize local state from application
     this.state = Object.assign({}, {
       ingress: props.application.ingress,
-      servicePorts: this.servicePortMap()[this.defaultService()],
     });
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -140,7 +139,6 @@ class Ingress extends Component {
           };
         }),
       };
-      update.servicePorts = this.servicePortMap()[value];
     }
 
     this.setState(update);
@@ -149,7 +147,8 @@ class Ingress extends Component {
   render() {
     const { ui, routes, classes, goStep } = this.props;
     const { services } = this.props.application;
-    const { ingress, servicePorts } = this.state;
+    const { ingress } = this.state;
+    const servicePorts = this.servicePortMap();
 
     let view;
     if (ingress.rules.length > 0) {

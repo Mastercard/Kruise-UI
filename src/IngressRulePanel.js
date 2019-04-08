@@ -104,7 +104,7 @@ class IngressRulePanel extends Component {
                       id: 'servicePort',
                     }}
                   >
-                    {servicePorts.map((p, idx) =>
+                    {servicePorts[ingressRule.serviceName].map((p, idx) =>
                       <MenuItem key={p+"-"+idx} value={p}>{p}</MenuItem>
                     )}
                   </Select>
