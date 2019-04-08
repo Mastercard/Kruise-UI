@@ -144,7 +144,17 @@ class Service extends Component {
   }
 
   handleDeleteService = serviceIdx => event => {
+    const deletedService = this.state.services[serviceIdx];
     this.setState({
+      ingress: {
+        ...this.state.ingress,
+        rules: this.state.ingress.rules.filter((r, i) => {
+          if (r.serviceName === deletedService.name) {
+            return false;
+          }
+          return true;
+        }),
+      },
       services: [
         ...this.state.services.slice(0, serviceIdx),
         ...this.state.services.slice(serviceIdx + 1),
