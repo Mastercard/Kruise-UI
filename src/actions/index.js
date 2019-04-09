@@ -19,6 +19,7 @@ import {
   ROUTE_SERVICE,
   ROUTE_INGRESS,
   ROUTE_CONTAINER,
+  ROUTE_SUBMIT,
 } from '../constants/routes';
 
 export function submitApp(payload) {
@@ -105,6 +106,40 @@ export function submitIngress(payload) {
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
           return dispatch(goStep(ROUTE_CONTAINER));
+        }
+
+        return null;
+      });
+  };
+}
+
+export function submitContainers(payload) {
+  return appSubmit(payload, "Containers are not valid", ROUTE_SUBMIT, validateContainers);
+}
+
+function appSubmit(payload, invalidErrorMessage, nextStep, validator) {
+  return function(dispatch, getState) {
+    // update state from form
+    dispatch(setAppDetails(payload));
+
+    // clear validation errors
+    dispatch(clearValidationErrors(payload));
+
+    // normalize payload
+    dispatch(normalizeApplication(payload));
+
+    return validator(getState().application)
+      .then(validationResponse => {
+        // if there are validation errors, short circuit and show errors
+        if (Object.keys(validationResponse).length > 0) {
+          dispatch(setValidationErrors(validationResponse));
+          return dispatch(setError(invalidErrorMessage));
+        }
+
+        // no validation errors, finalize
+        var dispatched = dispatch(finalizeApp(getState().application));
+        if (dispatched.type === FINALIZE_APP) {
+          return dispatch(goStep(nextStep));
         }
 
         return null;
@@ -273,5 +308,17 @@ function validateIngress(payload) {
         ingressErrors = json.errors.ingress;
       }
       return ingressErrors;
+    });
+}
+
+function validateContainers(payload) {
+  return serverValidate(payload)
+    .then(json => {
+      let errors = {}
+      console.log("validateContainers errors", json.errors);
+      if (json.errors && json.errors.containers) {
+        errors = json.errors.containers;
+      }
+      return errors;
     });
 }

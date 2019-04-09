@@ -7,8 +7,7 @@ import Icon from '@material-ui/core/Icon';
 import WizardNav from './WizardNav'
 import DialogNoServices from './DialogNoServices'
 import ContainerPanel from './ContainerPanel'
-import { goStep } from './actions/index'
-import { ROUTE_SUBMIT } from './constants/routes.js'
+import { submitContainers } from './actions/index'
 
 const styles = theme => ({
   root: {
@@ -36,7 +35,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goStep: path => dispatch(goStep(path)),
+    submitContainers: payload => dispatch(submitContainers(payload)),
   };
 };
 
@@ -45,9 +44,22 @@ const imagePullPolicies = [ "Always", "IfNotPresent" ];
 class Container extends Component {
   handleSubmit = event => {
     event.preventDefault();
-    const app = Object.assign({}, this.props.application, this.state);
-    console.log(app);
-    this.props.goStep(ROUTE_SUBMIT);
+
+    let app = Object.assign({}, this.props.application);
+    const containerMap = this.state.containers.reduce((obj, container) => {
+      if (!obj[container.serviceName]) obj[container.serviceName] = [];
+      obj[container.serviceName].push(container);
+      return obj;
+    }, {})
+
+    app = Object.assign({}, app, {
+      ...app,
+      services: app.services.map((s) => {
+        return Object.assign({}, s, { containers: (containerMap[s.name] || []) });
+      }),
+    });
+
+    this.props.submitContainers(app);
   };
 
   handleAddContainer = event => {

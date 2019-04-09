@@ -127,7 +127,6 @@ class ContainerPanel extends Component {
                   className={classes.textField}
                   value={container.command}
                   margin="normal"
-                  required
                   fullWidth
                   error={this.hasError("command")}
                 />
