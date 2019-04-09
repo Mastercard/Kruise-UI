@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import { submitIngress, clearValidationError } from './actions/index'
 import WizardNav from './WizardNav'
+import DialogNoServices from './DialogNoServices'
 import IngressRulePanel from './IngressRulePanel'
 
 const styles = theme => ({
@@ -149,6 +150,12 @@ class Ingress extends Component {
     const { services } = this.props.application;
     const { ingress } = this.state;
     const servicePorts = this.servicePortMap();
+
+    if (services.length === 0) {
+      return (
+        <DialogNoServices resource={"ingress rules"} />
+      );
+    }
 
     let view;
     if (ingress.rules.length > 0) {
