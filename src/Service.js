@@ -168,7 +168,13 @@ class Service extends Component {
           return s;
         }
 
-        return { ...s, ports: [...s.ports, { port: 8080 }] };
+        return {
+          ...s,
+          ports: [
+            ...s.ports,
+            { name: "", port: 8080, targetPort: "" },
+          ]
+        };
       }),
     });
   }
