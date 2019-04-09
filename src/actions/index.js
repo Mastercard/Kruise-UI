@@ -22,129 +22,20 @@ import {
   ROUTE_SUBMIT,
 } from '../constants/routes';
 
-export function submitApp(payload) {
-  return function(dispatch, getState) {
-    // update state from form
-    dispatch(setAppDetails(payload));
-
-    // clear validation errors
-    dispatch(clearValidationErrors(payload));
-
-    // normalize payload
-    dispatch(normalizeApplication(payload));
-
-    return validateApplication(getState().application)
-      .then(validationResponse => {
-        // if there are validation errors, short circuit and show errors
-        if (validationResponse && Object.keys(validationResponse).length > 0) {
-          dispatch(setValidationErrors(validationResponse));
-          return dispatch(setError("Application is not valid"));
-        }
-
-        // no validation errors, finalize
-        var dispatched = dispatch(finalizeApp(getState().application));
-        if (dispatched.type === FINALIZE_APP) {
-          // TODO: can I calculate next route instead of hardcoding?
-          return dispatch(goStep(ROUTE_SERVICE));
-        }
-
-        return null;
-      });
-  };
+export function submitAppDetails(payload) {
+  return appSubmit(payload, "Application is not valid", ROUTE_SERVICE, validateApplication);
 }
 
 export function submitServices(payload) {
-  return function(dispatch, getState) {
-    // update state from form
-    dispatch(setAppDetails(payload));
-
-    // clear validation errors
-    dispatch(clearValidationErrors(payload));
-
-    // normalize payload
-    dispatch(normalizeApplication(payload));
-
-    return validateServices(getState().application)
-      .then(validationResponse => {
-        // if there are validation errors, short circuit and show errors
-        if (Object.keys(validationResponse).length > 0) {
-          dispatch(setValidationErrors(validationResponse));
-          return dispatch(setError("Services are not valid"));
-        }
-
-        // no validation errors, finalize
-        var dispatched = dispatch(finalizeApp(getState().application));
-        if (dispatched.type === FINALIZE_APP) {
-          return dispatch(goStep(ROUTE_INGRESS));
-        }
-
-        return null;
-      });
-  };
+  return appSubmit(payload, "Services are not valid", ROUTE_INGRESS, validateServices);
 }
 
 export function submitIngress(payload) {
-  return function(dispatch, getState) {
-    // update state from form
-    dispatch(setAppDetails(payload));
-
-    // clear validation errors
-    dispatch(clearValidationErrors(payload));
-
-    // normalize payload
-    dispatch(normalizeApplication(payload));
-
-    return validateIngress(getState().application)
-      .then(validationResponse => {
-        // if there are validation errors, short circuit and show errors
-        if (Object.keys(validationResponse).length > 0) {
-          dispatch(setValidationErrors(validationResponse));
-          return dispatch(setError("Ingress is not valid"));
-        }
-
-        // no validation errors, finalize
-        var dispatched = dispatch(finalizeApp(getState().application));
-        if (dispatched.type === FINALIZE_APP) {
-          return dispatch(goStep(ROUTE_CONTAINER));
-        }
-
-        return null;
-      });
-  };
+  return appSubmit(payload, "Ingress is not valid", ROUTE_CONTAINER, validateIngress);
 }
 
 export function submitContainers(payload) {
   return appSubmit(payload, "Containers are not valid", ROUTE_SUBMIT, validateContainers);
-}
-
-function appSubmit(payload, invalidErrorMessage, nextStep, validator) {
-  return function(dispatch, getState) {
-    // update state from form
-    dispatch(setAppDetails(payload));
-
-    // clear validation errors
-    dispatch(clearValidationErrors(payload));
-
-    // normalize payload
-    dispatch(normalizeApplication(payload));
-
-    return validator(getState().application)
-      .then(validationResponse => {
-        // if there are validation errors, short circuit and show errors
-        if (Object.keys(validationResponse).length > 0) {
-          dispatch(setValidationErrors(validationResponse));
-          return dispatch(setError(invalidErrorMessage));
-        }
-
-        // no validation errors, finalize
-        var dispatched = dispatch(finalizeApp(getState().application));
-        if (dispatched.type === FINALIZE_APP) {
-          return dispatch(goStep(nextStep));
-        }
-
-        return null;
-      });
-  };
 }
 
 export function canPreview(payload) {
@@ -262,6 +153,37 @@ export function addService(service) {
 export function deleteService(idx) {
   return { type: DELETE_SERVICE, payload: idx };
 }
+
+function appSubmit(payload, invalidErrorMessage, nextStep, validator) {
+  return function(dispatch, getState) {
+    // update state from form
+    dispatch(setAppDetails(payload));
+
+    // clear validation errors
+    dispatch(clearValidationErrors(payload));
+
+    // normalize payload
+    dispatch(normalizeApplication(payload));
+
+    return validator(getState().application)
+      .then(validationResponse => {
+        // if there are validation errors, short circuit and show errors
+        if (Object.keys(validationResponse).length > 0) {
+          dispatch(setValidationErrors(validationResponse));
+          return dispatch(setError(invalidErrorMessage));
+        }
+
+        // no validation errors, finalize
+        var dispatched = dispatch(finalizeApp(getState().application));
+        if (dispatched.type === FINALIZE_APP) {
+          return dispatch(goStep(nextStep));
+        }
+
+        return null;
+      });
+  };
+}
+
 
 function serverValidate(payload) {
   // run server side validation

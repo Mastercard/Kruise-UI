@@ -9,7 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { submitApp, clearValidationError, canPreview } from './actions/index'
+import { submitAppDetails, clearValidationError, canPreview } from './actions/index'
 import { withRouter } from 'react-router-dom';
 import WizardNav from './WizardNav'
 
@@ -22,7 +22,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    submitApp: payload => dispatch(submitApp(payload)),
+    submitAppDetails: payload => dispatch(submitAppDetails(payload)),
     clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
     canPreview: show => dispatch(canPreview(show)),
   };
@@ -74,7 +74,7 @@ class AppDetails extends Component {
     if (!this.state.ingress) {
       payload.ingress = { name: this.state.name+"-ingress", rules: [] };
     }
-    this.props.submitApp(payload);
+    this.props.submitAppDetails(payload);
   };
 
   hasError = field => {
