@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
-import { goStep, submitServices, deleteService, clearValidationError } from './actions/index'
+import { submitServices, deleteService, clearValidationError } from './actions/index'
 import WizardNav from './WizardNav'
 import ServicePanel from './ServicePanel'
 
@@ -37,7 +37,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goStep: path => dispatch(goStep(path)),
     deleteService: service => dispatch(deleteService(service)),
     submitServices: payload => dispatch(submitServices(payload)),
     clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
@@ -203,7 +202,7 @@ class Service extends Component {
   render() {
     /* TODO: rename handlers to onAddService, etc */
 
-    const { ui, routes, classes, goStep } = this.props;
+    const { ui, routes, classes } = this.props;
     const { services } = this.state;
 
     let view;
@@ -212,7 +211,6 @@ class Service extends Component {
                services={services}
                classes={classes}
                routes={routes}
-               goStep={goStep}
                validationErrors={ui.validationErrors}
                addService={this.handleAddService}
                addServicePort={this.handleAddServicePort}
@@ -224,7 +222,6 @@ class Service extends Component {
       view = <NoServicesView
                classes={classes}
                routes={routes}
-               goStep={goStep}
                addService={this.handleAddService}
       />;
     }
@@ -243,7 +240,6 @@ function ServicesView(props) {
   const {
     routes,
     services,
-    goStep,
     addService,
     addServicePort,
     deleteService,
@@ -269,19 +265,19 @@ function ServicesView(props) {
         )}
       </Grid>
       <Grid item xs={2}>
-        <WizardNav routes={routes} goStep={goStep} />
+        <WizardNav routes={routes} />
       </Grid>
     </Grid>
   );
 }
 
 function NoServicesView(props) {
-  const { routes, goStep, classes, addService } = props;
+  const { routes, classes, addService } = props;
   return (
     <Grid container spacing={24}>
       <AddServiceButton cols={10} classes={classes} onClick={addService} />
       <Grid item xs={2}>
-        <WizardNav routes={routes} goStep={goStep} />
+        <WizardNav routes={routes} />
       </Grid>
     </Grid>
   );

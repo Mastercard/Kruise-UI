@@ -145,7 +145,7 @@ class Ingress extends Component {
   };
 
   render() {
-    const { ui, routes, classes, goStep } = this.props;
+    const { ui, routes, classes } = this.props;
     const { services } = this.props.application;
     const { ingress } = this.state;
     const servicePorts = this.servicePortMap();
@@ -157,7 +157,6 @@ class Ingress extends Component {
                services={services}
                servicePorts={servicePorts}
                routes={routes}
-               goStep={goStep}
                handleChange={this.handleChange}
                handleAddIngressRule={this.handleAddIngressRule}
                handleDeleteIngressRule={this.handleDeleteIngressRule}
@@ -167,7 +166,6 @@ class Ingress extends Component {
       view = <NoIngressRulesView
                classes={classes}
                routes={routes}
-               goStep={goStep}
                onAdd={this.handleAddIngressRule}
       />
     }
@@ -201,7 +199,7 @@ function IngressView(props) {
         )}
       </Grid>
       <Grid item xs={2}>
-        <WizardNav routes={props.routes} goStep={props.goStep} />
+        <WizardNav routes={props.routes} />
       </Grid>
     </Grid>
   );
@@ -210,7 +208,6 @@ function IngressView(props) {
 function NoIngressRulesView(props) {
   const {
     routes,
-    goStep,
     classes,
     onAdd,
   } = props;
@@ -219,7 +216,7 @@ function NoIngressRulesView(props) {
     <Grid container spacing={24}>
       <AddIngressRuleButton cols={10} classes={classes} onClick={onAdd} />
       <Grid item xs={2}>
-        <WizardNav routes={routes} goStep={goStep} />
+        <WizardNav routes={routes} />
       </Grid>
     </Grid>
   );

@@ -67,7 +67,7 @@ class StepPlaceholder extends Component {
               </Paper>
             </Grid>
             <Grid item xs={2}>
-              <WizardNav routes={routes} goStep={this.props.goStep} />
+              <WizardNav routes={routes} />
             </Grid>
           </Grid>
         </div>
