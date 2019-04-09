@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { goStep } from './actions/index'
+import { ROUTE_SERVICE } from './constants/routes.js'
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -16,7 +17,7 @@ const mapDispatchToProps = dispatch => {
 
 class DialogNoServices extends Component {
   handleServicesClick = event => {
-    this.props.goStep("/service");
+    this.props.goStep(ROUTE_SERVICE);
   };
 
   render() {
