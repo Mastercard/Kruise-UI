@@ -69,13 +69,8 @@ class Ingress extends Component {
     }, {});
   };
 
-  defaultService = () => {
-    // TODO: can props.application.services ever be undefined? if so, prevent
-    return this.props.application.services[0].name;
-  };
-
   handleAddIngressRule = event => {
-    const defService = this.defaultService();
+    const defService = this.props.application.services[0].name;
     this.setState({
       ingress: {
         ...this.state.ingress,
