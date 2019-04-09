@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 import AppDetails from '../AppDetails';
 import Service from '../Service';
 import Ingress from '../Ingress';
+import Container from '../Container';
 import StepPlaceholder from '../StepPlaceholder';
 
 import {
@@ -41,7 +42,7 @@ const initialState = {
     // { name: "Volumes", path: ROUTE_VOLUMES, component: StepPlaceholder },
     // { name: "Performance", path: ROUTE_PERFORMANCE, component: StepPlaceholder},
     // { name: "Health", path: ROUTE_HEALTH, component: StepPlaceholder},
-    { name: "Container", path: ROUTE_CONTAINER, component: StepPlaceholder},
+    { name: "Container", path: ROUTE_CONTAINER, component: Container},
     // { name: "Optimize", path: ROUTE_OPTIMIZE, component: StepPlaceholder},
     { name: "Submit", path: ROUTE_SUBMIT, component: StepPlaceholder},
   ],
