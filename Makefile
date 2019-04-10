@@ -5,6 +5,10 @@ all: build
 build:
 	docker build -t deploy-wizard-ui:latest .
 
+.PHONY: prod
+prod:
+	docker build -f ./Dockerfile.prod -t deploy-wizard-ui:v0.1 .
+
 run: build
 	docker run -it \
 		-v ${PWD}:/usr/src/app \
