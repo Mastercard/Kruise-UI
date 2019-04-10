@@ -54,8 +54,8 @@ const initialState = {
     region: "STL",
     namespace: "",
     repoURL: "",
-    path: "",
-    targetRevision: "",
+    path: "/",
+    targetRevision: "HEAD",
     services: [],
   },
   ui: {
