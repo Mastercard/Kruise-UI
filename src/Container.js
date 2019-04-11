@@ -80,18 +80,28 @@ class Container extends Component {
     }, {});
   };
 
-  handleAddContainer = event => {
+  handleAddContainer = serviceIdx => event => {
+    let newContainers = [
+      ...this.state.containers[serviceIdx],
+      {
+        name: "",
+        image: "",
+        serviceName: this.props.application.services[serviceIdx].name,
+        imagePullPolicy: imagePullPolicies[1],
+      },
+    ]
+    console.log("newContainers", newContainers);
+
+    let newState = Object.assign({}, this.state.containers);
+    newState[serviceIdx] = newContainers;
+    console.log("newState", newState);
+
     this.setState({
-      containers: [
-        ...this.state.containers,
-        {
-          name: "",
-          image: "",
-          serviceName: this.props.application.services[0].name,
-          imagePullPolicy: imagePullPolicies[1],
-        }
-      ],
-    })
+      containers: newState,
+    });
+
+    console.log("state", this.state);
+    console.groupEnd();
   };
 
   handleChange = (serviceIdx, containerIdx) => event => {
@@ -158,7 +168,7 @@ class Container extends Component {
     if (containerCount.length === 0) {
       view = (
         <div className={classes.actionRow}>
-          <Button variant="contained" color="primary" className={classes.button} onClick={this.handleAddContainer}>
+          <Button variant="contained" color="primary" className={classes.button} onClick={this.handleAddContainer(0)}>
             Add Container
             <Icon className={classes.rightIcon}>add_circle</Icon>
           </Button>
@@ -177,6 +187,7 @@ class Container extends Component {
                    imagePullPolicies={imagePullPolicies}
                    validationErrors={containerValidationErrors(serviceIdx, containerIdx)}
                    onChange={this.handleChange(serviceIdx, containerIdx)}
+                   onAdd={this.handleAddContainer(serviceIdx)}
                  />
                );
             }) }
