@@ -237,9 +237,11 @@ function validateContainers(payload) {
   return serverValidate(payload)
     .then(json => {
       let errors = {}
-      console.log("validateContainers errors", json.errors);
-      if (json.errors && json.errors.containers) {
-        errors = json.errors.containers;
+      if (json.errors && json.errors.services) {
+        errors = Object.keys(json.errors.services).reduce((m, serviceIdx) => {
+          m[serviceIdx] = json.errors.services[serviceIdx].containers;
+          return m;
+        }, {});
       }
       return errors;
     });

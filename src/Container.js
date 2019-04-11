@@ -29,6 +29,7 @@ const styles = theme => ({
 const mapStateToProps = state => {
   return {
     application: state.application,
+    ui: state.ui,
     routes: state.routes,
   };
 };
@@ -45,16 +46,19 @@ class Container extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    let app = Object.assign({}, this.props.application);
-    const containerMap = this.state.containers.reduce((obj, container) => {
+    const containers = Object.keys(this.state.containers).map((serviceIdx, containerIdx) => {
+      return this.state.containers[containerIdx];
+    }).flat();
+
+    const containerMap = containers.reduce((obj, container) => {
       if (!obj[container.serviceName]) obj[container.serviceName] = [];
       obj[container.serviceName].push(container);
       return obj;
     }, {})
 
-    app = Object.assign({}, app, {
-      ...app,
-      services: app.services.map((s) => {
+    const app = Object.assign({}, this.props.application, {
+      ...this.props.application,
+      services: this.props.application.services.map((s) => {
         return Object.assign({}, s, { containers: (containerMap[s.name] || []) });
       }),
     });
@@ -79,16 +83,15 @@ class Container extends Component {
   constructor(props) {
     super(props);
 
-    const allContainers = this.props.application.services.reduce((containers, service) => {
-      if (service.containers && service.containers.length > 0) {
-        service.containers.forEach((c) => {
-          containers.push(c);
-        });
-      }
-      return containers;
-    }, []);
+    const containerMap = this.props.application.services.reduce((m, service, serviceIdx) => {
+      m[serviceIdx] = Object.keys(service.containers).map((containerIdx) => {
+        return service.containers[containerIdx];
+      });
+      return m;
+    }, {});
+
     this.state = Object.assign({}, {
-      containers: allContainers,
+      containers: containerMap,
     });
   }
 
@@ -97,6 +100,19 @@ class Container extends Component {
     const { services } = this.props.application;
     const { containers } = this.state;
 
+    const containerCount = Object.keys(containers).reduce((n, serviceIdx) => {
+      return n + containers[serviceIdx].length;
+    }, 0);
+
+    // lookup the validation error for a particular container
+    const containerValidationErrors = (serviceIdx, containerIdx) => {
+      if (this.props.ui.validationErrors[serviceIdx]) {
+        return this.props.ui.validationErrors[serviceIdx][containerIdx] || {};
+      }
+
+      return {};
+    };
+
     if (services.length === 0) {
       return (
         <DialogNoServices resource={"containers"} />
@@ -104,7 +120,7 @@ class Container extends Component {
     }
 
     let view;
-    if (containers.length === 0) {
+    if (containerCount.length === 0) {
       view = (
         <div className={classes.actionRow}>
           <Button variant="contained" color="primary" className={classes.button} onClick={this.handleAddContainer}>
@@ -116,13 +132,18 @@ class Container extends Component {
     } else {
       view = (
         <>
-          {containers.map((container, containerIdx) =>
-            <ContainerPanel
-              key={"container"+containerIdx}
-              container={container}
-              services={services}
-              imagePullPolicies={imagePullPolicies}
-            />
+          {Object.keys(containers).map((container, serviceIdx) => {
+             return containers[serviceIdx].map((container, containerIdx) => {
+               return (
+                 <ContainerPanel
+                   key={"container"+containerIdx}
+                   container={container}
+                   services={services}
+                   imagePullPolicies={imagePullPolicies}
+                   validationErrors={containerValidationErrors(serviceIdx, containerIdx)}
+                 />
+               );
+            }) }
           )}
         </>
       );

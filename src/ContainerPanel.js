@@ -86,6 +86,16 @@ class ContainerPanel extends Component {
                   </Select>
                 </FormControl>
                 <TextField
+                  name="name"
+                  label="Container name"
+                  className={classes.textField}
+                  value={container.name}
+                  margin="normal"
+                  required
+                  fullWidth
+                  error={this.hasError("name")}
+                />
+                <TextField
                   name="image"
                   label="Image Location"
                   className={classes.textField}
