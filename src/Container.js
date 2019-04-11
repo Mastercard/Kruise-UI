@@ -7,7 +7,7 @@ import Icon from '@material-ui/core/Icon';
 import WizardNav from './WizardNav'
 import DialogNoServices from './DialogNoServices'
 import ContainerPanel from './ContainerPanel'
-import { submitContainers } from './actions/index'
+import { submitContainers, clearValidationError } from './actions/index'
 
 const styles = theme => ({
   root: {
@@ -37,6 +37,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     submitContainers: payload => dispatch(submitContainers(payload)),
+    clearValidationError: (keys, field) => dispatch(clearValidationError(keys, field)),
   };
 };
 
@@ -46,6 +47,7 @@ class Container extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
+    console.group("Container", "handleSubmit");
     const containers = Object.keys(this.state.containers).map((serviceIdx, containerIdx) => {
       return this.state.containers[containerIdx];
     }).flat();
@@ -63,7 +65,19 @@ class Container extends Component {
       }),
     });
 
+    this.setState({ containers: this.localState(app) });
+
+    console.groupEnd();
     this.props.submitContainers(app);
+  };
+
+  localState = app => {
+    return app.services.reduce((m, service, serviceIdx) => {
+      m[serviceIdx] = Object.keys(service.containers).map((containerIdx) => {
+        return service.containers[containerIdx];
+      });
+      return m;
+    }, {});
   };
 
   handleAddContainer = event => {
@@ -80,22 +94,43 @@ class Container extends Component {
     })
   };
 
+  handleChange = (serviceIdx, containerIdx) => event => {
+    console.group("Container","handleChange");
+    console.log("serviceIdx", serviceIdx, "containerIdx", containerIdx);
+
+    const { name, value } = event.target;
+    console.log("name", name, "value", value);
+
+    this.props.clearValidationError([ serviceIdx, "containers", containerIdx], name);
+
+    const newContainer = Object.assign({}, this.state.containers[serviceIdx][containerIdx], {
+      [ name ]: value,
+    });
+    console.log("newContainer", newContainer);
+
+    let newState = Object.assign({}, this.state.containers);
+    newState[serviceIdx][containerIdx] = newContainer;
+
+    console.log("oldState", this.state);
+    console.log("newState", newState);
+
+    this.setState({ containers: newState });
+
+    console.groupEnd();
+  };
+
   constructor(props) {
     super(props);
 
-    const containerMap = this.props.application.services.reduce((m, service, serviceIdx) => {
-      m[serviceIdx] = Object.keys(service.containers).map((containerIdx) => {
-        return service.containers[containerIdx];
-      });
-      return m;
-    }, {});
-
     this.state = Object.assign({}, {
-      containers: containerMap,
+      containers: this.localState(this.props.application),
     });
   }
 
   render() {
+    console.group("Container", "render");
+    console.group("validationErrors", this.props.ui.validationErrors);
+    console.groupEnd();
     const { routes, classes } = this.props;
     const { services } = this.props.application;
     const { containers } = this.state;
@@ -141,6 +176,7 @@ class Container extends Component {
                    services={services}
                    imagePullPolicies={imagePullPolicies}
                    validationErrors={containerValidationErrors(serviceIdx, containerIdx)}
+                   onChange={this.handleChange(serviceIdx, containerIdx)}
                  />
                );
             }) }

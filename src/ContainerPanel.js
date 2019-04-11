@@ -58,6 +58,9 @@ class ContainerPanel extends Component {
   };
 
   render() {
+    console.group("ContainerPanel", "render");
+    console.log("validationErrors", this.props.validationErrors);
+    console.groupEnd();
     const { container, services, classes } = this.props;
 
     return (
@@ -74,6 +77,7 @@ class ContainerPanel extends Component {
                   <Select
                     value={container.serviceName}
                     required
+                    onChange={this.props.onChange}
                     error={this.hasError("serviceName")}
                     inputProps={{
                       name: 'serviceName',
@@ -90,6 +94,7 @@ class ContainerPanel extends Component {
                   label="Container name"
                   className={classes.textField}
                   value={container.name}
+                  onChange={this.props.onChange}
                   margin="normal"
                   required
                   fullWidth
@@ -100,6 +105,7 @@ class ContainerPanel extends Component {
                   label="Image Location"
                   className={classes.textField}
                   value={container.image}
+                  onChange={this.props.onChange}
                   margin="normal"
                   required
                   fullWidth
@@ -110,6 +116,7 @@ class ContainerPanel extends Component {
                   label="Image Version"
                   className={classes.textField}
                   value={container.imageTag}
+                  onChange={this.props.onChange}
                   margin="normal"
                   required
                   fullWidth
@@ -120,6 +127,7 @@ class ContainerPanel extends Component {
                   <Select
                     value={container.imagePullPolicy}
                     required
+                    onChange={this.props.onChange}
                     error={this.hasError("imagePullPolicy")}
                     inputProps={{
                       name: 'imagePullPolicy',
@@ -136,6 +144,7 @@ class ContainerPanel extends Component {
                   label="Command"
                   className={classes.textField}
                   value={container.command}
+                  onChange={this.props.onChange}
                   margin="normal"
                   fullWidth
                   error={this.hasError("command")}
