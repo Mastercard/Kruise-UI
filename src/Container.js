@@ -81,7 +81,7 @@ class Container extends Component {
   };
 
   handleAddContainer = serviceIdx => event => {
-    let newContainers = [
+    const newContainers = [
       ...this.state.containers[serviceIdx],
       {
         name: "",
@@ -102,6 +102,20 @@ class Container extends Component {
 
     console.log("state", this.state);
     console.groupEnd();
+  };
+
+  handleDeleteContainer = (serviceIdx, containerIdx) => event => {
+    const newContainers = [
+      ...this.state.containers[serviceIdx].slice(0, containerIdx),
+      ...this.state.containers[serviceIdx].slice(containerIdx + 1),
+    ];
+
+    let newState = Object.assign({}, this.state.containers);
+    newState[serviceIdx] = newContainers;
+
+    this.setState({
+      containers: newState,
+    });
   };
 
   handleChange = (serviceIdx, containerIdx) => event => {
@@ -140,7 +154,6 @@ class Container extends Component {
   render() {
     console.group("Container", "render");
     console.group("validationErrors", this.props.ui.validationErrors);
-    console.groupEnd();
     const { routes, classes } = this.props;
     const { services } = this.props.application;
     const { containers } = this.state;
@@ -148,6 +161,8 @@ class Container extends Component {
     const containerCount = Object.keys(containers).reduce((n, serviceIdx) => {
       return n + containers[serviceIdx].length;
     }, 0);
+    console.log("containerCount", containerCount);
+    console.groupEnd();
 
     // lookup the validation error for a particular container
     const containerValidationErrors = (serviceIdx, containerIdx) => {
@@ -165,7 +180,7 @@ class Container extends Component {
     }
 
     let view;
-    if (containerCount.length === 0) {
+    if (containerCount === 0) {
       view = (
         <div className={classes.actionRow}>
           <Button variant="contained" color="primary" className={classes.button} onClick={this.handleAddContainer(0)}>
@@ -188,6 +203,7 @@ class Container extends Component {
                    validationErrors={containerValidationErrors(serviceIdx, containerIdx)}
                    onChange={this.handleChange(serviceIdx, containerIdx)}
                    onAdd={this.handleAddContainer(serviceIdx)}
+                   onDelete={this.handleDeleteContainer(serviceIdx, containerIdx)}
                  />
                );
             }) }

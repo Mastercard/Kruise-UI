@@ -154,10 +154,10 @@ class ContainerPanel extends Component {
           </Grid>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="add ingress rule" onClick={this.props.onAdd}>
+          <IconButton aria-label="add container" onClick={this.props.onAdd}>
             <AddCircleIcon />
           </IconButton>
-          <IconButton className={classes.delete} aria-label="delete service" onClick={this.props.onDelete}>
+          <IconButton className={classes.delete} aria-label="delete container" onClick={this.props.onDelete}>
             <DeleteIcon />
           </IconButton>
         </CardActions>
