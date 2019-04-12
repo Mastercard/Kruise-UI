@@ -25,6 +25,7 @@ class PreviewDialog extends Component {
             </SyntaxHighlighter>
           </DialogContent>
           <DialogActions>
+            <Button onClick={() => {navigator.clipboard.writeText(this.props.content)}} color="secondary">Copy</Button>
             <Button onClick={this.props.onClose} color="primary">
               Close
             </Button>

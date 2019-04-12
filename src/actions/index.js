@@ -19,7 +19,6 @@ import {
   ROUTE_SERVICE,
   ROUTE_INGRESS,
   ROUTE_CONTAINER,
-  ROUTE_SUBMIT,
 } from '../constants/routes';
 
 export function submitAppDetails(payload) {
