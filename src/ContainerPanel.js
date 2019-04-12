@@ -58,9 +58,6 @@ class ContainerPanel extends Component {
   };
 
   render() {
-    console.group("ContainerPanel", "render");
-    console.log("validationErrors", this.props.validationErrors);
-    console.groupEnd();
     const { container, services, classes } = this.props;
 
     return (

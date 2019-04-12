@@ -47,7 +47,6 @@ class Container extends Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    console.group("Container", "handleSubmit");
     const containers = Object.keys(this.state.containers).map((serviceIdx, containerIdx) => {
       return this.state.containers[containerIdx];
     }).flat();
@@ -67,7 +66,6 @@ class Container extends Component {
 
     this.setState({ containers: this.localState(app) });
 
-    console.groupEnd();
     this.props.submitContainers(app);
   };
 
@@ -90,18 +88,12 @@ class Container extends Component {
         imagePullPolicy: imagePullPolicies[1],
       },
     ]
-    console.log("newContainers", newContainers);
-
     let newState = Object.assign({}, this.state.containers);
     newState[serviceIdx] = newContainers;
-    console.log("newState", newState);
 
     this.setState({
       containers: newState,
     });
-
-    console.log("state", this.state);
-    console.groupEnd();
   };
 
   handleDeleteContainer = (serviceIdx, containerIdx) => event => {
@@ -119,28 +111,18 @@ class Container extends Component {
   };
 
   handleChange = (serviceIdx, containerIdx) => event => {
-    console.group("Container","handleChange");
-    console.log("serviceIdx", serviceIdx, "containerIdx", containerIdx);
-
     const { name, value } = event.target;
-    console.log("name", name, "value", value);
 
     this.props.clearValidationError([ serviceIdx, "containers", containerIdx], name);
 
     const newContainer = Object.assign({}, this.state.containers[serviceIdx][containerIdx], {
       [ name ]: value,
     });
-    console.log("newContainer", newContainer);
 
     let newState = Object.assign({}, this.state.containers);
     newState[serviceIdx][containerIdx] = newContainer;
 
-    console.log("oldState", this.state);
-    console.log("newState", newState);
-
     this.setState({ containers: newState });
-
-    console.groupEnd();
   };
 
   constructor(props) {
@@ -152,8 +134,6 @@ class Container extends Component {
   }
 
   render() {
-    console.group("Container", "render");
-    console.group("validationErrors", this.props.ui.validationErrors);
     const { routes, classes } = this.props;
     const { services } = this.props.application;
     const { containers } = this.state;
@@ -161,8 +141,6 @@ class Container extends Component {
     const containerCount = Object.keys(containers).reduce((n, serviceIdx) => {
       return n + containers[serviceIdx].length;
     }, 0);
-    console.log("containerCount", containerCount);
-    console.groupEnd();
 
     // lookup the validation error for a particular container
     const containerValidationErrors = (serviceIdx, containerIdx) => {
