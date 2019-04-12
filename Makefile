@@ -7,7 +7,7 @@ build:
 
 .PHONY: prod
 prod:
-	docker build -f ./Dockerfile.prod -t deploy-wizard-ui:v0.1 .
+	docker build -f ./Dockerfile.prod -t deploy-wizard-ui:v0.2 .
 
 run: build
 	docker run -it \
