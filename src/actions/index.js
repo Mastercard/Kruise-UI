@@ -23,19 +23,19 @@ import {
 } from '../constants/routes';
 
 export function submitAppDetails(payload) {
-  return appSubmit(payload, "Application is not valid", ROUTE_SERVICE, validateApplication);
+  return appSubmit(payload, "Application is not valid", goStep(ROUTE_SERVICE), validateApplication);
 }
 
 export function submitServices(payload) {
-  return appSubmit(payload, "Services are not valid", ROUTE_INGRESS, validateServices);
+  return appSubmit(payload, "Services are not valid", goStep(ROUTE_INGRESS), validateServices);
 }
 
 export function submitIngress(payload) {
-  return appSubmit(payload, "Ingress is not valid", ROUTE_CONTAINER, validateIngress);
+  return appSubmit(payload, "Ingress is not valid", goStep(ROUTE_CONTAINER), validateIngress);
 }
 
 export function submitContainers(payload) {
-  return appSubmit(payload, "Containers are not valid", ROUTE_SUBMIT, validateContainers);
+  return appSubmit(payload, "Containers are not valid", showPreview(), validateContainers);
 }
 
 export function canPreview(payload) {
@@ -154,7 +154,7 @@ export function deleteService(idx) {
   return { type: DELETE_SERVICE, payload: idx };
 }
 
-function appSubmit(payload, invalidErrorMessage, nextStep, validator) {
+function appSubmit(payload, invalidErrorMessage, onFinalized, validator) {
   return function(dispatch, getState) {
     // update state from form
     dispatch(setAppDetails(payload));
@@ -176,7 +176,7 @@ function appSubmit(payload, invalidErrorMessage, nextStep, validator) {
         // no validation errors, finalize
         var dispatched = dispatch(finalizeApp(getState().application));
         if (dispatched.type === FINALIZE_APP) {
-          return dispatch(goStep(nextStep));
+          return dispatch(onFinalized);
         }
 
         return null;
