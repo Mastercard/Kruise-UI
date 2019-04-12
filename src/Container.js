@@ -71,7 +71,7 @@ class Container extends Component {
 
   localState = app => {
     return app.services.reduce((m, service, serviceIdx) => {
-      m[serviceIdx] = Object.keys(service.containers).map((containerIdx) => {
+      m[serviceIdx] = Object.keys(service.containers || []).map((containerIdx) => {
         return service.containers[containerIdx];
       });
       return m;
