@@ -1,16 +1,13 @@
 import { FINALIZE_APP, NORMALIZE_APP } from '../constants/actionTypes';
-import { setError, setValidationErrors, normalizedApplication } from '../actions/index'
+// import { setError, setValidationErrors, normalizedApplication } from '../actions/index'
+import { normalizedApplication } from '../actions/index'
 
 export function allowedReposMiddleware({ dispatch }) {
   return function(next) {
     return function (action) {
 
       if (action.type === FINALIZE_APP) {
-        if (!action.application.repoURL.includes("bitbucket")) {
-          const errMsg = "git repo URL must be a bitbucket URL";
-          dispatch(setValidationErrors({ "repoURL": "errMsg" }));
-          return dispatch(setError(errMsg));
-        }
+        // TODO: validate application.repoURL is "allowed"
       }
 
       return next(action);

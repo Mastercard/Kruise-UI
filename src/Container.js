@@ -86,6 +86,7 @@ class Container extends Component {
         image: "",
         serviceName: this.props.application.services[serviceIdx].name,
         imagePullPolicy: imagePullPolicies[1],
+        ports: this.props.application.services[serviceIdx].ports.map((p) => p.name),
       },
     ]
     let newState = Object.assign({}, this.state.containers);
@@ -133,6 +134,13 @@ class Container extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.application !== this.state.application) {
+      console.log("state transition", this.state.containers, nextProps.application);
+      this.setState({ containers: this.localState(nextProps.application)});
+    }
+  }
+
   render() {
     const { routes, classes } = this.props;
     const { services } = this.props.application;
@@ -175,6 +183,8 @@ class Container extends Component {
                return (
                  <ContainerPanel
                    key={"container"+containerIdx}
+                   serviceIdx={serviceIdx}
+                   containerIdx={containerIdx}
                    container={container}
                    services={services}
                    imagePullPolicies={imagePullPolicies}

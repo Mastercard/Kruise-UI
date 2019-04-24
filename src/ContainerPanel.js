@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import ContainerPortList from './ContainerPortList';
 
 const styles = theme => ({
   container: {
@@ -55,6 +56,13 @@ class ContainerPanel extends Component {
   hasError = field => {
     const appErrors = this.props.validationErrors;
     return appErrors && appErrors.hasOwnProperty(field);
+  };
+
+  servicePorts = () => {
+    return this.props.services.reduce((m, service) => {
+      m[service.name] = service.ports;
+      return m;
+    }, {});
   };
 
   render() {
@@ -145,6 +153,12 @@ class ContainerPanel extends Component {
                   margin="normal"
                   fullWidth
                   error={this.hasError("command")}
+                />
+                <ContainerPortList
+                  container={container}
+                  serviceIdx={this.props.serviceIdx}
+                  containerIdx={this.props.containerIdx}
+                  ports={this.servicePorts()[container.serviceName]}
                 />
               </div>
             </Grid>
