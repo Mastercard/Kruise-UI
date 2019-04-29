@@ -48,17 +48,19 @@ class WizardNav extends React.Component {
         <IconButton disabled={!prev} className={classes.button} onClick={this.handleBack(prev)}>
           <ArrowBack />
         </IconButton>
-        <Button
-          type="submit"
-          disabled={nextButtonDisabled}
-          size="large"
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          fullWidth={false}
-        >
-          Next
-        </Button>
+        {!nextButtonDisabled &&
+         <Button
+           type="submit"
+           disabled={nextButtonDisabled}
+           size="large"
+           variant="contained"
+           color="primary"
+           className={classes.button}
+           fullWidth={false}
+         >
+           Next
+         </Button>
+        }
       </div>
     );
   }

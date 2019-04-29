@@ -1,12 +1,12 @@
-import { combineReducers } from 'redux'
-import produce from 'immer'
+import { combineReducers } from 'redux';
+import produce from 'immer';
 
 // components for routing
 import AppDetails from '../AppDetails';
 import Service from '../Service';
 import Ingress from '../Ingress';
 import Container from '../Container';
-import StepPlaceholder from '../StepPlaceholder';
+import Submit from '../Submit';
 
 import {
   SET_APP_DETAILS,
@@ -46,7 +46,7 @@ const initialState = {
     // { name: "Health", path: ROUTE_HEALTH, component: StepPlaceholder},
     { name: "Container", path: ROUTE_CONTAINER, component: Container},
     // { name: "Optimize", path: ROUTE_OPTIMIZE, component: StepPlaceholder},
-    { name: "Submit", path: ROUTE_SUBMIT, component: StepPlaceholder},
+    { name: "Submit", path: ROUTE_SUBMIT, component: Submit},
   ],
   application: {
     name: "",

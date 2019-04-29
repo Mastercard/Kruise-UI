@@ -36,7 +36,7 @@ export function submitIngress(payload) {
 }
 
 export function submitContainers(payload) {
-  return appSubmit(payload, "Containers are not valid", goStep(ROUTE_SUBMIT), validateContainers);
+  return appSubmit(payload, "Containers are not valid", createRelease(ROUTE_SUBMIT), validateContainers);
 }
 
 export function canPreview(payload) {
@@ -144,7 +144,7 @@ export function showPreview() {
   };
 }
 
-export function createRelease() {
+export function createRelease(to) {
   return function(dispatch, getState) {
 
     // TODO: configurable api server
@@ -158,8 +158,8 @@ export function createRelease() {
     })
       .then(response => response.text())
       .then(payload => {
-        dispatch(setPreviewContent(payload));
-        dispatch(togglePreview(true));
+        console.log(payload);
+        dispatch(goStep(to));
       });
   };
 }
@@ -244,7 +244,7 @@ function validateApplication(payload) {
 function validateServices(payload) {
   return serverValidate(payload)
     .then(json => {
-      let serviceErrors = {}
+      let serviceErrors = {};
       if (json.errors && json.errors.services) {
         serviceErrors = json.errors.services;
       }
@@ -255,7 +255,7 @@ function validateServices(payload) {
 function validateIngress(payload) {
   return serverValidate(payload)
     .then(json => {
-      let ingressErrors = {}
+      let ingressErrors = {};
       if (json.errors && json.errors.ingress) {
         ingressErrors = json.errors.ingress;
       }
@@ -266,7 +266,7 @@ function validateIngress(payload) {
 function validateContainers(payload) {
   return serverValidate(payload)
     .then(json => {
-      let errors = {}
+      let errors = {};
       if (json.errors && json.errors.services) {
         errors = Object.keys(json.errors.services).reduce((m, serviceIdx) => {
           m[serviceIdx] = json.errors.services[serviceIdx].containers;
