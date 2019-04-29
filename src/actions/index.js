@@ -20,6 +20,7 @@ import {
   ROUTE_SERVICE,
   ROUTE_INGRESS,
   ROUTE_CONTAINER,
+  ROUTE_SUBMIT,
 } from '../constants/routes';
 
 export function submitAppDetails(payload) {
@@ -35,7 +36,7 @@ export function submitIngress(payload) {
 }
 
 export function submitContainers(payload) {
-  return appSubmit(payload, "Containers are not valid", showPreview(), validateContainers);
+  return appSubmit(payload, "Containers are not valid", goStep(ROUTE_SUBMIT), validateContainers);
 }
 
 export function canPreview(payload) {
@@ -128,7 +129,7 @@ export function showPreview() {
 
     // TODO: configurable api server
     // TODO: error handling
-    return fetch("http://localhost:9801/apps", {
+    return fetch("http://localhost:9801/app/preview", {
       method: "post",
       body: JSON.stringify(getState().application),
       headers: {
@@ -139,8 +140,28 @@ export function showPreview() {
       .then(payload => {
         dispatch(setPreviewContent(payload));
         dispatch(togglePreview(true));
-      })
-  }
+      });
+  };
+}
+
+export function createRelease() {
+  return function(dispatch, getState) {
+
+    // TODO: configurable api server
+    // TODO: error handling
+    return fetch("http://localhost:9801/app/release", {
+      method: "post",
+      body: JSON.stringify(getState().application),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.text())
+      .then(payload => {
+        dispatch(setPreviewContent(payload));
+        dispatch(togglePreview(true));
+      });
+  };
 }
 
 export function togglePreview(show) {
@@ -198,7 +219,7 @@ function serverValidate(payload) {
   // run server side validation
   // TODO: configurable api server
   // TODO: error handling
-  return fetch("http://localhost:9801/validates/application", {
+  return fetch("http://localhost:9801/app/validation", {
     method: "post",
     body: JSON.stringify(payload),
     headers: {

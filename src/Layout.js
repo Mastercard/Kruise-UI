@@ -69,7 +69,7 @@ class Layout extends Component {
   };
 
   showPreview = event => {
-    this.props.showPreview(true);
+    this.props.showPreview();
   };
 
   render() {
