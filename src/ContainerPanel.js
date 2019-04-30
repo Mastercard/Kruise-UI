@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -158,19 +159,22 @@ class ContainerPanel extends Component {
                   fullWidth
                   error={this.hasError("command")}
                 />
-                <FormControl component="fieldset" className={classes.formControl}>
+                <FormControl error={this.hasError("ports")} component="fieldset" className={classes.formControl}>
                   <FormLabel component="legend">Ports</FormLabel>
                   <FormGroup row>
                     {this.servicePorts()[container.serviceName].map((p, idx) =>
                       <FormControlLabel
                         key={p.name+"-"+idx}
                         control={
-                          <Checkbox name="ports" checked={containerPorts.indexOf(p.name) >= 0} onChange={this.props.onChange} value={p.name} />
+                          <Checkbox color="primary" name="ports" checked={containerPorts.indexOf(p.name) >= 0} onChange={this.props.onChange} value={p.name} />
                         }
                         label={p.name}
                       />
                     )}
                   </FormGroup>
+                  {this.hasError("ports") &&
+                   <FormHelperText>At least one port must be checked.</FormHelperText>
+                  }
                 </FormControl>
               </div>
             </Grid>
