@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import produce from 'immer';
 
 // components for routing
 import AppDetails from '../AppDetails';
@@ -21,7 +20,6 @@ import {
   SET_PREVIEW_CONTENT,
   ADD_SERVICE,
   DELETE_SERVICE,
-  SET_CONTAINER_PORTS,
 } from '../constants/actionTypes';
 
 import {
@@ -96,16 +94,6 @@ export function application(state = initialState.application, action) {
 
   if (action.type === NORMALIZED_APP) {
     return action.application;
-  }
-
-  if (action.type === SET_CONTAINER_PORTS) {
-    const { serviceIdx, containerIdx, ports } = action;
-
-    const nextState = produce(state, draftState => {
-      draftState.services[serviceIdx].containers[containerIdx].ports = ports;
-    });
-
-    return nextState;
   }
 
   return state;

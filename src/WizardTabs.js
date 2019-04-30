@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router-dom";
 import { goStep } from './actions/index'
+import { ROUTE_SUBMIT } from './constants/routes.js'
 
 const styles = {
   root: {
@@ -26,6 +27,9 @@ const mapDispatchToProps = dispatch => {
 
 class WizardTabs extends React.Component {
   handleChange = (event, value) => {
+    if (value === ROUTE_SUBMIT) {
+      return;
+    }
     this.props.goStep(value);
   };
 

@@ -13,7 +13,6 @@ import {
   SET_PREVIEW_CONTENT,
   ADD_SERVICE,
   DELETE_SERVICE,
-  SET_CONTAINER_PORTS,
 } from '../constants/actionTypes';
 
 import {
@@ -97,15 +96,6 @@ export function setAppDetails(payload) {
   return {
     type: SET_APP_DETAILS,
     payload,
-  };
-}
-
-export function setContainerPorts(serviceIdx, containerIdx, ports) {
-  return {
-    type: SET_CONTAINER_PORTS,
-    serviceIdx,
-    containerIdx,
-    ports,
   };
 }
 

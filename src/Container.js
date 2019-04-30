@@ -82,10 +82,12 @@ class Container extends Component {
     const newContainers = [
       ...this.state.containers[serviceIdx],
       {
+        serviceName: this.props.application.services[serviceIdx].name,
         name: "",
         image: "",
-        serviceName: this.props.application.services[serviceIdx].name,
+        imageTag: "",
         imagePullPolicy: imagePullPolicies[1],
+        command: "",
         ports: this.props.application.services[serviceIdx].ports.map((p) => p.name),
       },
     ]
@@ -114,10 +116,25 @@ class Container extends Component {
   handleChange = (serviceIdx, containerIdx) => event => {
     const { name, value } = event.target;
 
-    this.props.clearValidationError([ serviceIdx, "containers", containerIdx], name);
+    let newValue = value;
+    const container = this.state.containers[serviceIdx][containerIdx];
+
+    if (name === "ports") {
+      const port = value;
+      const containerPorts = container.ports || [];
+      if (containerPorts.indexOf(port) >= 0) {
+        // remove it
+        newValue = containerPorts.filter(p => p !== port);
+      } else {
+        // add it
+        newValue = [ ...containerPorts, port ];
+      }
+    } else {
+      this.props.clearValidationError([ serviceIdx, "containers", containerIdx], name);
+    }
 
     const newContainer = Object.assign({}, this.state.containers[serviceIdx][containerIdx], {
-      [ name ]: value,
+      [ name ]: newValue,
     });
 
     let newState = Object.assign({}, this.state.containers);
@@ -132,13 +149,6 @@ class Container extends Component {
     this.state = Object.assign({}, {
       containers: this.localState(this.props.application),
     });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.application !== this.state.application) {
-      console.log("state transition", this.state.containers, nextProps.application);
-      this.setState({ containers: this.localState(nextProps.application)});
-    }
   }
 
   render() {
