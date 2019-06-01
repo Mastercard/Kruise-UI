@@ -117,9 +117,8 @@ export function dismissError() {
 export function showPreview() {
   return function(dispatch, getState) {
 
-    // TODO: configurable api server
     // TODO: error handling
-    return fetch("http://localhost:9801/app/preview", {
+    return fetch(process.env.REACT_APP_DEPLOY_WIZARD_API_SERVER+"/app/preview", {
       method: "post",
       body: JSON.stringify(getState().application),
       headers: {
@@ -137,9 +136,8 @@ export function showPreview() {
 export function createRelease(to) {
   return function(dispatch, getState) {
 
-    // TODO: configurable api server
     // TODO: error handling
-    return fetch("http://localhost:9801/app/release", {
+    return fetch(process.env.REACT_APP_DEPLOY_WIZARD_API_SERVER+"/app/release", {
       method: "post",
       body: JSON.stringify(getState().application),
       headers: {
@@ -204,12 +202,11 @@ function appSubmit(payload, invalidErrorMessage, onFinalized, validator) {
   };
 }
 
-
 function serverValidate(payload) {
   // run server side validation
   // TODO: configurable api server
   // TODO: error handling
-  return fetch("http://localhost:9801/app/validation", {
+  return fetch(process.env.REACT_APP_DEPLOY_WIZARD_API_SERVER+"/app/validation", {
     method: "post",
     body: JSON.stringify(payload),
     headers: {

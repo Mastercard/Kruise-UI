@@ -8,6 +8,7 @@ COPY package.json /usr/src/app/package.json
 RUN npm install --silent
 RUN npm install react-scripts@2.1.5 -g --silent
 COPY . /usr/src/app
+ENV REACT_APP_DEPLOY_WIZARD_API_SERVER http://deploy-wizard-api:9801
 RUN npm run build
 
 # prod build
