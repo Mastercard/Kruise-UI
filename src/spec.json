@@ -1,0 +1,80 @@
+{
+  "application": {
+    "name": "sampleapp",
+    "labels": {
+      "version": "v1",
+      "team": "dna",
+      "env": "Dev",
+      "region": "STL"
+    },
+    "namespace": "dna"
+  },
+  "services": [
+    {
+      "spec": {
+        "service": {
+          "type": "ClusterIP",
+          "ports": [
+            {
+              "name": "http",
+              "port": 8080,
+              "targetPort": 80
+            },
+            {
+              "name": "metrics",
+              "port": 9080
+            }
+          ]
+        },
+        "ingresses": [
+          {
+            "host": "example.com",
+            "paths": [
+              {
+                "path": "/",
+                "portName": "http"
+              }
+            ]
+          }
+        ],
+        "configMaps": [
+          {
+            "name": "config",
+            "data": ""
+          }
+        ],
+        "persistentVolumes": [
+          {
+            "name": "datavol",
+            "accessMode": "ReadWriteOnce",
+            "capacity": 30,
+            "storageClassName": ""
+          }
+        ],
+        "containers": [
+          {
+            "name": "http",
+            "image": "nginx:alpine",
+            "imagePullPolicy": "Always",
+            "command": "",
+            "portNames": ["http", "metrics"],
+            "volumes": [
+              {
+                "name": "config",
+                "type": "configMap",
+                "mountPath": "/config"
+              },
+              {
+                "name": "datavol",
+                "type": "persistentVolume",
+                "mountPath": "/data",
+                "subPath": "test",
+                "readOnly": false
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
