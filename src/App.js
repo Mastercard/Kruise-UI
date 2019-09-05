@@ -1,6 +1,24 @@
 import React, { useState } from "react";
 import { Store } from "./store";
 import Application from "./components/Application";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core/styles";
+import { blue, indigo } from "@material-ui/core/colors";
+
+const theme = createMuiTheme({
+  palette: {
+    secondary: {
+      main: blue[900]
+    },
+    primary: {
+      main: indigo[700]
+    }
+  },
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: ['"Lato"', "sans-serif"].join(",")
+  }
+});
 
 function App() {
   const [app, setApp] = useState(Store.application);
@@ -8,11 +26,13 @@ function App() {
 
   return (
     <div>
-      <Application app={app} onChange={setApp} />
-      <AppDetails app={app} />
-      {services.map((s, i) => (
-        <ServicePlaceholder key={i} spec={s.spec} />
-      ))}
+      <ThemeProvider theme={theme}>
+        <Application app={app} onChange={setApp} />
+        <AppDetails app={app} />
+        {services.map((s, i) => (
+          <ServicePlaceholder key={i} spec={s.spec} />
+        ))}
+      </ThemeProvider>
     </div>
   );
 }
