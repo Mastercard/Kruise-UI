@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 export default function Routes(props) {
   return (
     <Router>
+      {/* TODO: dynamically generate from ui.routes? */}
       <Application app={props.app} onChange={props.setApp} path="/" />
       <Services services={props.services} path="/services" />
     </Router>

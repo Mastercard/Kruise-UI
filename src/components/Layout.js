@@ -12,13 +12,14 @@ import Routes from "../routes";
 import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "@reach/router";
 import Debug from "./Debug";
+import PreviewDialog from "./PreviewDialog";
 
 function Layout(props) {
-  const { classes, app, setApp, services, setServices } = props;
+  const { classes, app, setApp, services, setServices, ui } = props;
 
-  // const closePreview = event => {
-  //   console.log("TODO", "closePreview", event);
-  // };
+  const closePreview = event => {
+    console.log("TODO", "closePreview", event);
+  };
 
   const showPreview = event => {
     console.log("TODO", "showPreview", event);
@@ -43,7 +44,7 @@ function Layout(props) {
           <IconButton
             color="inherit"
             className={classes.previewButton}
-            disabled={true} // TODO: !ui.previewEnabled
+            disabled={!ui.previewEnabled}
             onClick={showPreview}
             aria-label="preview"
           >
@@ -61,11 +62,11 @@ function Layout(props) {
           services={services}
           setServices={setServices}
         />
-        {/* <PreviewDialog */}
-        {/*   content={ui.previewContent} */}
-        {/*   open={ui.showPreview} */}
-        {/*   onClose={this.closePreview} */}
-        {/* /> */}
+        <PreviewDialog
+          content={ui.previewContent}
+          open={ui.showPreview}
+          onClose={closePreview}
+        />
         <section>
           <Debug app={app} />
         </section>
@@ -75,11 +76,12 @@ function Layout(props) {
 }
 
 Layout.propTypes = {
-  classes: PropTypes.object,
-  app: PropTypes.object,
-  setApp: PropTypes.func,
-  services: PropTypes.arrayOf(PropTypes.object),
-  setServices: PropTypes.func
+  classes: PropTypes.object.isRequired,
+  ui: PropTypes.object.isRequired,
+  app: PropTypes.object.isRequired,
+  setApp: PropTypes.func.isRequired,
+  services: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setServices: PropTypes.func.isRequired
 };
 
 const styles = theme => ({
