@@ -23,11 +23,17 @@ const theme = createMuiTheme({
 
 function App() {
   const [app, setApp] = useState(Store.application);
+  const [services, setServices] = useState(Store.services);
 
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Routes app={app} setApp={setApp} />
+        <Routes
+          app={app}
+          setApp={setApp}
+          services={services}
+          setServices={setServices}
+        />
         <AppDetails app={app} />
       </ThemeProvider>
     </div>

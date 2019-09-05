@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { navigate } from "@reach/router";
 import PropTypes from "prop-types";
 
 function Application(props) {
@@ -25,6 +26,7 @@ function Application(props) {
       ...app,
       labels: labels
     });
+    navigate("/services");
   };
 
   return (
