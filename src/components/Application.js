@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 
 function Application(props) {
   const [app, setApp] = useState(props.app);
@@ -89,5 +90,10 @@ function Application(props) {
     </form>
   );
 }
+
+Application.propTypes = {
+  app: PropTypes.object,
+  onChange: PropTypes.func
+};
 
 export default Application;

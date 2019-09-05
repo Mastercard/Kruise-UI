@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Store } from "./store";
-import Application from "./components/Application";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { blue, indigo } from "@material-ui/core/colors";
+import Routes from "./routes";
+import PropTypes from "prop-types";
 
 const theme = createMuiTheme({
   palette: {
@@ -22,24 +23,15 @@ const theme = createMuiTheme({
 
 function App() {
   const [app, setApp] = useState(Store.application);
-  const [services] = useState(Store.services);
 
   return (
     <div>
       <ThemeProvider theme={theme}>
-        <Application app={app} onChange={setApp} />
+        <Routes app={app} setApp={setApp} />
         <AppDetails app={app} />
-        {services.map((s, i) => (
-          <ServicePlaceholder key={i} spec={s.spec} />
-        ))}
       </ThemeProvider>
     </div>
   );
-}
-
-function ServicePlaceholder(props) {
-  const { service } = props.spec;
-  return <h1>Service {service.type}</h1>;
 }
 
 function AppDetails(props) {
@@ -66,5 +58,10 @@ function AppDetails(props) {
     </>
   );
 }
+
+AppDetails.propTypes = {
+  app: PropTypes.object,
+  setApp: PropTypes.func
+};
 
 export default App;
