@@ -31,3 +31,11 @@ deps:
 		-v /usr/src/app/node_modules \
 		--rm \
 		kruise-wizard:latest npm install
+
+.PHONY: shell
+shell:
+	docker run -it \
+		-v ${PWD}:/usr/src/app \
+		-v /usr/src/app/node_modules \
+		--rm \
+		kruise-wizard:latest bash
