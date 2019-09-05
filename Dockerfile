@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 RUN npm install react-scripts@3.1.1 -g --silent
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
-COPY package.json /usr/src/app/package.json
+COPY package.json yarn.lock /usr/src/app/
 RUN npm install --silent
 
 CMD ["npm", "start"]
