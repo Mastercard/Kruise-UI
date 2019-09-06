@@ -15,8 +15,7 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [app, setApp] = useState(Store.application);
-  const [services, setServices] = useState(Store.services);
+  const [appSpec, setAppSpec] = useState(Store.appSpec);
   const [ui, setUi] = useState(Store.ui);
 
   return (
@@ -25,10 +24,8 @@ function App() {
         <CssBaseline />
         <ThemeProvider theme={theme}>
           <Layout
-            app={app}
-            setApp={setApp}
-            services={services}
-            setServices={setServices}
+            appSpec={appSpec}
+            setAppSpec={setAppSpec}
             ui={ui}
             setUi={setUi}
           />

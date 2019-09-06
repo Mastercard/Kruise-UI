@@ -1,21 +1,36 @@
 import React from "react";
 import { Router } from "@reach/router";
-import Application from "./components/Application";
-import Services from "./components/Services";
 import PropTypes from "prop-types";
 
 export default function Routes(props) {
+  // TODO: not sure this is in the right place
+  const changeAppSpec = change => {
+    props.setAppSpec({
+      ...props.appSpec,
+      ...change
+    });
+  };
+
   return (
     <Router>
-      {/* TODO: dynamically generate from ui.routes? */}
-      <Application app={props.app} onChange={props.setApp} path="/" />
-      <Services services={props.services} path="/services" />
+      {props.routes.map(r => {
+        const Tag = r.component;
+        return (
+          <Tag
+            key={r.path}
+            path={r.path}
+            appSpec={props.appSpec}
+            onChange={changeAppSpec}
+          />
+        );
+      })}
     </Router>
   );
 }
 
 Routes.propTypes = {
-  app: PropTypes.object,
-  setApp: PropTypes.func,
+  appSpec: PropTypes.object,
+  setAppSpec: PropTypes.func,
+  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
   services: PropTypes.arrayOf(PropTypes.object)
 };

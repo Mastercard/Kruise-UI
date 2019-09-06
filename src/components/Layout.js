@@ -18,7 +18,7 @@ import ErrorNotifications from "./ErrorNotifications";
 import WizardTabs from "./WizardTabs";
 
 function Layout(props) {
-  const { classes, app, setApp, services, setServices, ui, setUi } = props;
+  const { classes, appSpec, setAppSpec, ui, setUi } = props;
 
   const showPreview = on => {
     setUi({
@@ -69,12 +69,7 @@ function Layout(props) {
         <div className={classes.appBarSpacer} />
         <WizardTabs routes={ui.routes} />
         <div className={classes.tabBarSpacer} />
-        <Routes
-          app={app}
-          setApp={setApp}
-          services={services}
-          setServices={setServices}
-        />
+        <Routes routes={ui.routes} appSpec={appSpec} setAppSpec={setAppSpec} />
         <PreviewDialog
           content={ui.previewContent}
           open={ui.showPreview}
@@ -87,7 +82,7 @@ function Layout(props) {
           <Button color="primary" onClick={() => showPreview(true)}>
             Preview
           </Button>
-          <Debug app={app} />
+          <Debug appSpec={appSpec} />
         </section>
       </main>
     </div>
@@ -98,10 +93,8 @@ Layout.propTypes = {
   classes: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
   setUi: PropTypes.func.isRequired,
-  app: PropTypes.object.isRequired,
-  setApp: PropTypes.func.isRequired,
-  services: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setServices: PropTypes.func.isRequired
+  appSpec: PropTypes.object.isRequired,
+  setAppSpec: PropTypes.func.isRequired
 };
 
 const styles = theme => ({

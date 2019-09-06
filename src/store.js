@@ -3,8 +3,10 @@ import Application from "./components/Application";
 import Services from "./components/Services";
 
 export const Store = {
-  application: data.application,
-  services: data.services,
+  appSpec: {
+    application: data.application,
+    services: data.services
+  },
   ui: {
     warning: null,
     error: null,
@@ -13,7 +15,7 @@ export const Store = {
     previewEnabled: false,
     previewContent: "",
     routes: [
-      { name: "App Details", path: "/", component: Application },
+      { name: "Application", path: "/", component: Application },
       { name: "Services", path: "/services", component: Services }
     ]
   }

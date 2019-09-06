@@ -3,8 +3,8 @@ import { navigate } from "@reach/router";
 import PropTypes from "prop-types";
 
 function Application(props) {
-  const [app, setApp] = useState(props.app);
-  const [labels, setLabels] = useState(props.app.labels);
+  const [app, setApp] = useState(props.appSpec.application);
+  const [labels, setLabels] = useState(props.appSpec.application.labels);
 
   const handleAppChange = event => {
     setApp({
@@ -23,8 +23,10 @@ function Application(props) {
   const handleSubmit = event => {
     event.preventDefault();
     props.onChange({
-      ...app,
-      labels: labels
+      application: {
+        ...app,
+        labels: labels
+      }
     });
     navigate("/services");
   };
@@ -94,7 +96,7 @@ function Application(props) {
 }
 
 Application.propTypes = {
-  app: PropTypes.object,
+  appSpec: PropTypes.object,
   onChange: PropTypes.func
 };
 
