@@ -19,12 +19,11 @@ import ErrorNotifications from "./ErrorNotifications";
 function Layout(props) {
   const { classes, app, setApp, services, setServices, ui, setUi } = props;
 
-  const closePreview = event => {
-    console.log("TODO", "closePreview", event);
-  };
-
-  const showPreview = event => {
-    console.log("TODO", "showPreview", event);
+  const showPreview = on => {
+    setUi({
+      ...ui,
+      showPreview: on === true
+    });
   };
 
   const setError = error => {
@@ -58,7 +57,7 @@ function Layout(props) {
             color="inherit"
             className={classes.previewButton}
             disabled={!ui.previewEnabled}
-            onClick={showPreview}
+            onClick={() => showPreview(true)}
             aria-label="preview"
           >
             <Visibility />
@@ -78,10 +77,15 @@ function Layout(props) {
         <PreviewDialog
           content={ui.previewContent}
           open={ui.showPreview}
-          onClose={closePreview}
+          onClose={() => showPreview(false)}
         />
         <section>
-          <Button onClick={() => setError("testing 1 2 3")}>Error</Button>
+          <Button color="primary" onClick={() => setError("testing 1 2 3")}>
+            Error
+          </Button>
+          <Button color="primary" onClick={() => showPreview(true)}>
+            Preview
+          </Button>
           <Debug app={app} />
         </section>
       </main>
