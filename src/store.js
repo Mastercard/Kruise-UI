@@ -8,7 +8,6 @@ export const Store = {
   ui: {
     warning: null,
     error: null,
-    step: "",
     validationErrors: {},
     showPreview: false,
     previewEnabled: false,

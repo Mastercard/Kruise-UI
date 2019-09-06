@@ -15,6 +15,7 @@ import { Link as RouterLink } from "@reach/router";
 import Debug from "./Debug";
 import PreviewDialog from "./PreviewDialog";
 import ErrorNotifications from "./ErrorNotifications";
+import WizardTabs from "./WizardTabs";
 
 function Layout(props) {
   const { classes, app, setApp, services, setServices, ui, setUi } = props;
@@ -66,7 +67,7 @@ function Layout(props) {
       </AppBar>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-        {/* <WizardTabs /> */}
+        <WizardTabs routes={ui.routes} />
         <div className={classes.tabBarSpacer} />
         <Routes
           app={app}
