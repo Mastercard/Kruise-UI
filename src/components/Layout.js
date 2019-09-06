@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
@@ -13,9 +14,10 @@ import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "@reach/router";
 import Debug from "./Debug";
 import PreviewDialog from "./PreviewDialog";
+import ErrorNotifications from "./ErrorNotifications";
 
 function Layout(props) {
-  const { classes, app, setApp, services, setServices, ui } = props;
+  const { classes, app, setApp, services, setServices, ui, setUi } = props;
 
   const closePreview = event => {
     console.log("TODO", "closePreview", event);
@@ -25,9 +27,20 @@ function Layout(props) {
     console.log("TODO", "showPreview", event);
   };
 
+  const setError = error => {
+    setUi({
+      ...ui,
+      error: error
+    });
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
   return (
     <div className={classes.root}>
-      {/* <ErrorNotifications /> */}
+      <ErrorNotifications error={ui.error} dismiss={clearError} />
       <AppBar position="absolute" className={classNames(classes.appBar)}>
         <Toolbar className={classes.toolbar}>
           <Typography
@@ -68,6 +81,7 @@ function Layout(props) {
           onClose={closePreview}
         />
         <section>
+          <Button onClick={() => setError("testing 1 2 3")}>Error</Button>
           <Debug app={app} />
         </section>
       </main>
@@ -78,6 +92,7 @@ function Layout(props) {
 Layout.propTypes = {
   classes: PropTypes.object.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   services: PropTypes.arrayOf(PropTypes.object).isRequired,

@@ -17,7 +17,7 @@ const theme = createMuiTheme({
 function App() {
   const [app, setApp] = useState(Store.application);
   const [services, setServices] = useState(Store.services);
-  const [ui] = useState(Store.ui);
+  const [ui, setUi] = useState(Store.ui);
 
   return (
     <div>
@@ -30,6 +30,7 @@ function App() {
             services={services}
             setServices={setServices}
             ui={ui}
+            setUi={setUi}
           />
         </ThemeProvider>
       </>
