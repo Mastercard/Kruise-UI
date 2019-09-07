@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 function Services(props) {
-  const [services] = useState(props.appSpec.services);
+  const { services } = props.appSpec;
 
   return services.map((s, idx) => (
     <h1 key={"service-" + idx}>{s.spec.service.type}</h1>
@@ -10,7 +10,7 @@ function Services(props) {
 }
 
 Services.propTypes = {
-  services: PropTypes.arrayOf(PropTypes.object)
+  appSpec: PropTypes.object.isRequired
 };
 
 export default Services;

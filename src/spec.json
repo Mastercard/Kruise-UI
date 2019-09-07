@@ -9,6 +9,11 @@
     },
     "namespace": "dna"
   },
+  "destination": {
+    "url": "https://github.com/ryane/sampleapp.git",
+    "path": "/deploy",
+    "targetRevision": "HEAD"
+  },
   "services": [
     {
       "spec": {

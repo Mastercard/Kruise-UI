@@ -5,6 +5,7 @@ import Services from "./components/Services";
 export const Store = {
   appSpec: {
     application: data.application,
+    destination: data.destination,
     services: data.services
   },
   ui: {

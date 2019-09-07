@@ -3,24 +3,17 @@ import { Router } from "@reach/router";
 import PropTypes from "prop-types";
 
 export default function Routes(props) {
-  // TODO: not sure this is in the right place
-  const changeAppSpec = change => {
-    props.setAppSpec({
-      ...props.appSpec,
-      ...change
-    });
-  };
-
   return (
     <Router>
-      {props.routes.map(r => {
+      {props.ui.routes.map(r => {
         const Tag = r.component;
         return (
           <Tag
             key={r.path}
             path={r.path}
+            ui={props.ui}
             appSpec={props.appSpec}
-            onChange={changeAppSpec}
+            setAppSpec={props.setAppSpec}
           />
         );
       })}
@@ -29,8 +22,7 @@ export default function Routes(props) {
 }
 
 Routes.propTypes = {
-  appSpec: PropTypes.object,
-  setAppSpec: PropTypes.func,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  services: PropTypes.arrayOf(PropTypes.object)
+  appSpec: PropTypes.object.isRequired,
+  setAppSpec: PropTypes.func.isRequired,
+  ui: PropTypes.object.isRequired
 };

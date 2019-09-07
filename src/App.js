@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Store } from "./store";
+import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
@@ -15,20 +14,12 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [appSpec, setAppSpec] = useState(Store.appSpec);
-  const [ui, setUi] = useState(Store.ui);
-
   return (
     <div>
       <>
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Layout
-            appSpec={appSpec}
-            setAppSpec={setAppSpec}
-            ui={ui}
-            setUi={setUi}
-          />
+          <Layout />
         </ThemeProvider>
       </>
     </div>

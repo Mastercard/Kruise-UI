@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
@@ -16,9 +16,12 @@ import Debug from "./Debug";
 import PreviewDialog from "./PreviewDialog";
 import ErrorNotifications from "./ErrorNotifications";
 import WizardTabs from "./WizardTabs";
+import { Store } from "../store";
 
-function Layout(props) {
-  const { classes, appSpec, setAppSpec, ui, setUi } = props;
+function Wizard(props) {
+  const [appSpec, setAppSpec] = useState(Store.appSpec);
+  const [ui, setUi] = useState(Store.ui);
+  const { classes } = props;
 
   const showPreview = on => {
     setUi({
@@ -69,7 +72,7 @@ function Layout(props) {
         <div className={classes.appBarSpacer} />
         <WizardTabs routes={ui.routes} />
         <div className={classes.tabBarSpacer} />
-        <Routes routes={ui.routes} appSpec={appSpec} setAppSpec={setAppSpec} />
+        <Routes ui={ui} appSpec={appSpec} setAppSpec={setAppSpec} />
         <PreviewDialog
           content={ui.previewContent}
           open={ui.showPreview}
@@ -89,12 +92,8 @@ function Layout(props) {
   );
 }
 
-Layout.propTypes = {
-  classes: PropTypes.object.isRequired,
-  ui: PropTypes.object.isRequired,
-  setUi: PropTypes.func.isRequired,
-  appSpec: PropTypes.object.isRequired,
-  setAppSpec: PropTypes.func.isRequired
+Wizard.propTypes = {
+  classes: PropTypes.object.isRequired
 };
 
 const styles = theme => ({
@@ -130,4 +129,4 @@ const styles = theme => ({
   }
 });
 
-export default withStyles(styles)(Layout);
+export default withStyles(styles)(Wizard);
