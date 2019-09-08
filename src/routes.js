@@ -12,8 +12,8 @@ export default function Routes(props) {
             key={r.path}
             path={r.path}
             ui={props.ui}
-            appSpec={props.appSpec}
-            setAppSpec={props.setAppSpec}
+            app={props.app}
+            setApp={props.setApp}
           />
         );
       })}
@@ -22,7 +22,7 @@ export default function Routes(props) {
 }
 
 Routes.propTypes = {
-  appSpec: PropTypes.object.isRequired,
-  setAppSpec: PropTypes.func.isRequired,
+  app: PropTypes.object.isRequired,
+  setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired
 };

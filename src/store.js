@@ -3,11 +3,7 @@ import Application from "./components/Application";
 import Services from "./components/Services";
 
 export const Store = {
-  appSpec: {
-    application: data.application,
-    destination: data.destination,
-    services: data.services
-  },
+  application: data.application,
   ui: {
     warning: null,
     error: null,

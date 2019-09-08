@@ -19,7 +19,7 @@ import WizardTabs from "./WizardTabs";
 import { Store } from "../store";
 
 function Wizard(props) {
-  const [appSpec, setAppSpec] = useState(Store.appSpec);
+  const [app, setApp] = useState(Store.application);
   const [ui, setUi] = useState(Store.ui);
   const { classes } = props;
 
@@ -72,7 +72,7 @@ function Wizard(props) {
         <div className={classes.appBarSpacer} />
         <WizardTabs routes={ui.routes} />
         <div className={classes.tabBarSpacer} />
-        <Routes ui={ui} appSpec={appSpec} setAppSpec={setAppSpec} />
+        <Routes ui={ui} app={app} setApp={setApp} />
         <PreviewDialog
           content={ui.previewContent}
           open={ui.showPreview}
@@ -85,7 +85,7 @@ function Wizard(props) {
           <Button color="primary" onClick={() => showPreview(true)}>
             Preview
           </Button>
-          <Debug appSpec={appSpec} />
+          <Debug app={app} />
         </section>
       </main>
     </div>

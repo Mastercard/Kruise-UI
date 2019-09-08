@@ -1,6 +1,7 @@
 import React from "react";
 import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
+import update from "immutability-helper";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -13,42 +14,43 @@ import Select from "@material-ui/core/Select";
 import WizardNav from "./WizardNav";
 
 function Application(props) {
-  const { appSpec, setAppSpec, ui, classes } = props;
-  const app = appSpec.application;
-  const labels = app.labels;
-  const destination = appSpec.destination;
+  const { app, setApp, ui, classes } = props;
+  const metadata = app.metadata;
+  const labels = metadata.labels;
+  const destination = app.spec.destination;
 
-  const handleAppChange = event => {
-    setAppSpec({
-      ...appSpec,
-      application: {
-        ...app,
-        [event.target.name]: event.target.value
-      }
-    });
+  const handleMetadataChange = event => {
+    setApp(
+      update(app, {
+        metadata: {
+          [event.target.name]: { $set: event.target.value }
+        }
+      })
+    );
   };
 
   const handleLabelsChange = event => {
-    setAppSpec({
-      ...appSpec,
-      application: {
-        ...app,
-        labels: {
-          ...labels,
-          [event.target.name]: event.target.value
+    setApp(
+      update(app, {
+        metadata: {
+          labels: {
+            [event.target.name]: { $set: event.target.value }
+          }
         }
-      }
-    });
+      })
+    );
   };
 
   const handleDestinationChange = event => {
-    setAppSpec({
-      ...appSpec,
-      destination: {
-        ...destination,
-        [event.target.name]: event.target.value
-      }
-    });
+    setApp(
+      update(app, {
+        spec: {
+          destination: {
+            [event.target.name]: { $set: event.target.value }
+          }
+        }
+      })
+    );
   };
 
   const handleSubmit = event => {
@@ -79,8 +81,8 @@ function Application(props) {
                   name="name"
                   label="Application Name"
                   className={classes.textField}
-                  value={app.name}
-                  onChange={handleAppChange}
+                  value={metadata.name}
+                  onChange={handleMetadataChange}
                   margin="normal"
                   required
                   error={hasError("name")}
@@ -147,8 +149,8 @@ function Application(props) {
                   name="namespace"
                   label="Target Namespace"
                   className={classes.textField}
-                  value={app.namespace}
-                  onChange={handleAppChange}
+                  value={metadata.namespace}
+                  onChange={handleMetadataChange}
                   margin="normal"
                   required
                   error={hasError("namespace")}
@@ -206,8 +208,8 @@ function Application(props) {
 }
 
 Application.propTypes = {
-  appSpec: PropTypes.object.isRequired,
-  setAppSpec: PropTypes.func.isRequired,
+  app: PropTypes.object.isRequired,
+  setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   classes: PropTypes.object.isRequired
