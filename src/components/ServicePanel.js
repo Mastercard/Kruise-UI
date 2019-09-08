@@ -51,6 +51,16 @@ function ServicePanel(props) {
     );
   };
 
+  const handlePortDelete = idx => () => {
+    props.onChange(
+      update(service, {
+        ports: {
+          $splice: [[idx, 1]]
+        }
+      })
+    );
+  };
+
   return (
     <Card className={classNames(classes.card, classes.panel)}>
       <CardContent>
@@ -100,6 +110,7 @@ function ServicePanel(props) {
                 ui={ui}
                 servicePort={port}
                 onChange={handlePortChange(idx)}
+                onDelete={handlePortDelete(idx)}
               />
             ))}
           </Grid>

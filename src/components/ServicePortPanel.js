@@ -64,7 +64,11 @@ function ServicePortPanel(props) {
         </div>
       </CardContent>
       <CardActions className={classes.actions}>
-        <IconButton className={classes.deletePort} aria-label="delete port">
+        <IconButton
+          className={classes.deletePort}
+          aria-label="delete port"
+          onClick={props.onDelete}
+        >
           <DeleteIcon />
         </IconButton>
       </CardActions>
@@ -76,6 +80,7 @@ ServicePortPanel.propTypes = {
   ui: PropTypes.object.isRequired,
   servicePort: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
