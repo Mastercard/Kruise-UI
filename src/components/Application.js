@@ -1,8 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
-import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";

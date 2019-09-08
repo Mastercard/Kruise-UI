@@ -16,6 +16,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import update from "immutability-helper";
+import ServicePortPanel from "./ServicePortPanel";
 
 // TODO: review these types
 const serviceTypes = ["ClusterIP", "ExternalName", "LoadBalancer"];
@@ -29,11 +31,24 @@ function ServicePanel(props) {
   };
 
   const handleChange = event => {
-    const s = {
+    props.onChange({
       ...service,
       [event.target.name]: event.target.value
-    };
-    props.onChange(s);
+    });
+  };
+
+  const handlePortChange = idx => event => {
+    props.onChange(
+      update(service, {
+        ports: {
+          [idx]: {
+            $merge: {
+              [event.target.name]: event.target.value
+            }
+          }
+        }
+      })
+    );
   };
 
   return (
@@ -79,23 +94,14 @@ function ServicePanel(props) {
             </div>
           </Grid>
           <Grid item xs={6}>
-            {/* {service.ports.map((port, idx) => ( */}
-            {/*   <ServicePortPanel */}
-            {/*     key={"service-port-" + idx} */}
-            {/*     servicePortIndex={idx} */}
-            {/*     servicePort={port} */}
-            {/*     onChange={this.props.onChange( */}
-            {/*       "port", */}
-            {/*       this.props.serviceIndex, */}
-            {/*       idx */}
-            {/*     )} */}
-            {/*     onDelete={this.props.deleteServicePort( */}
-            {/*       this.props.serviceIndex, */}
-            {/*       idx */}
-            {/*     )} */}
-            {/*     validationErrors={portValidationErrors[idx] || {}} */}
-            {/*   /> */}
-            {/* ))} */}
+            {service.ports.map((port, idx) => (
+              <ServicePortPanel
+                key={"service-port-" + idx}
+                ui={ui}
+                servicePort={port}
+                onChange={handlePortChange(idx)}
+              />
+            ))}
           </Grid>
         </Grid>
       </CardContent>

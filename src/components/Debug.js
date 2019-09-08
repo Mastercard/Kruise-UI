@@ -44,6 +44,16 @@ function Debug(props) {
             <br />
           </p>
         ))}
+        {services
+          .map(s => s.ports)
+          .flat()
+          .map((p, j) => (
+            <div key={j}>
+              <strong>
+                {p.name} ({p.port}:{p.targetPort})
+              </strong>
+            </div>
+          ))}
       </Grid>
     </Grid>
   );
