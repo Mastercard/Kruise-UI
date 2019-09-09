@@ -61,6 +61,21 @@ function ServicePanel(props) {
     );
   };
 
+  const handlePortAdd = () => {
+    props.onChange(
+      update(service, {
+        ports: {
+          $push: [
+            {
+              name: "",
+              port: 8080
+            }
+          ]
+        }
+      })
+    );
+  };
+
   return (
     <Card className={classNames(classes.card, classes.panel)}>
       <CardContent>
@@ -136,6 +151,7 @@ function ServicePanel(props) {
           size="small"
           color="primary"
           className={classes.button}
+          onClick={handlePortAdd}
         >
           Add Port
           <AddCircleIcon className={classes.rightIcon} />
