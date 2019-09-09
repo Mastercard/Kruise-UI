@@ -117,12 +117,17 @@ function ServicePanel(props) {
         </Grid>
       </CardContent>
       <CardActions className={classes.actions}>
-        <IconButton className={classes.addService} aria-label="add service">
+        <IconButton
+          className={classes.addService}
+          aria-label="add service"
+          onClick={props.onAdd}
+        >
           <AddCircleIcon />
         </IconButton>
         <IconButton
           className={classes.deleteService}
           aria-label="delete service"
+          onClick={props.onDelete}
         >
           <DeleteIcon />
         </IconButton>
@@ -144,6 +149,8 @@ ServicePanel.propTypes = {
   ui: PropTypes.object.isRequired,
   service: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

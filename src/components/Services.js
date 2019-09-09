@@ -25,9 +25,42 @@ function Services(props) {
     console.log("TODO: submitService");
   };
 
-  const addService = event => {
-    if (event) event.preventDefault();
-    console.log("TODO: addService");
+  const addService = () => {
+    setApp(
+      update(app, {
+        spec: {
+          components: {
+            $push: [
+              {
+                service: {
+                  name: "",
+                  type: "ClusterIP",
+                  ports: [
+                    {
+                      name: "",
+                      port: 8080,
+                      targetPort: ""
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      })
+    );
+  };
+
+  const deleteService = idx => () => {
+    setApp(
+      update(app, {
+        spec: {
+          components: {
+            $splice: [[idx, 1]]
+          }
+        }
+      })
+    );
   };
 
   let view;
@@ -35,6 +68,8 @@ function Services(props) {
     view = (
       <ServicesView
         onChange={handleServiceChange}
+        onAdd={addService}
+        onDelete={deleteService}
         ui={ui}
         services={services}
         classes={classes}
@@ -63,6 +98,8 @@ function ServicesView(props) {
             ui={ui}
             service={service}
             onChange={props.onChange(serviceIdx)}
+            onDelete={props.onDelete(serviceIdx)}
+            onAdd={props.onAdd}
           />
         ))}
       </Grid>
@@ -108,7 +145,9 @@ Services.propTypes = {
 ServicesView.propTypes = {
   ui: PropTypes.object.isRequired,
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired
 };
 
 NoServicesView.propTypes = {
