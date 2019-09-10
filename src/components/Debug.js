@@ -8,6 +8,33 @@ function Debug(props) {
   const labels = metadata.labels;
   const destination = app.spec.destination;
   const services = app.spec.components.map(c => c.service);
+  const servicePorts = services.reduce((o, s) => {
+    return Object.assign(o, {
+      [s.name]: s.ports.map((p, i) => {
+        return (
+          <div key={i}>
+            <strong>
+              {p.name} ({p.port}:{p.targetPort})
+            </strong>
+          </div>
+        );
+      })
+    });
+  }, {});
+
+  const serviceIngresses = app.spec.components.reduce((o, c) => {
+    return Object.assign(o, {
+      [c.service.name]: c.ingresses.map((i, j) => {
+        return (
+          <div key={j}>
+            <strong>Ingress: </strong>
+            {i.host} ({i.paths[0].portName})
+          </div>
+        );
+      })
+    });
+  }, {});
+
   return (
     <Grid container spacing={10}>
       <Grid item xs={6}>
@@ -37,23 +64,16 @@ function Debug(props) {
       <Grid item xs={6}>
         <h2>services</h2>
         {services.map((s, i) => (
-          <p key={i}>
+          <div key={i}>
             <strong>Name:</strong> {s.name}
             <br />
             <strong>Type:</strong> {s.type}
             <br />
-          </p>
+            {servicePorts[s.name]}
+            {serviceIngresses[s.name]}
+            <br />
+          </div>
         ))}
-        {services
-          .map(s => s.ports)
-          .flat()
-          .map((p, j) => (
-            <div key={j}>
-              <strong>
-                {p.name} ({p.port}:{p.targetPort})
-              </strong>
-            </div>
-          ))}
       </Grid>
     </Grid>
   );

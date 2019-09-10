@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
@@ -22,7 +23,7 @@ function Services(props) {
 
   const handleSubmit = event => {
     if (event) event.preventDefault();
-    console.log("TODO: submitService");
+    navigate("/ingresses");
   };
 
   const addService = () => {
@@ -67,8 +68,8 @@ function Services(props) {
   if (services.length > 0) {
     view = (
       <ServicesView
-        onChange={handleServiceChange}
         onAdd={addService}
+        onChange={handleServiceChange}
         onDelete={deleteService}
         ui={ui}
         services={services}

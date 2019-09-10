@@ -1,6 +1,7 @@
 import data from "./spec.json";
 import Application from "./components/Application";
 import Services from "./components/Services";
+import Ingresses from "./components/Ingresses";
 
 export const Store = {
   application: data.application,
@@ -13,7 +14,8 @@ export const Store = {
     previewContent: "",
     routes: [
       { name: "Application", path: "/", component: Application },
-      { name: "Services", path: "/services", component: Services }
+      { name: "Services", path: "/services", component: Services },
+      { name: "Ingresses", path: "/ingresses", component: Ingresses }
     ]
   }
 };
