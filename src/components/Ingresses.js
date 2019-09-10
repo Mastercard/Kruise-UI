@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
@@ -12,7 +13,7 @@ import IngressPanel from "./IngressPanel";
 function Ingresses(props) {
   const handleSubmit = event => {
     if (event) event.preventDefault();
-    console.log("TODO: submitIngress");
+    navigate("/volumes");
   };
 
   const addIngress = () => {

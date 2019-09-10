@@ -2,6 +2,7 @@ import data from "./spec.json";
 import Application from "./components/Application";
 import Services from "./components/Services";
 import Ingresses from "./components/Ingresses";
+import Volumes from "./components/Volumes";
 
 export const Store = {
   application: data.application,
@@ -15,7 +16,8 @@ export const Store = {
     routes: [
       { name: "Application", path: "/", component: Application },
       { name: "Services", path: "/services", component: Services },
-      { name: "Ingresses", path: "/ingresses", component: Ingresses }
+      { name: "Ingresses", path: "/ingresses", component: Ingresses },
+      { name: "Volumes", path: "/volumes", component: Volumes }
     ]
   }
 };
