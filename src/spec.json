@@ -61,7 +61,8 @@
           "containers": [
             {
               "name": "http",
-              "image": "nginx:alpine",
+              "image": "nginx",
+              "imageTag": "alpine",
               "imagePullPolicy": "Always",
               "command": "",
               "portNames": ["http", "metrics"],
@@ -98,7 +99,8 @@
           "containers": [
             {
               "name": "http",
-              "image": "nginx:alpine",
+              "image": "nginx",
+              "imageTag": "alpine",
               "imagePullPolicy": "Always",
               "command": "",
               "portNames": ["http"]
