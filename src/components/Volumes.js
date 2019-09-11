@@ -9,6 +9,10 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import WizardNav from "./WizardNav";
 import VolumePanel from "./VolumePanel";
 
+const volumeTypes = ["PersistentVolume", "ConfigMap"];
+const accessModes = ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"];
+const storageClasses = ["SSD", "NFS"];
+
 function Volumes(props) {
   const { app, setApp, ui, classes } = props;
 
@@ -32,12 +36,29 @@ function Volumes(props) {
     }
   };
 
+  const newVolume = _type => {
+    switch (_type) {
+      case "ConfigMap":
+        return { name: "", data: "" };
+      case "PersistentVolume":
+        return {
+          name: "",
+          accessMode: accessModes[0],
+          capacity: 20,
+          storageClassName: storageClasses[0]
+        };
+      default:
+        throw new Error("invalid volume type: " + _type);
+    }
+  };
+
   const handleSubmit = event => {
     if (event) event.preventDefault();
     navigate("/volumes");
   };
 
-  const updateApp = updatedVolumes => {
+  const updateApp = command => {
+    const updatedVolumes = update(volumes, command);
     const { configMaps, persistentVolumes } = updatedVolumes.reduce(
       (vols, vol) => {
         vols[typeKey(vol._type)].push(vol.volume);
@@ -60,27 +81,16 @@ function Volumes(props) {
   };
 
   const handleChange = idx => vol => {
-    updateApp(
-      update(volumes, {
-        [idx]: { $set: vol }
-      })
-    );
+    updateApp({ [idx]: { $set: vol } });
   };
 
   const handleDelete = idx => () => {
-    updateApp(
-      update(volumes, {
-        $splice: [[idx, 1]]
-      })
-    );
+    updateApp({ $splice: [[idx, 1]] });
   };
 
-  const handleAdd = vol => {
-    updateApp(
-      update(volumes, {
-        $push: [vol]
-      })
-    );
+  const handleAdd = () => {
+    const newType = volumeTypes[0];
+    updateApp({ $push: [{ _type: newType, volume: newVolume(newType) }] });
   };
 
   let view;
@@ -93,10 +103,11 @@ function Volumes(props) {
         onChange={handleChange}
         onAdd={handleAdd}
         onDelete={handleDelete}
+        volumeCreator={newVolume}
       />
     );
   } else {
-    view = <NoVolumesView ui={ui} classes={classes} />;
+    view = <NoVolumesView ui={ui} classes={classes} onAdd={handleAdd} />;
   }
 
   return (
@@ -120,6 +131,10 @@ function VolumesView(props) {
             onAdd={props.onAdd}
             onChange={props.onChange(volumeIdx)}
             onDelete={props.onDelete(volumeIdx)}
+            volumeCreator={props.volumeCreator}
+            volumeTypes={volumeTypes}
+            accessModes={accessModes}
+            storageClasses={storageClasses}
           />
         ))}
       </Grid>
@@ -141,6 +156,7 @@ function NoVolumesView(props) {
             variant="contained"
             color="primary"
             className={classes.button}
+            onClick={props.onAdd}
           >
             Add Volume
             <AddCircleIcon className={classes.rightIcon} />
@@ -164,6 +180,7 @@ Volumes.propTypes = {
 VolumesView.propTypes = {
   ui: PropTypes.object.isRequired,
   volumes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  volumeCreator: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
@@ -171,6 +188,7 @@ VolumesView.propTypes = {
 
 NoVolumesView.propTypes = {
   ui: PropTypes.object.isRequired,
+  onAdd: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

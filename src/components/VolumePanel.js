@@ -16,39 +16,14 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 
-const volumeTypes = ["PersistentVolume", "ConfigMap"];
-const accessModes = ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"];
-const storageClasses = ["SSD", "NFS"];
-
 function VolumePanel(props) {
-  const { ui, volume, classes } = props;
+  const { ui, volume, volumeTypes, classes } = props;
 
   const [typeMap, setTypeMap] = useState({});
 
   const hasError = field => {
     const appErrors = ui.validationErrors;
     return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
-
-  const newVolume = (_type, vol, noCache = false) => {
-    if (!noCache) {
-      const cachedType = typeMap[_type];
-      if (cachedType) return cachedType;
-    }
-
-    switch (_type) {
-      case "ConfigMap":
-        return { name: vol.name, data: "" };
-      case "PersistentVolume":
-        return {
-          name: vol.name,
-          accessMode: accessModes[0],
-          capacity: 20,
-          storageClassName: storageClasses[0]
-        };
-      default:
-        throw new Error("invalid volume type: " + _type);
-    }
   };
 
   const handleChange = event => {
@@ -68,16 +43,25 @@ function VolumePanel(props) {
     // cache old type values
     setTypeMap({ ...typeMap, [currentType]: volume.volume });
 
+    // create a new default volume
+    let newVolume = props.volumeCreator(newType);
+
+    // if there is a cached volume of newType, update the fields in the new
+    // volume
+    const cachedType = typeMap[newType];
+    if (cachedType) {
+      Object.keys(cachedType)
+        .filter(k => k in newVolume)
+        .forEach(k => {
+          newVolume[k] = cachedType[k];
+        });
+    }
+
     // update volume
     props.onChange({
       _type: newType,
-      volume: newVolume(newType, volume.volume)
+      volume: newVolume
     });
-  };
-
-  const handleAdd = () => {
-    const type = volumeTypes[0];
-    props.onAdd({ _type: type, volume: newVolume(type, { name: "" }) }, true);
   };
 
   return (
@@ -140,6 +124,8 @@ function VolumePanel(props) {
                       volume={volume.volume}
                       onChange={handleChange}
                       hasError={hasError}
+                      accessModes={props.accessModes}
+                      storageClasses={props.storageClasses}
                       classes={classes}
                     />
                   );
@@ -154,7 +140,7 @@ function VolumePanel(props) {
         <IconButton
           className={classes.addVolume}
           aria-label="add volume"
-          onClick={handleAdd}
+          onClick={props.onAdd}
         >
           <AddCircleIcon />
         </IconButton>
@@ -209,7 +195,7 @@ function PersistentVolume(props) {
             id: "accessMode"
           }}
         >
-          {accessModes.map(s => (
+          {props.accessModes.map(s => (
             <MenuItem key={s} value={s}>
               {s}
             </MenuItem>
@@ -243,7 +229,7 @@ function PersistentVolume(props) {
             id: "storageClassName"
           }}
         >
-          {storageClasses.map(s => (
+          {props.storageClasses.map(s => (
             <MenuItem key={s} value={s}>
               {s}
             </MenuItem>
@@ -260,6 +246,10 @@ VolumePanel.propTypes = {
   onChange: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  volumeCreator: PropTypes.func.isRequired,
+  volumeTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  storageClasses: PropTypes.arrayOf(PropTypes.string).isRequired,
+  accessModes: PropTypes.arrayOf(PropTypes.string).isRequired,
   classes: PropTypes.object.isRequired
 };
 
@@ -274,6 +264,8 @@ PersistentVolume.propTypes = {
   volume: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   hasError: PropTypes.func.isRequired,
+  storageClasses: PropTypes.arrayOf(PropTypes.string).isRequired,
+  accessModes: PropTypes.arrayOf(PropTypes.string).isRequired,
   classes: PropTypes.object.isRequired
 };
 
