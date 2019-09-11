@@ -12,17 +12,17 @@ function Services(props) {
   const { app, setApp, ui, classes } = props;
   const services = app.spec.components.map(c => c.service);
 
-  const handleServiceChange = idx => s => {
+  const handleSubmit = event => {
+    if (event) event.preventDefault();
+    navigate("/ingresses");
+  };
+
+  const changeService = idx => s => {
     setApp(
       update(app, {
         spec: { components: { [idx]: { service: { $set: s } } } }
       })
     );
-  };
-
-  const handleSubmit = event => {
-    if (event) event.preventDefault();
-    navigate("/ingresses");
   };
 
   const addService = () => {
@@ -68,14 +68,23 @@ function Services(props) {
   let view;
   if (services.length > 0) {
     view = (
-      <ServicesView
-        onAdd={addService}
-        onChange={handleServiceChange}
-        onDelete={deleteService}
-        ui={ui}
-        services={services}
-        classes={classes}
-      />
+      <Grid container spacing={10}>
+        <Grid item xs={10}>
+          {services.map((service, serviceIdx) => (
+            <ServicePanel
+              key={"service-" + serviceIdx}
+              ui={ui}
+              service={service}
+              onChange={changeService(serviceIdx)}
+              onDelete={deleteService(serviceIdx)}
+              onAdd={addService}
+            />
+          ))}
+        </Grid>
+        <Grid item xs={2}>
+          <WizardNav routes={ui.routes} />
+        </Grid>
+      </Grid>
     );
   } else {
     view = <EmptyResourceView ui={ui} name="Service" onAdd={addService} />;
@@ -88,43 +97,11 @@ function Services(props) {
   );
 }
 
-function ServicesView(props) {
-  const { ui, services } = props;
-
-  return (
-    <Grid container spacing={10}>
-      <Grid item xs={10}>
-        {services.map((service, serviceIdx) => (
-          <ServicePanel
-            key={"service-" + serviceIdx}
-            ui={ui}
-            service={service}
-            onChange={props.onChange(serviceIdx)}
-            onDelete={props.onDelete(serviceIdx)}
-            onAdd={props.onAdd}
-          />
-        ))}
-      </Grid>
-      <Grid item xs={2}>
-        <WizardNav routes={ui.routes} />
-      </Grid>
-    </Grid>
-  );
-}
-
 Services.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
-};
-
-ServicesView.propTypes = {
-  ui: PropTypes.object.isRequired,
-  services: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired
 };
 
 const styles = {
