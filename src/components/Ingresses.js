@@ -4,11 +4,10 @@ import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import WizardNav from "./WizardNav";
 import DialogNoServices from "./DialogNoServices";
 import IngressPanel from "./IngressPanel";
+import EmptyResourceView from "./EmptyResourceView";
 
 function Ingresses(props) {
   const handleSubmit = event => {
@@ -217,39 +216,13 @@ function Ingresses(props) {
       </Grid>
     );
   } else {
-    view = <NoIngressesView ui={ui} classes={classes} onAdd={addIngress} />;
+    view = <EmptyResourceView ui={ui} name="Ingress" onAdd={addIngress} />;
   }
 
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <div className={classes.root}>{view}</div>
     </form>
-  );
-}
-
-function NoIngressesView(props) {
-  const { ui, classes, onAdd } = props;
-
-  return (
-    <Grid container spacing={10}>
-      <Grid item xs={2} />
-      <Grid item xs={8}>
-        <div className={classes.actionRow}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={onAdd}
-          >
-            Add Ingress
-            <AddCircleIcon className={classes.rightIcon} />
-          </Button>
-        </div>
-      </Grid>
-      <Grid item xs={2}>
-        <WizardNav routes={ui.routes} />
-      </Grid>
-    </Grid>
   );
 }
 
@@ -260,27 +233,10 @@ Ingresses.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-NoIngressesView.propTypes = {
-  ui: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  onAdd: PropTypes.func.isRequired
-};
-
-const styles = theme => ({
+const styles = {
   root: {
     display: "flex"
-  },
-  button: {
-    marginRight: theme.spacing(10)
-  },
-  rightIcon: {
-    marginLeft: theme.spacing(10)
-  },
-  actionRow: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    textAlign: "center"
   }
-});
+};
 
 export default withStyles(styles)(Ingresses);

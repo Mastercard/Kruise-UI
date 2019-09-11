@@ -4,10 +4,9 @@ import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
 import WizardNav from "./WizardNav";
 import ServicePanel from "./ServicePanel";
+import EmptyResourceView from "./EmptyResourceView";
 
 function Services(props) {
   const { app, setApp, ui, classes } = props;
@@ -43,7 +42,9 @@ function Services(props) {
                       targetPort: ""
                     }
                   ]
-                }
+                },
+                ingresses: [],
+                containers: []
               }
             ]
           }
@@ -77,7 +78,7 @@ function Services(props) {
       />
     );
   } else {
-    view = <NoServicesView ui={ui} classes={classes} addService={addService} />;
+    view = <EmptyResourceView ui={ui} name="Service" onAdd={addService} />;
   }
 
   return (
@@ -111,31 +112,6 @@ function ServicesView(props) {
   );
 }
 
-function NoServicesView(props) {
-  const { ui, classes, addService } = props;
-  return (
-    <Grid container spacing={10}>
-      <Grid item xs={2} />
-      <Grid item xs={8}>
-        <div className={classes.actionRow}>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={addService}
-          >
-            Add Service
-            <AddCircleIcon className={classes.rightIcon} />
-          </Button>
-        </div>
-      </Grid>
-      <Grid item xs={2}>
-        <WizardNav routes={ui.routes} />
-      </Grid>
-    </Grid>
-  );
-}
-
 Services.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
@@ -151,27 +127,10 @@ ServicesView.propTypes = {
   onAdd: PropTypes.func.isRequired
 };
 
-NoServicesView.propTypes = {
-  ui: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
-  addService: PropTypes.func.isRequired
-};
-
-const styles = theme => ({
+const styles = {
   root: {
     display: "flex"
-  },
-  button: {
-    marginRight: theme.spacing(1)
-  },
-  rightIcon: {
-    marginLeft: theme.spacing(1)
-  },
-  actionRow: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    textAlign: "center"
   }
-});
+};
 
 export default withStyles(styles)(Services);

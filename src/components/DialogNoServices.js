@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { navigate } from "@reach/router";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -7,7 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-function DialogNoServices() {
+function DialogNoServices(props) {
   const handleServicesClick = () => {
     navigate("/services");
   };
@@ -23,7 +24,7 @@ function DialogNoServices() {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Before you can create {this.props.resource}, you must first define a
+          Before you can create {props.resource}, you must first define a
           service.
         </DialogContentText>
       </DialogContent>
@@ -36,4 +37,7 @@ function DialogNoServices() {
   );
 }
 
+DialogNoServices.propTypes = {
+  resource: PropTypes.string.isRequired
+};
 export default DialogNoServices;
