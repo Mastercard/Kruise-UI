@@ -56,12 +56,10 @@ function Volumes(props) {
       }
     });
 
-    console.log(configMaps, persistentVolumes);
     navigate("/volumes");
   };
 
   const handleChange = idx => vol => {
-    console.log("handleChange", idx, vol);
     setVolumes(
       update(volumes, {
         [idx]: { $set: vol }
@@ -70,7 +68,6 @@ function Volumes(props) {
   };
 
   const handleDelete = idx => () => {
-    console.log("handleDelete", idx);
     setVolumes(
       update(volumes, {
         $splice: [[idx, 1]]
@@ -79,7 +76,6 @@ function Volumes(props) {
   };
 
   const handleAdd = vol => {
-    console.log("handleAdd", vol);
     setVolumes(
       update(volumes, {
         $push: [vol]
@@ -103,7 +99,6 @@ function Volumes(props) {
     view = <NoVolumesView ui={ui} classes={classes} />;
   }
 
-  console.log("app", app);
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <div className={classes.root}>{view}</div>
