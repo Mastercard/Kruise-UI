@@ -16,6 +16,20 @@
         "path": "/deploy",
         "targetRevision": "HEAD"
       },
+      "configMaps": [
+        {
+          "name": "config",
+          "data": ""
+        }
+      ],
+      "persistentVolumes": [
+        {
+          "name": "datavol",
+          "accessMode": "ReadWriteOnce",
+          "capacity": 30,
+          "storageClassName": "SSD"
+        }
+      ],
       "components": [
         {
           "service": {
@@ -42,20 +56,6 @@
                   "portName": "http"
                 }
               ]
-            }
-          ],
-          "configMaps": [
-            {
-              "name": "config",
-              "data": ""
-            }
-          ],
-          "persistentVolumes": [
-            {
-              "name": "datavol",
-              "accessMode": "ReadWriteOnce",
-              "capacity": 30,
-              "storageClassName": ""
             }
           ],
           "containers": [
@@ -95,8 +95,6 @@
             ]
           },
           "ingresses": [],
-          "configMaps": [],
-          "persistentVolumes": [],
           "containers": [
             {
               "name": "http",

@@ -37,7 +37,7 @@ function Debug(props) {
 
   return (
     <Grid container spacing={10}>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <h2>application</h2>
         <p>
           <strong>Name:</strong> {metadata.name}
@@ -61,7 +61,7 @@ function Debug(props) {
           <strong>TargetRevision:</strong> {destination.targetRevision}
         </p>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={4}>
         <h2>services</h2>
         {services.map((s, i) => (
           <div key={i}>
@@ -71,6 +71,30 @@ function Debug(props) {
             <br />
             {servicePorts[s.name]}
             {serviceIngresses[s.name]}
+            <br />
+          </div>
+        ))}
+      </Grid>
+      <Grid item xs={4}>
+        <h2>configMaps</h2>
+        {app.spec.configMaps.map((c, i) => (
+          <div key={i}>
+            <strong>Name:</strong> {c.name}
+            <br />
+            <strong>Data size:</strong> {c.data.length}
+            <br />
+          </div>
+        ))}
+        <h2>persistentVolumes</h2>
+        {app.spec.persistentVolumes.map((v, i) => (
+          <div key={i}>
+            <strong>Name:</strong> {v.name}
+            <br />
+            <strong>Access Mode:</strong> {v.accessMode}
+            <br />
+            <strong>Capacity:</strong> {v.capacity}
+            <br />
+            <strong>Storage Class:</strong> {v.storageClassName}
             <br />
           </div>
         ))}

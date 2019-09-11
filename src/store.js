@@ -17,7 +17,8 @@ export const Store = {
       { name: "Application", path: "/", component: Application },
       { name: "Services", path: "/services", component: Services },
       { name: "Ingresses", path: "/ingresses", component: Ingresses },
-      { name: "Volumes", path: "/volumes", component: Volumes }
+      { name: "Volumes", path: "/volumes", component: Volumes },
+      { name: "Volumes", path: "/app", component: Application }
     ]
   }
 };
