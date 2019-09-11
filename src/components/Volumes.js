@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
@@ -12,15 +12,13 @@ import VolumePanel from "./VolumePanel";
 function Volumes(props) {
   const { app, setApp, ui, classes } = props;
 
-  const [volumes, setVolumes] = useState(
-    [].concat(
-      app.spec.configMaps.map(v => {
-        return { _type: "ConfigMap", volume: { ...v } };
-      }),
-      app.spec.persistentVolumes.map(v => {
-        return { _type: "PersistentVolume", volume: { ...v } };
-      })
-    )
+  const volumes = [].concat(
+    app.spec.configMaps.map(v => {
+      return { _type: "ConfigMap", volume: { ...v } };
+    }),
+    app.spec.persistentVolumes.map(v => {
+      return { _type: "PersistentVolume", volume: { ...v } };
+    })
   );
 
   const typeKey = _type => {
@@ -36,7 +34,11 @@ function Volumes(props) {
 
   const handleSubmit = event => {
     if (event) event.preventDefault();
-    const { configMaps, persistentVolumes } = volumes.reduce(
+    navigate("/volumes");
+  };
+
+  const updateApp = updatedVolumes => {
+    const { configMaps, persistentVolumes } = updatedVolumes.reduce(
       (vols, vol) => {
         vols[typeKey(vol._type)].push(vol.volume);
         return vols;
@@ -55,12 +57,10 @@ function Volumes(props) {
         persistentVolumes: persistentVolumes
       }
     });
-
-    navigate("/volumes");
   };
 
   const handleChange = idx => vol => {
-    setVolumes(
+    updateApp(
       update(volumes, {
         [idx]: { $set: vol }
       })
@@ -68,7 +68,7 @@ function Volumes(props) {
   };
 
   const handleDelete = idx => () => {
-    setVolumes(
+    updateApp(
       update(volumes, {
         $splice: [[idx, 1]]
       })
@@ -76,7 +76,7 @@ function Volumes(props) {
   };
 
   const handleAdd = vol => {
-    setVolumes(
+    updateApp(
       update(volumes, {
         $push: [vol]
       })
