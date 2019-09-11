@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
@@ -15,13 +15,15 @@ const storageClasses = ["SSD", "NFS"];
 function Volumes(props) {
   const { app, setApp, ui, classes } = props;
 
-  const volumes = [].concat(
-    app.spec.configMaps.map(v => {
-      return { _type: "ConfigMap", volume: { ...v } };
-    }),
-    app.spec.persistentVolumes.map(v => {
-      return { _type: "PersistentVolume", volume: { ...v } };
-    })
+  const [volumes, setVolumes] = useState(
+    [].concat(
+      app.spec.configMaps.map(v => {
+        return { _type: "ConfigMap", volume: { ...v } };
+      }),
+      app.spec.persistentVolumes.map(v => {
+        return { _type: "PersistentVolume", volume: { ...v } };
+      })
+    )
   );
 
   const typeKey = _type => {
@@ -53,12 +55,12 @@ function Volumes(props) {
 
   const handleSubmit = event => {
     if (event) event.preventDefault();
-    navigate("/volumes");
+    updateApp();
+    navigate("/containers");
   };
 
-  const updateApp = command => {
-    const updatedVolumes = update(volumes, command);
-    const { configMaps, persistentVolumes } = updatedVolumes.reduce(
+  const updateApp = () => {
+    const { configMaps, persistentVolumes } = volumes.reduce(
       (vols, vol) => {
         vols[typeKey(vol._type)].push(vol.volume);
         return vols;
@@ -80,16 +82,20 @@ function Volumes(props) {
   };
 
   const handleChange = idx => vol => {
-    updateApp({ [idx]: { $set: vol } });
+    setVolumes(update(volumes, { [idx]: { $set: vol } }));
   };
 
   const handleDelete = idx => () => {
-    updateApp({ $splice: [[idx, 1]] });
+    setVolumes(update(volumes, { $splice: [[idx, 1]] }));
   };
 
   const handleAdd = () => {
     const newType = volumeTypes[0];
-    updateApp({ $push: [{ _type: newType, volume: newVolume(newType) }] });
+    setVolumes(
+      update(volumes, {
+        $push: [{ _type: newType, volume: newVolume(newType) }]
+      })
+    );
   };
 
   let view;

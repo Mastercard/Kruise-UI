@@ -43,8 +43,11 @@ function VolumePanel(props) {
     // cache old type values
     setTypeMap({ ...typeMap, [currentType]: volume.volume });
 
-    // create a new default volume
-    let newVolume = props.volumeCreator(newType);
+    // create a new default volume but preserve name
+    let newVolume = {
+      ...props.volumeCreator(newType),
+      name: volume.volume.name
+    };
 
     // if there is a cached volume of newType, update the fields in the new
     // volume
