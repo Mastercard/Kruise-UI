@@ -95,15 +95,27 @@ function Volumes(props) {
   let view;
   if (volumes.length > 0) {
     view = (
-      <VolumesView
-        ui={ui}
-        volumes={volumes}
-        classes={classes}
-        onChange={handleChange}
-        onAdd={handleAdd}
-        onDelete={handleDelete}
-        volumeCreator={newVolume}
-      />
+      <Grid container spacing={10}>
+        <Grid item xs={10}>
+          {volumes.map((volume, volumeIdx) => (
+            <VolumePanel
+              key={"volume-" + volumeIdx}
+              ui={ui}
+              volume={volume}
+              onAdd={handleAdd}
+              onChange={handleChange(volumeIdx)}
+              onDelete={handleDelete(volumeIdx)}
+              volumeCreator={newVolume}
+              volumeTypes={volumeTypes}
+              accessModes={accessModes}
+              storageClasses={storageClasses}
+            />
+          ))}
+        </Grid>
+        <Grid item xs={2}>
+          <WizardNav routes={ui.routes} />
+        </Grid>
+      </Grid>
     );
   } else {
     view = <EmptyResourceView ui={ui} name="Volume" onAdd={handleAdd} />;
@@ -116,48 +128,11 @@ function Volumes(props) {
   );
 }
 
-function VolumesView(props) {
-  const { ui, volumes } = props;
-
-  return (
-    <Grid container spacing={10}>
-      <Grid item xs={10}>
-        {volumes.map((volume, volumeIdx) => (
-          <VolumePanel
-            key={"volume-" + volumeIdx}
-            ui={ui}
-            volume={volume}
-            onAdd={props.onAdd}
-            onChange={props.onChange(volumeIdx)}
-            onDelete={props.onDelete(volumeIdx)}
-            volumeCreator={props.volumeCreator}
-            volumeTypes={volumeTypes}
-            accessModes={accessModes}
-            storageClasses={storageClasses}
-          />
-        ))}
-      </Grid>
-      <Grid item xs={2}>
-        <WizardNav routes={ui.routes} />
-      </Grid>
-    </Grid>
-  );
-}
-
 Volumes.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
-};
-
-VolumesView.propTypes = {
-  ui: PropTypes.object.isRequired,
-  volumes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  volumeCreator: PropTypes.func.isRequired,
-  onAdd: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
 };
 
 const styles = {
