@@ -89,9 +89,6 @@ const styles = theme => ({
     minWidth: 275,
     marginTop: 16
   },
-  firstCard: {
-    marginTop: 0
-  },
   container: {
     display: "flex",
     flexWrap: "wrap"

@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import update from "immutability-helper";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -22,7 +24,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
 function ContainerPanel(props) {
-  const { ui, container, services, classes } = props;
+  const { ui, container, services, volumes, classes } = props;
 
   const servicePorts = services
     .filter(s => s.name === container._serviceName)
@@ -30,6 +32,16 @@ function ContainerPanel(props) {
     .flat();
 
   const imagePullPolicies = Object.keys(props.imagePullPolicyNames);
+
+  // unmountedVolumes contains the list of volumes that are not already mounted
+  // by this container
+  const unmountedVolumes = volumes.filter(v => {
+    return (
+      container.volumes.findIndex(
+        cv => v._type === cv.type && v.name === cv.name
+      ) === -1
+    );
+  });
 
   const hasError = field => {
     const appErrors = ui.validationErrors;
@@ -62,6 +74,63 @@ function ContainerPanel(props) {
     });
   };
 
+  const handleVolumeAdd = () => {
+    props.onChange({
+      ...container,
+      volumes: [
+        ...container.volumes,
+        {
+          name: unmountedVolumes[0].name,
+          type: unmountedVolumes[0]._type,
+          mountPath: "",
+          subPath: "",
+          readOnly: true
+        }
+      ]
+    });
+  };
+
+  const handleVolumeChange = idx => event => {
+    const { name, value } = event.target;
+    props.onChange(
+      update(container, {
+        volumes: {
+          [idx]: {
+            $set: {
+              ...container.volumes[idx],
+              [name]: value
+            }
+          }
+        }
+      })
+    );
+  };
+
+  const handleVolumeTypeChange = idx => event => {
+    const [_type, name] = event.target.value.split(/-(.+)/);
+    props.onChange(
+      update(container, {
+        volumes: {
+          [idx]: {
+            $set: {
+              ...container.volumes[idx],
+              name: name,
+              type: _type
+            }
+          }
+        }
+      })
+    );
+  };
+
+  const handleVolumeDelete = idx => () => {
+    props.onChange(
+      update(container, {
+        volumes: { $splice: [[idx, 1]] }
+      })
+    );
+  };
+
   return (
     <Card className={classNames(classes.card, classes.panel)}>
       <CardContent>
@@ -69,7 +138,7 @@ function ContainerPanel(props) {
           container
         </Typography>
         <Grid container spacing={10}>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <div className={classes.container}>
               <FormControl className={classes.formControl} fullWidth>
                 <InputLabel htmlFor="type">Service / Component Name</InputLabel>
@@ -183,6 +252,101 @@ function ContainerPanel(props) {
               </FormControl>
             </div>
           </Grid>
+          <Grid item xs={6}>
+            {(container.volumes || []).map((vol, volIdx) => (
+              <Card
+                key={vol.type + "-" + vol.name}
+                className={classes.volumeCard}
+              >
+                <CardContent>
+                  <Typography
+                    variant="overline"
+                    align="left"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Volume Mount
+                  </Typography>
+                  <div className={classes.container}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="type">Volume</InputLabel>
+                      <Select
+                        value={[vol.type, vol.name].join("-")}
+                        onChange={handleVolumeTypeChange(volIdx)}
+                        required
+                        fullWidth
+                        error={hasError("volume")}
+                        inputProps={{
+                          name: "volume",
+                          id: "volume"
+                        }}
+                      >
+                        {unmountedVolumes
+                          .concat([{ _type: vol.type, name: vol.name }])
+                          .map(v => (
+                            <MenuItem
+                              key={[v._type, v.name].join("-")}
+                              value={[v._type, v.name].join("-")}
+                            >
+                              {v.name} ({v._type})
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </FormControl>
+                    <TextField
+                      name="mountPath"
+                      id="mountPath"
+                      label="Mount Path"
+                      className={classes.textField}
+                      value={vol.mountPath}
+                      onChange={handleVolumeChange(volIdx)}
+                      margin="normal"
+                      error={hasError("mountPath")}
+                    />
+                    <TextField
+                      name="subPath"
+                      id="subPath"
+                      label="Subpath"
+                      className={classes.textField}
+                      value={vol.subPath}
+                      onChange={handleVolumeChange(volIdx)}
+                      margin="normal"
+                      error={hasError("subPath")}
+                    />
+                    <FormControl
+                      error={hasError("readOnly")}
+                      component="fieldset"
+                      className={classes.formControl}
+                    >
+                      <FormGroup row>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              color="primary"
+                              name="readOnly"
+                              checked={vol.readOnly === true}
+                              onChange={handleVolumeChange(volIdx)}
+                              value={vol.readOnly === true}
+                            />
+                          }
+                          label="Read Only?"
+                        />
+                      </FormGroup>
+                    </FormControl>
+                  </div>
+                </CardContent>
+                <CardActions className={classes.actions}>
+                  <IconButton
+                    className={classes.deleteVolume}
+                    aria-label="delete port"
+                    onClick={handleVolumeDelete(volIdx)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </CardActions>
+              </Card>
+            ))}
+          </Grid>
         </Grid>
       </CardContent>
       <CardActions className={classes.actions}>
@@ -196,6 +360,17 @@ function ContainerPanel(props) {
         >
           <DeleteIcon />
         </IconButton>
+        <Button
+          variant="contained"
+          size="small"
+          color="primary"
+          disabled={unmountedVolumes.length === 0}
+          className={classes.button}
+          onClick={handleVolumeAdd}
+        >
+          Add Volume Mount
+          <AddCircleIcon className={classes.rightIcon} />
+        </Button>
       </CardActions>
     </Card>
   );
@@ -208,6 +383,7 @@ ContainerPanel.propTypes = {
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
+  volumes: PropTypes.arrayOf(PropTypes.object).isRequired,
   imagePullPolicyNames: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
 };
@@ -240,6 +416,16 @@ const styles = theme => ({
   },
   panel: {
     marginBottom: theme.spacing(4)
+  },
+  volumeCard: {
+    minWidth: 275,
+    marginTop: 16
+  },
+  rightIcon: {
+    marginLeft: theme.spacing(1)
+  },
+  deleteVolume: {
+    marginLeft: "auto"
   }
 });
 

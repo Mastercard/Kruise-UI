@@ -26,6 +26,34 @@ function Volumes(props) {
     )
   );
 
+  // attachedVolumes builds a map of volume mounts for all containers. we need
+  // this so that we can update the name and types on containers' volume
+  // mounts
+  const [attachedVolumes, setAttachedVolumes] = useState(
+    (app.spec.components || []).reduce((compacc, component, componentIdx) => {
+      (component.containers || []).forEach((container, containerIdx) => {
+        (container.volumes || []).forEach((volMount, volMountIdx) => {
+          volumes.forEach((vol, volIdx) => {
+            if (
+              volMount.name === vol.volume.name &&
+              volMount.type === vol._type
+            ) {
+              compacc.push({
+                componentIdx: componentIdx,
+                containerIdx: containerIdx,
+                volumeMountIdx: volMountIdx,
+                volumeIdx: volIdx,
+                volume: vol
+              });
+            }
+          });
+        });
+      });
+      return compacc;
+    }, [])
+  );
+
+  // lookup the right json key name for different volume types
   const typeKey = _type => {
     switch (_type) {
       case "ConfigMap":
@@ -37,6 +65,7 @@ function Volumes(props) {
     }
   };
 
+  // factory to create new volumes
   const newVolume = _type => {
     switch (_type) {
       case "ConfigMap":
@@ -59,7 +88,9 @@ function Volumes(props) {
     navigate("/containers");
   };
 
+  // updateApp runs when the form is submitted and updates the application state
   const updateApp = () => {
+    // reduce volumes into an object grouped by volume type
     const { configMaps, persistentVolumes } = volumes.reduce(
       (vols, vol) => {
         vols[typeKey(vol._type)].push(vol.volume);
@@ -71,10 +102,32 @@ function Volumes(props) {
       }
     );
 
+    // fix up any volume mounts in containers
+    let newComponents = app.spec.components;
+    attachedVolumes.forEach(av => {
+      newComponents = update(newComponents, {
+        [av.componentIdx]: {
+          containers: {
+            [av.containerIdx]: {
+              volumes: {
+                [av.volumeMountIdx]: {
+                  $merge: {
+                    name: volumes[av.volumeIdx].volume.name,
+                    type: volumes[av.volumeIdx]._type
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+
     setApp({
       ...app,
       spec: {
         ...app.spec,
+        components: newComponents,
         configMaps: configMaps,
         persistentVolumes: persistentVolumes
       }
@@ -87,6 +140,34 @@ function Volumes(props) {
 
   const handleDelete = idx => () => {
     setVolumes(update(volumes, { $splice: [[idx, 1]] }));
+
+    // we also need to deleted any container volume mounts that use this volume
+    setAttachedVolumes(attachedVolumes.filter(av => av.volumeIdx !== idx));
+    let newComponents = app.spec.components;
+    attachedVolumes
+      .filter(av => av.volumeIdx === idx)
+      .forEach(av => {
+        newComponents = update(newComponents, {
+          [av.componentIdx]: {
+            containers: {
+              [av.containerIdx]: {
+                volumes: {
+                  $splice: [[av.volumeMountIdx, 1]]
+                }
+              }
+            }
+          }
+        });
+      });
+
+    // update application state
+    setApp({
+      ...app,
+      spec: {
+        ...app.spec,
+        components: newComponents
+      }
+    });
   };
 
   const handleAdd = () => {

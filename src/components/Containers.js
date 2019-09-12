@@ -17,6 +17,14 @@ const imagePullPolicyNames = {
 function Containers(props) {
   const { app, setApp, ui, classes } = props;
   const services = app.spec.components.map(c => c.service);
+  const volumes = [].concat(
+    app.spec.configMaps.map(v => {
+      return { _type: "ConfigMap", ...v };
+    }),
+    app.spec.persistentVolumes.map(v => {
+      return { _type: "PersistentVolume", ...v };
+    })
+  );
 
   const [containers, setContainers] = useState(
     app.spec.components
@@ -121,6 +129,7 @@ function Containers(props) {
               onChange={handleChange(containerIdx)}
               onDelete={handleDelete(containerIdx)}
               services={services}
+              volumes={volumes}
               imagePullPolicyNames={imagePullPolicyNames}
             />
           ))}

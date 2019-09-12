@@ -69,12 +69,14 @@
               "volumes": [
                 {
                   "name": "config",
-                  "type": "configMap",
-                  "mountPath": "/config"
+                  "type": "ConfigMap",
+                  "mountPath": "/config",
+                  "subPath": "",
+                  "readOnly": true
                 },
                 {
                   "name": "datavol",
-                  "type": "persistentVolume",
+                  "type": "PersistentVolume",
                   "mountPath": "/data",
                   "subPath": "test",
                   "readOnly": false
@@ -103,7 +105,8 @@
               "imageTag": "alpine",
               "imagePullPolicy": "Always",
               "command": "",
-              "portNames": ["http"]
+              "portNames": ["http"],
+              "volumes": []
             }
           ]
         }
