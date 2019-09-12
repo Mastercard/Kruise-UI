@@ -14,6 +14,7 @@ function WizardNav(props) {
           classes={props.classes}
           routes={props.routes}
           location={location}
+          onSubmit={props.onSubmit}
         />
       )}
     </Location>
@@ -21,7 +22,8 @@ function WizardNav(props) {
 }
 
 function WizardNavButtons(props) {
-  const handleBack = path => () => {
+  const submitAndNavigate = path => () => {
+    props.onSubmit();
     navigate(path);
   };
 
@@ -58,19 +60,19 @@ function WizardNavButtons(props) {
       <IconButton
         disabled={!prev}
         className={classes.button}
-        onClick={handleBack(prev)}
+        onClick={submitAndNavigate(prev)}
       >
         <ArrowBack />
       </IconButton>
       {!nextButtonDisabled && (
         <Button
-          type="submit"
           disabled={nextButtonDisabled}
           size="large"
           variant="contained"
           color="primary"
           className={classes.button}
           fullWidth={false}
+          onClick={submitAndNavigate(next)}
         >
           Next
         </Button>
@@ -81,13 +83,15 @@ function WizardNavButtons(props) {
 
 WizardNav.propTypes = {
   classes: PropTypes.object.isRequired,
-  routes: PropTypes.arrayOf(PropTypes.object).isRequired
+  routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onSubmit: PropTypes.func.isRequired
 };
 
 WizardNavButtons.propTypes = {
   classes: PropTypes.object.isRequired,
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired
 };
 
 const styles = theme => ({

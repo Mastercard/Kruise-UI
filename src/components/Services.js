@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
@@ -12,10 +11,7 @@ function Services(props) {
   const { app, setApp, ui, classes } = props;
   const services = app.spec.components.map(c => c.service);
 
-  const handleSubmit = event => {
-    if (event) event.preventDefault();
-    navigate("/ingresses");
-  };
+  const handleSubmit = () => {};
 
   const changeService = idx => s => {
     setApp(
@@ -82,7 +78,7 @@ function Services(props) {
           ))}
         </Grid>
         <Grid item xs={2}>
-          <WizardNav routes={ui.routes} />
+          <WizardNav routes={ui.routes} onSubmit={handleSubmit} />
         </Grid>
       </Grid>
     );

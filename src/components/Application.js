@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
@@ -53,10 +52,7 @@ function Application(props) {
     );
   };
 
-  const handleSubmit = event => {
-    if (event) event.preventDefault();
-    navigate("/services");
-  };
+  const handleSubmit = () => {};
 
   const hasError = field => {
     const appErrors = ui.validationErrors;
@@ -199,7 +195,7 @@ function Application(props) {
             </Paper>
           </Grid>
           <Grid item xs={2}>
-            <WizardNav routes={ui.routes} />
+            <WizardNav onSubmit={handleSubmit} routes={ui.routes} />
           </Grid>
         </Grid>
       </div>

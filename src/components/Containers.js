@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { navigate } from "@reach/router";
 import { withStyles } from "@material-ui/core/styles";
 import update from "immutability-helper";
 import Grid from "@material-ui/core/Grid";
@@ -40,10 +39,8 @@ function Containers(props) {
     return <DialogNoServices resource="containers" />;
   }
 
-  const handleSubmit = event => {
-    if (event) event.preventDefault();
+  const handleSubmit = () => {
     updateApp();
-    navigate("/containers");
   };
 
   const updateApp = () => {
@@ -135,7 +132,7 @@ function Containers(props) {
           ))}
         </Grid>
         <Grid item xs={2}>
-          <WizardNav routes={ui.routes} />
+          <WizardNav onSubmit={handleSubmit} routes={ui.routes} />
         </Grid>
       </Grid>
     );
