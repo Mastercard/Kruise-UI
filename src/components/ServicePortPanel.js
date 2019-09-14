@@ -8,14 +8,11 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import DeleteIcon from "@material-ui/icons/Delete";
+import useApplicationValidator from "../validation";
 
 function ServicePortPanel(props) {
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
-
   const { servicePort, ui, classes } = props;
+  const [hasError] = useApplicationValidator(ui);
 
   return (
     <Card className={classes.card}>
@@ -37,7 +34,7 @@ function ServicePortPanel(props) {
             value={servicePort.name}
             onChange={props.onChange}
             margin="normal"
-            error={hasError("name")}
+            error={hasError(props.specPath, "name")}
           />
           <TextField
             name="port"
@@ -49,17 +46,18 @@ function ServicePortPanel(props) {
             onChange={props.onChange}
             margin="normal"
             required
-            error={hasError("port")}
+            error={hasError(props.specPath, "port")}
           />
           <TextField
             id="targetPort"
             name="targetPort"
             label="Target Port"
+            type="number"
             className={classes.textField}
             value={servicePort.targetPort}
             onChange={props.onChange}
             margin="normal"
-            error={hasError("targetPort")}
+            error={hasError(props.specPath, "targetPort")}
           />
         </div>
       </CardContent>
@@ -78,6 +76,7 @@ function ServicePortPanel(props) {
 
 ServicePortPanel.propTypes = {
   ui: PropTypes.object.isRequired,
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   servicePort: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

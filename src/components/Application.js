@@ -18,7 +18,7 @@ function Application(props) {
   const metadata = app.metadata;
   const labels = metadata.labels;
   const destination = app.spec.destination;
-  const [validate, hasError, clearError] = useApplicationValidator(ui, setUi);
+  const [hasError, clearError, validate] = useApplicationValidator(ui, setUi);
 
   const handleMetadataChange = event => {
     setApp(

@@ -18,37 +18,42 @@ import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
 import update from "immutability-helper";
 import ServicePortPanel from "./ServicePortPanel";
+import useApplicationValidator from "../validation";
 
 // TODO: review these types
 const serviceTypes = ["ClusterIP", "ExternalName", "LoadBalancer"];
 
 function ServicePanel(props) {
-  const { ui, service, classes } = props;
-
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
+  const { ui, setUi, service, classes } = props;
+  const [hasError, clearError] = useApplicationValidator(ui, setUi);
 
   const handleChange = event => {
     props.onChange({
       ...service,
       [event.target.name]: event.target.value
     });
+    clearError(props.specPath, event.target.name);
   };
 
   const handlePortChange = idx => event => {
+    const { name, value } = event.target;
+    let setVal = value;
+    if (["port", "targetPort"].includes(name)) {
+      if (value === "") setVal = 0;
+      else setVal = parseInt(setVal);
+    }
     props.onChange(
       update(service, {
         ports: {
           [idx]: {
             $merge: {
-              [event.target.name]: event.target.value
+              [name]: setVal
             }
           }
         }
       })
     );
+    clearError(props.specPath.concat("ports", idx), event.target.name);
   };
 
   const handlePortDelete = idx => () => {
@@ -95,7 +100,7 @@ function ServicePanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("name")}
+                error={hasError(props.specPath, "name")}
               />
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="type">Service Type</InputLabel>
@@ -104,7 +109,7 @@ function ServicePanel(props) {
                   onChange={handleChange}
                   required
                   fullWidth
-                  error={hasError("type")}
+                  error={hasError(props.specPath, "type")}
                   inputProps={{
                     name: "type",
                     id: "type"
@@ -124,6 +129,8 @@ function ServicePanel(props) {
               <ServicePortPanel
                 key={"service-port-" + idx}
                 ui={ui}
+                setUi={setUi}
+                specPath={props.specPath.concat("ports", idx.toString())}
                 servicePort={port}
                 onChange={handlePortChange(idx)}
                 onDelete={handlePortDelete(idx)}
@@ -164,6 +171,8 @@ function ServicePanel(props) {
 
 ServicePanel.propTypes = {
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   service: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,

@@ -45,5 +45,5 @@ export default function useApplicationValidator(ui, setUi) {
     );
   };
 
-  return [validate, hasError, clearError];
+  return [hasError, clearError, validate];
 }

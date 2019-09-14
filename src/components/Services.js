@@ -6,12 +6,16 @@ import Grid from "@material-ui/core/Grid";
 import WizardNav from "./WizardNav";
 import ServicePanel from "./ServicePanel";
 import EmptyResourceView from "./EmptyResourceView";
+import useApplicationValidator from "../validation";
 
 function Services(props) {
-  const { app, setApp, ui, classes } = props;
+  const { app, setApp, ui, setUi, classes } = props;
   const services = app.spec.components.map(c => c.service);
+  const [, , validate] = useApplicationValidator(ui, setUi);
 
-  const handleSubmit = () => true;
+  const handleSubmit = () => {
+    return validate(app);
+  };
 
   const changeService = idx => s => {
     setApp(
@@ -35,7 +39,7 @@ function Services(props) {
                     {
                       name: "",
                       port: 8080,
-                      targetPort: ""
+                      targetPort: 0
                     }
                   ]
                 },
@@ -70,6 +74,13 @@ function Services(props) {
             <ServicePanel
               key={"service-" + serviceIdx}
               ui={ui}
+              setUi={setUi}
+              specPath={[
+                "spec",
+                "components",
+                serviceIdx.toString(),
+                "service"
+              ]}
               service={service}
               onChange={changeService(serviceIdx)}
               onDelete={deleteService(serviceIdx)}
@@ -97,6 +108,7 @@ Services.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
