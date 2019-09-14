@@ -15,14 +15,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import useApplicationValidator from "../validation";
 
 function IngressPanel(props) {
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
-
   const { ui, ingress, services, serviceName, classes } = props;
+  const [hasError] = useApplicationValidator(ui);
   const servicePorts = services
     .find(s => s.name === serviceName)
     .ports.map(p => p.name);
@@ -45,7 +42,7 @@ function IngressPanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("host")}
+                error={hasError(props.specPath, "host")}
               />
               <FormControl className={classes.formControl} fullWidth>
                 <InputLabel htmlFor="type">Service / Component Name</InputLabel>
@@ -53,7 +50,7 @@ function IngressPanel(props) {
                   value={serviceName}
                   onChange={props.onChange(serviceName, ingress.host)}
                   required
-                  error={hasError("serviceName")}
+                  error={hasError(props.specPath, "serviceName")}
                   inputProps={{
                     name: "serviceName",
                     id: "serviceName"
@@ -73,7 +70,7 @@ function IngressPanel(props) {
                   value={ingress.paths[0].portName}
                   onChange={props.onChange(serviceName, ingress.host)}
                   required
-                  error={hasError("portName")}
+                  error={hasError(props.specPath, "portName")}
                   inputProps={{
                     name: "servicePort",
                     id: "servicePort"
@@ -108,6 +105,7 @@ function IngressPanel(props) {
 
 IngressPanel.propTypes = {
   ui: PropTypes.object.isRequired,
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   ingress: PropTypes.object.isRequired,
   services: PropTypes.arrayOf(PropTypes.object).isRequired,
   serviceName: PropTypes.string.isRequired,

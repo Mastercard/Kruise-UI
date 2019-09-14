@@ -7,9 +7,15 @@ import WizardNav from "./WizardNav";
 import DialogNoServices from "./DialogNoServices";
 import IngressPanel from "./IngressPanel";
 import EmptyResourceView from "./EmptyResourceView";
+import useApplicationValidator from "../validation";
 
 function Ingresses(props) {
-  const handleSubmit = () => true;
+  const { app, setApp, ui, setUi, classes } = props;
+  const [, clearError, validate] = useApplicationValidator(ui, setUi);
+
+  const handleSubmit = () => {
+    return validate(app);
+  };
 
   const addIngress = () => {
     setApp(
@@ -68,6 +74,11 @@ function Ingresses(props) {
 
     const iidx = app.spec.components[cidx].ingresses.findIndex(
       i => i.host === host
+    );
+
+    clearError(
+      ["spec", "components", cidx.toString(), "ingresses", iidx.toString()],
+      event.target.name
     );
 
     switch (event.target.name) {
@@ -167,24 +178,26 @@ function Ingresses(props) {
     }
   };
 
-  const { app, setApp, ui, classes } = props;
   const services = app.spec.components.map(c => c.service);
   if (services.length === 0) {
     return <DialogNoServices resource={"ingress rules"} />;
   }
 
-  const ingresses = app.spec.components.reduce((o, component) => {
-    return Object.assign(o, { [component.service.name]: component.ingresses });
-  }, {});
-
-  const ingressPanels = Object.keys(ingresses).map(serviceName => {
-    return ingresses[serviceName].map((ingress, ingressIdx) => {
+  const ingressPanels = app.spec.components.map((component, componentIdx) => {
+    return component.ingresses.map((ingress, ingressIdx) => {
       return (
         <IngressPanel
           key={"ingress-" + ingressIdx}
           ui={ui}
+          specPath={[
+            "spec",
+            "components",
+            componentIdx.toString(),
+            "ingresses",
+            ingressIdx.toString()
+          ]}
           ingress={ingress}
-          serviceName={serviceName}
+          serviceName={component.service.name}
           services={services}
           onAdd={addIngress}
           onChange={changeIngress}
@@ -226,6 +239,7 @@ Ingresses.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
