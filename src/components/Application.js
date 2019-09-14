@@ -11,12 +11,14 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import WizardNav from "./WizardNav";
+import useApplicationValidator from "../validation";
 
 function Application(props) {
   const { app, setApp, ui, setUi, classes } = props;
   const metadata = app.metadata;
   const labels = metadata.labels;
   const destination = app.spec.destination;
+  const [validate, hasError, clearError] = useApplicationValidator(ui, setUi);
 
   const handleMetadataChange = event => {
     setApp(
@@ -56,51 +58,7 @@ function Application(props) {
   };
 
   const handleSubmit = () => {
-    return validate();
-  };
-
-  const validate = async () => {
-    return fetch("http://localhost:9801/app/validation", {
-      method: "post",
-      body: JSON.stringify(app),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(response =>
-      response.json().then(verrs => {
-        if (Object.keys(verrs).length > 0) {
-          setUi({ ...ui, validationErrors: verrs });
-          return false;
-        }
-        return true;
-      })
-    );
-  };
-
-  const hasError = (path, field) => {
-    const appErrors = path.reduce(
-      (acc, p) => ((acc && acc[p]) !== undefined ? acc[p] : undefined),
-      ui.validationErrors.errors || {}
-    );
-    return Object.prototype.hasOwnProperty.call(appErrors || {}, field);
-  };
-
-  const clearError = (path, field) => {
-    if (!hasError(path, field)) return;
-    let patch = {};
-    path.reduce((acc, p, i, src) => {
-      if (i === src.length - 1) {
-        return (acc[p] = { $unset: [field] });
-      }
-      return (acc[p] = {});
-    }, patch);
-    setUi(
-      update(ui, {
-        validationErrors: {
-          errors: patch
-        }
-      })
-    );
+    return validate(app);
   };
 
   // TODO: this stuff need to be configurable
