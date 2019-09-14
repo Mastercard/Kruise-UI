@@ -6,21 +6,27 @@ import Grid from "@material-ui/core/Grid";
 import WizardNav from "./WizardNav";
 import VolumePanel from "./VolumePanel";
 import EmptyResourceView from "./EmptyResourceView";
+import useApplicationValidator from "../validation";
 
 const volumeTypes = ["PersistentVolume", "ConfigMap"];
 const accessModes = ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"];
 const storageClasses = ["SSD", "NFS"];
 
 function Volumes(props) {
-  const { app, setApp, ui, classes } = props;
+  const { app, setApp, ui, setUi, classes } = props;
+  const [, , validate] = useApplicationValidator(ui, setUi);
 
   const [volumes, setVolumes] = useState(
     [].concat(
-      app.spec.configMaps.map(v => {
-        return { _type: "ConfigMap", volume: { ...v } };
+      app.spec.configMaps.map((v, i) => {
+        return { _type: "ConfigMap", _index: i.toString(), volume: { ...v } };
       }),
-      app.spec.persistentVolumes.map(v => {
-        return { _type: "PersistentVolume", volume: { ...v } };
+      app.spec.persistentVolumes.map((v, i) => {
+        return {
+          _type: "PersistentVolume",
+          _index: i.toString(),
+          volume: { ...v }
+        };
       })
     )
   );
@@ -82,11 +88,11 @@ function Volumes(props) {
   };
 
   const handleSubmit = () => {
-    updateApp();
-    return true;
+    return validate(updateApp());
   };
 
-  // updateApp runs when the form is submitted and updates the application state
+  // updateApp runs when the form is submitted, updates the application state,
+  // and returns the app
   const updateApp = () => {
     // reduce volumes into an object grouped by volume type
     const { configMaps, persistentVolumes } = volumes.reduce(
@@ -121,7 +127,7 @@ function Volumes(props) {
       });
     });
 
-    setApp({
+    const newApp = {
       ...app,
       spec: {
         ...app.spec,
@@ -129,7 +135,9 @@ function Volumes(props) {
         configMaps: configMaps,
         persistentVolumes: persistentVolumes
       }
-    });
+    };
+    setApp(newApp);
+    return newApp;
   };
 
   const handleChange = idx => vol => {
@@ -185,7 +193,10 @@ function Volumes(props) {
           {volumes.map((volume, volumeIdx) => (
             <VolumePanel
               key={"volume-" + volumeIdx}
+              specPath={["spec", typeKey(volume._type), volume._index]}
+              typeKey={typeKey}
               ui={ui}
+              setUi={setUi}
               volume={volume}
               onAdd={handleAdd}
               onChange={handleChange(volumeIdx)}
@@ -217,6 +228,7 @@ Volumes.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

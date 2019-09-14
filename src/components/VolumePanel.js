@@ -15,25 +15,31 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { withStyles } from "@material-ui/core/styles";
 import classNames from "classnames";
+import useApplicationValidator from "../validation";
 
 function VolumePanel(props) {
-  const { ui, volume, volumeTypes, classes } = props;
-
+  const { ui, setUi, volume, volumeTypes, classes } = props;
+  const [hasError, clearError] = useApplicationValidator(ui, setUi);
   const [typeMap, setTypeMap] = useState({});
 
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
-
   const handleChange = event => {
+    const { name, value } = event.target;
+    let setVal = value;
+    if (volume._type === "PersistentVolume" && name === "capacity") {
+      if (setVal === "") setVal = 0;
+      else setVal = parseInt(setVal);
+    }
     props.onChange({
       ...volume,
       volume: {
         ...volume.volume,
-        [event.target.name]: event.target.value
+        [name]: setVal
       }
     });
+    clearError(
+      ["spec", props.typeKey(volume._type), volume._index],
+      event.target.name
+    );
   };
 
   const handleTypeChange = event => {
@@ -83,7 +89,7 @@ function VolumePanel(props) {
                   onChange={handleTypeChange}
                   required
                   fullWidth
-                  error={hasError("_type")}
+                  error={hasError(props.specPath, "_type")}
                   inputProps={{
                     name: "_type",
                     id: "_type"
@@ -105,7 +111,7 @@ function VolumePanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("name")}
+                error={hasError(props.specPath, "name")}
               />
             </div>
           </Grid>
@@ -115,6 +121,7 @@ function VolumePanel(props) {
                 case "ConfigMap":
                   return (
                     <ConfigMap
+                      specPath={props.specPath}
                       volume={volume.volume}
                       onChange={handleChange}
                       hasError={hasError}
@@ -124,6 +131,7 @@ function VolumePanel(props) {
                 case "PersistentVolume":
                   return (
                     <PersistentVolume
+                      specPath={props.specPath}
                       volume={volume.volume}
                       onChange={handleChange}
                       hasError={hasError}
@@ -175,7 +183,7 @@ function ConfigMap(props) {
         multiline
         rows="4"
         variant="outlined"
-        error={props.hasError("data")}
+        error={props.hasError(props.specPath, "data")}
       />
     </div>
   );
@@ -192,7 +200,7 @@ function PersistentVolume(props) {
           onChange={props.onChange}
           required
           fullWidth
-          error={props.hasError("accessMode")}
+          error={props.hasError(props.specPath, "accessMode")}
           inputProps={{
             name: "accessMode",
             id: "accessMode"
@@ -217,7 +225,7 @@ function PersistentVolume(props) {
         onChange={props.onChange}
         margin="normal"
         required
-        error={props.hasError("capacity")}
+        error={props.hasError(props.specPath, "capacity")}
       />
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="storageClassName">Storage Class</InputLabel>
@@ -226,7 +234,7 @@ function PersistentVolume(props) {
           onChange={props.onChange}
           required
           fullWidth
-          error={props.hasError("storageClassName")}
+          error={props.hasError(props.specPath, "storageClassName")}
           inputProps={{
             name: "storageClassName",
             id: "storageClassName"
@@ -245,6 +253,9 @@ function PersistentVolume(props) {
 
 VolumePanel.propTypes = {
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
+  typeKey: PropTypes.func.isRequired,
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   volume: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
@@ -257,6 +268,7 @@ VolumePanel.propTypes = {
 };
 
 ConfigMap.propTypes = {
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   volume: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   hasError: PropTypes.func.isRequired,
@@ -264,6 +276,7 @@ ConfigMap.propTypes = {
 };
 
 PersistentVolume.propTypes = {
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   volume: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   hasError: PropTypes.func.isRequired,
