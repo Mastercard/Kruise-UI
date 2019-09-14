@@ -83,6 +83,7 @@ function Volumes(props) {
 
   const handleSubmit = () => {
     updateApp();
+    return true;
   };
 
   // updateApp runs when the form is submitted and updates the application state

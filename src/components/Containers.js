@@ -41,6 +41,7 @@ function Containers(props) {
 
   const handleSubmit = () => {
     updateApp();
+    return true;
   };
 
   const updateApp = () => {

@@ -12,6 +12,7 @@ export default function Routes(props) {
             key={r.path}
             path={r.path}
             ui={props.ui}
+            setUi={props.setUi}
             app={props.app}
             setApp={props.setApp}
           />
@@ -24,5 +25,6 @@ export default function Routes(props) {
 Routes.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
-  ui: PropTypes.object.isRequired
+  ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired
 };

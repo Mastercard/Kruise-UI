@@ -22,9 +22,10 @@ function WizardNav(props) {
 }
 
 function WizardNavButtons(props) {
-  const submitAndNavigate = path => () => {
-    props.onSubmit();
-    navigate(path);
+  const submitAndNavigate = path => async () => {
+    if (await props.onSubmit()) {
+      navigate(path);
+    }
   };
 
   const { routes, location, classes } = props;

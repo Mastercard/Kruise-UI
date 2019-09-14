@@ -11,7 +11,7 @@ function Services(props) {
   const { app, setApp, ui, classes } = props;
   const services = app.spec.components.map(c => c.service);
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => true;
 
   const changeService = idx => s => {
     setApp(

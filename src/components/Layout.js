@@ -72,7 +72,7 @@ function Wizard(props) {
         <div className={classes.appBarSpacer} />
         <WizardTabs routes={ui.routes} />
         <div className={classes.tabBarSpacer} />
-        <Routes ui={ui} app={app} setApp={setApp} />
+        <Routes ui={ui} setUi={setUi} app={app} setApp={setApp} />
         <PreviewDialog
           content={ui.previewContent}
           open={ui.showPreview}

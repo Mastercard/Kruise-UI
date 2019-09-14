@@ -9,7 +9,7 @@ import IngressPanel from "./IngressPanel";
 import EmptyResourceView from "./EmptyResourceView";
 
 function Ingresses(props) {
-  const handleSubmit = () => {};
+  const handleSubmit = () => true;
 
   const addIngress = () => {
     setApp(

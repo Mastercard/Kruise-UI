@@ -13,7 +13,7 @@ import Select from "@material-ui/core/Select";
 import WizardNav from "./WizardNav";
 
 function Application(props) {
-  const { app, setApp, ui, classes } = props;
+  const { app, setApp, ui, setUi, classes } = props;
   const metadata = app.metadata;
   const labels = metadata.labels;
   const destination = app.spec.destination;
@@ -26,6 +26,7 @@ function Application(props) {
         }
       })
     );
+    clearError(["metadata"], event.target.name);
   };
 
   const handleLabelsChange = event => {
@@ -38,6 +39,7 @@ function Application(props) {
         }
       })
     );
+    clearError(["metadata", "labels"], event.target.name);
   };
 
   const handleDestinationChange = event => {
@@ -50,13 +52,55 @@ function Application(props) {
         }
       })
     );
+    clearError(["spec", "destination"], event.target.name);
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    return validate();
+  };
 
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
+  const validate = async () => {
+    return fetch("http://localhost:9801/app/validation", {
+      method: "post",
+      body: JSON.stringify(app),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then(response =>
+      response.json().then(verrs => {
+        if (Object.keys(verrs).length > 0) {
+          setUi({ ...ui, validationErrors: verrs });
+          return false;
+        }
+        return true;
+      })
+    );
+  };
+
+  const hasError = (path, field) => {
+    const appErrors = path.reduce(
+      (acc, p) => ((acc && acc[p]) !== undefined ? acc[p] : undefined),
+      ui.validationErrors.errors || {}
+    );
+    return Object.prototype.hasOwnProperty.call(appErrors || {}, field);
+  };
+
+  const clearError = (path, field) => {
+    if (!hasError(path, field)) return;
+    let patch = {};
+    path.reduce((acc, p, i, src) => {
+      if (i === src.length - 1) {
+        return (acc[p] = { $unset: [field] });
+      }
+      return (acc[p] = {});
+    }, patch);
+    setUi(
+      update(ui, {
+        validationErrors: {
+          errors: patch
+        }
+      })
+    );
   };
 
   // TODO: this stuff need to be configurable
@@ -81,7 +125,7 @@ function Application(props) {
                   onChange={handleMetadataChange}
                   margin="normal"
                   required
-                  error={hasError("name")}
+                  error={hasError(["metadata"], "name")}
                 />
                 <TextField
                   name="version"
@@ -91,7 +135,7 @@ function Application(props) {
                   onChange={handleLabelsChange}
                   margin="normal"
                   required
-                  error={hasError("version")}
+                  error={hasError(["metadata", "labels"], "version")}
                 />
                 <TextField
                   name="team"
@@ -101,7 +145,7 @@ function Application(props) {
                   onChange={handleLabelsChange}
                   margin="normal"
                   required
-                  error={hasError("team")}
+                  error={hasError(["metadata", "labels"], "team")}
                 />
                 <FormControl className={classes.formControl}>
                   <InputLabel htmlFor="environment">
@@ -149,7 +193,7 @@ function Application(props) {
                   onChange={handleMetadataChange}
                   margin="normal"
                   required
-                  error={hasError("namespace")}
+                  error={hasError(["metadata"], "namespace")}
                 />
               </div>
             </Paper>
@@ -169,7 +213,7 @@ function Application(props) {
                   onChange={handleDestinationChange}
                   margin="normal"
                   required
-                  error={hasError("url")}
+                  error={hasError(["spec", "destination"], "url")}
                 />
                 <TextField
                   name="path"
@@ -179,7 +223,7 @@ function Application(props) {
                   onChange={handleDestinationChange}
                   margin="normal"
                   required
-                  error={hasError("path")}
+                  error={hasError(["spec", "destination"], "path")}
                 />
                 <TextField
                   name="targetRevision"
@@ -189,7 +233,7 @@ function Application(props) {
                   onChange={handleDestinationChange}
                   margin="normal"
                   required
-                  error={hasError("targetRevision")}
+                  error={hasError(["spec", "destination"], "targetRevision")}
                 />
               </div>
             </Paper>
@@ -207,6 +251,7 @@ Application.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   classes: PropTypes.object.isRequired
 };
