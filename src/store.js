@@ -4,6 +4,7 @@ import Services from "./components/Services";
 import Ingresses from "./components/Ingresses";
 import Volumes from "./components/Volumes";
 import Containers from "./components/Containers";
+import Analyze from "./components/Analyze";
 
 export const Store = {
   application: data.application,
@@ -20,6 +21,7 @@ export const Store = {
       { name: "Ingresses", path: "/ingresses", component: Ingresses },
       { name: "Volumes", path: "/volumes", component: Volumes },
       { name: "Containers", path: "/containers", component: Containers },
+      { name: "Analyze", path: "/analyze", component: Analyze }
     ]
   }
 };
