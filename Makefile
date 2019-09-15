@@ -5,6 +5,10 @@ all: build
 build:
 	docker build -t kruise-wizard:latest .
 
+.PHONY: prod
+prod:
+	docker build -f ./Dockerfile.prod -t ryane/kruise-wizard:latest .
+
 run: build
 	docker run -it \
 		-v ${PWD}:/usr/src/app \
