@@ -34,15 +34,23 @@ export default function useApplicationValidator(ui, setUi) {
       headers: {
         "Content-Type": "application/json"
       }
-    }).then(response =>
-      response.json().then(verrs => {
-        if (Object.keys(verrs).length > 0) {
-          setUi({ ...ui, validationErrors: verrs });
-          return false;
-        }
-        return true;
-      })
-    );
+    })
+      .then(response =>
+        response.json().then(verrs => {
+          if (Object.keys(verrs).length > 0) {
+            setUi({ ...ui, validationErrors: verrs });
+            return false;
+          }
+          return true;
+        })
+      )
+      .catch(error => {
+        setUi({
+          ...ui,
+          error: `Validation failed: ${error.message}`
+        });
+        return false;
+      });
   };
 
   return [hasError, clearError, validate];
