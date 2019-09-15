@@ -2,7 +2,7 @@ import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core/styles";
-import Layout from "./components/Layout";
+import Wizard from "./components/Wizard";
 
 const theme = createMuiTheme({
   palette: {
@@ -19,7 +19,7 @@ function App() {
       <>
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Layout />
+          <Wizard />
         </ThemeProvider>
       </>
     </div>
