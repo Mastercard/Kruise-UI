@@ -28,6 +28,13 @@ export default function useApplicationValidator(ui, setUi) {
     );
   };
 
+  const checkResponse = response => {
+    if (!response.ok) {
+      throw new Error(`${response.statusText} (${response.status})`);
+    }
+    return response;
+  };
+
   const validate = async app => {
     return fetch(`${Config.KruiseAPI}/app/validation`, {
       method: "post",
@@ -36,6 +43,7 @@ export default function useApplicationValidator(ui, setUi) {
         "Content-Type": "application/json"
       }
     })
+      .then(checkResponse)
       .then(response =>
         response.json().then(verrs => {
           if (Object.keys(verrs).length > 0) {
