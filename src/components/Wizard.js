@@ -17,6 +17,7 @@ import PreviewDialog from "./PreviewDialog";
 import ErrorNotifications from "./ErrorNotifications";
 import WizardTabs from "./WizardTabs";
 import { Store } from "../store";
+import Config from "../config";
 
 function Wizard(props) {
   const [app, setApp] = useState(Store.application);
@@ -78,15 +79,17 @@ function Wizard(props) {
           open={ui.showPreview}
           onClose={() => showPreview(false)}
         />
-        <section>
-          <Button color="primary" onClick={() => setError("testing 1 2 3")}>
-            Error
-          </Button>
-          <Button color="primary" onClick={() => showPreview(true)}>
-            Preview
-          </Button>
-          <Debug app={app} />
-        </section>
+        {Config.Debug && (
+          <section>
+            <Button color="primary" onClick={() => setError("testing 1 2 3")}>
+              Error
+            </Button>
+            <Button color="primary" onClick={() => showPreview(true)}>
+              Preview
+            </Button>
+            <Debug app={app} />
+          </section>
+        )}
       </main>
     </div>
   );
