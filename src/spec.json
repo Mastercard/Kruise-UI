@@ -19,7 +19,7 @@
       "configMaps": [
         {
           "name": "config",
-          "data": ""
+          "data": "myconfig"
         }
       ],
       "persistentVolumes": [

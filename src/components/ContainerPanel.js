@@ -22,9 +22,11 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import useApplicationValidator from "../validation";
 
 function ContainerPanel(props) {
-  const { ui, container, services, volumes, classes } = props;
+  const { ui, setUi, container, services, volumes, classes } = props;
+  const [hasError, clearError] = useApplicationValidator(ui, setUi);
 
   const servicePorts = services
     .filter(s => s.name === container._serviceName)
@@ -43,16 +45,12 @@ function ContainerPanel(props) {
     );
   });
 
-  const hasError = field => {
-    const appErrors = ui.validationErrors;
-    return Object.prototype.hasOwnProperty.call(appErrors, field);
-  };
-
   const handleChange = event => {
     props.onChange({
       ...container,
       [event.target.name]: event.target.value
     });
+    clearError(props.specPath, event.target.name);
   };
 
   const handlePortChange = event => {
@@ -104,6 +102,10 @@ function ContainerPanel(props) {
         }
       })
     );
+    clearError(
+      props.specPath.concat(["volumes", idx.toString()]),
+      event.target.name
+    );
   };
 
   const handleVolumeTypeChange = idx => event => {
@@ -146,7 +148,7 @@ function ContainerPanel(props) {
                   value={container._serviceName}
                   required
                   onChange={handleChange}
-                  error={hasError("_serviceName")}
+                  error={hasError(props.specPath, "_serviceName")}
                   inputProps={{
                     name: "_serviceName",
                     id: "_serviceName"
@@ -168,7 +170,7 @@ function ContainerPanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("name")}
+                error={hasError(props.specPath, "name")}
               />
               <TextField
                 name="image"
@@ -179,7 +181,7 @@ function ContainerPanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("image")}
+                error={hasError(props.specPath, "image")}
               />
               <TextField
                 name="imageTag"
@@ -190,7 +192,7 @@ function ContainerPanel(props) {
                 margin="normal"
                 required
                 fullWidth
-                error={hasError("imageTag")}
+                error={hasError(props.specPath, "imageTag")}
               />
               <FormControl className={classes.formControl} fullWidth>
                 <InputLabel htmlFor="type">Image Pull Policy</InputLabel>
@@ -198,7 +200,7 @@ function ContainerPanel(props) {
                   value={container.imagePullPolicy}
                   required
                   onChange={handleChange}
-                  error={hasError("imagePullPolicy")}
+                  error={hasError(props.specPath, "imagePullPolicy")}
                   inputProps={{
                     name: "imagePullPolicy",
                     id: "imagePullPolicy"
@@ -219,10 +221,10 @@ function ContainerPanel(props) {
                 onChange={handleChange}
                 margin="normal"
                 fullWidth
-                error={hasError("command")}
+                error={hasError(props.specPath, "command")}
               />
               <FormControl
-                error={hasError("portNames")}
+                error={hasError(props.specPath, "portNames")}
                 component="fieldset"
                 className={classes.formControl}
               >
@@ -244,7 +246,7 @@ function ContainerPanel(props) {
                     />
                   ))}
                 </FormGroup>
-                {hasError("portNames") && (
+                {hasError(props.specPath, "portNames") && (
                   <FormHelperText>
                     At least one port must be checked.
                   </FormHelperText>
@@ -275,7 +277,10 @@ function ContainerPanel(props) {
                         onChange={handleVolumeTypeChange(volIdx)}
                         required
                         fullWidth
-                        error={hasError("volume")}
+                        error={hasError(
+                          props.specPath.concat(["volumes", volIdx.toString()]),
+                          "volume"
+                        )}
                         inputProps={{
                           name: "volume",
                           id: "volume"
@@ -301,7 +306,11 @@ function ContainerPanel(props) {
                       value={vol.mountPath}
                       onChange={handleVolumeChange(volIdx)}
                       margin="normal"
-                      error={hasError("mountPath")}
+                      required
+                      error={hasError(
+                        props.specPath.concat(["volumes", volIdx.toString()]),
+                        "mountPath"
+                      )}
                     />
                     <TextField
                       name="subPath"
@@ -311,10 +320,13 @@ function ContainerPanel(props) {
                       value={vol.subPath}
                       onChange={handleVolumeChange(volIdx)}
                       margin="normal"
-                      error={hasError("subPath")}
+                      error={hasError(
+                        props.specPath.concat(["volumes", volIdx.toString()]),
+                        "subPath"
+                      )}
                     />
                     <FormControl
-                      error={hasError("readOnly")}
+                      error={hasError(props.specPath, "readOnly")}
                       component="fieldset"
                       className={classes.formControl}
                     >
@@ -377,7 +389,9 @@ function ContainerPanel(props) {
 }
 
 ContainerPanel.propTypes = {
+  specPath: PropTypes.arrayOf(PropTypes.string).isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   container: PropTypes.object.isRequired,
   onAdd: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,

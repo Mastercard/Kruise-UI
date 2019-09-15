@@ -7,6 +7,7 @@ import WizardNav from "./WizardNav";
 import DialogNoServices from "./DialogNoServices";
 import ContainerPanel from "./ContainerPanel";
 import EmptyResourceView from "./EmptyResourceView";
+import useApplicationValidator from "../validation";
 
 const imagePullPolicyNames = {
   Always: "Always",
@@ -14,7 +15,8 @@ const imagePullPolicyNames = {
 };
 
 function Containers(props) {
-  const { app, setApp, ui, classes } = props;
+  const { app, setApp, ui, setUi, classes } = props;
+  const [, , validate] = useApplicationValidator(ui, setUi);
   const services = app.spec.components.map(c => c.service);
   const volumes = [].concat(
     app.spec.configMaps.map(v => {
@@ -27,9 +29,14 @@ function Containers(props) {
 
   const [containers, setContainers] = useState(
     app.spec.components
-      .map(s =>
-        s.containers.map(c => {
-          return { ...c, _serviceName: s.service.name };
+      .map((s, i) =>
+        s.containers.map((c, j) => {
+          return {
+            ...c,
+            _serviceName: s.service.name,
+            _componentIdx: i,
+            _containerIdx: j
+          };
         })
       )
       .flat()
@@ -40,8 +47,7 @@ function Containers(props) {
   }
 
   const handleSubmit = () => {
-    updateApp();
-    return true;
+    return validate(updateApp());
   };
 
   const updateApp = () => {
@@ -55,11 +61,10 @@ function Containers(props) {
     // where 0 is the index of the component and the containers array includes
     // all containers associated with that component
     const containerMap = containers.reduce((cm, container) => {
-      const { _serviceName, ...c } = container;
-      const componentIdx = app.spec.components.findIndex(
-        component => component.service.name === _serviceName
-      );
-      cm[componentIdx].push(c);
+      // remove _* vars from container
+      // eslint-disable-next-line no-unused-vars
+      const { _serviceName, _containerIdx, _componentIdx, ...c } = container;
+      cm[_componentIdx].push(c);
       return cm;
     }, componentMap);
 
@@ -84,6 +89,7 @@ function Containers(props) {
 
     // update state
     setApp(newApp);
+    return newApp;
   };
 
   const handleChange = idx => container => {
@@ -121,7 +127,15 @@ function Containers(props) {
           {containers.map((container, containerIdx) => (
             <ContainerPanel
               key={"container-" + containerIdx}
+              specPath={[
+                "spec",
+                "components",
+                container._componentIdx.toString(),
+                "containers",
+                container._containerIdx.toString()
+              ]}
               ui={ui}
+              setUi={setUi}
               container={container}
               onAdd={handleAdd}
               onChange={handleChange(containerIdx)}
@@ -152,6 +166,7 @@ Containers.propTypes = {
   app: PropTypes.object.isRequired,
   setApp: PropTypes.func.isRequired,
   ui: PropTypes.object.isRequired,
+  setUi: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
