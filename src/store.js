@@ -6,22 +6,41 @@ import Volumes from "./components/Volumes";
 import Containers from "./components/Containers";
 import Analyze from "./components/Analyze";
 
-export const Store = {
-  application: data.application,
-  ui: {
-    warning: null,
-    error: null,
-    validationErrors: {},
-    showPreview: false,
-    previewEnabled: false,
-    previewContent: "",
-    routes: [
-      { name: "Application", path: "/", component: Application },
-      { name: "Services", path: "/services", component: Services },
-      { name: "Ingresses", path: "/ingresses", component: Ingresses },
-      { name: "Volumes", path: "/volumes", component: Volumes },
-      { name: "Containers", path: "/containers", component: Containers },
-      { name: "Analyze", path: "/analyze", component: Analyze }
-    ]
+const loadApp = () => {
+  const localApp = localStorage.getItem("application");
+  if (localApp !== null) {
+    return {
+      application: JSON.parse(localStorage.getItem("application"))
+    };
+  } else {
+    return data;
   }
 };
+
+const saveStore = app => {
+  localStorage.setItem("application", JSON.stringify(app));
+};
+
+const loadStore = () => {
+  return {
+    application: loadApp().application,
+    ui: {
+      warning: null,
+      error: null,
+      validationErrors: {},
+      showPreview: false,
+      previewEnabled: false,
+      previewContent: "",
+      routes: [
+        { name: "Application", path: "/", component: Application },
+        { name: "Services", path: "/services", component: Services },
+        { name: "Ingresses", path: "/ingresses", component: Ingresses },
+        { name: "Volumes", path: "/volumes", component: Volumes },
+        { name: "Containers", path: "/containers", component: Containers },
+        { name: "Analyze", path: "/analyze", component: Analyze }
+      ]
+    }
+  };
+};
+
+export { loadStore, saveStore };

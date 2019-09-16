@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Typography from "@material-ui/core/Typography";
@@ -16,12 +16,13 @@ import Debug from "./Debug";
 import PreviewDialog from "./PreviewDialog";
 import ErrorNotifications from "./ErrorNotifications";
 import WizardTabs from "./WizardTabs";
-import { Store } from "../store";
+import { loadStore, saveStore } from "../store";
 import Config from "../config";
 
 function Wizard(props) {
-  const [app, setApp] = useState(Store.application);
-  const [ui, setUi] = useState(Store.ui);
+  const store = loadStore();
+  const [app, setApp] = useState(store.application);
+  const [ui, setUi] = useState(store.ui);
   const { classes } = props;
 
   const showPreview = on => {
@@ -41,6 +42,10 @@ function Wizard(props) {
   const clearError = () => {
     setError(null);
   };
+
+  useEffect(() => {
+    saveStore(app);
+  }, [app]);
 
   return (
     <div className={classes.root}>
