@@ -1,13 +1,20 @@
+GIT_COMMIT = $(shell git rev-parse HEAD)
+GIT_COMMIT = $(shell git rev-parse HEAD)
+GIT_SHA    = $(shell git rev-parse --short HEAD)
+GIT_TAG    = $(shell git describe --tags --abbrev=0 --exact-match 2>/dev/null)
+GIT_DIRTY  = $(shell test -n "`git status --porcelain`" && echo "dirty" || echo "clean")
+
+
 .PHONY: all
 all: build
 
 .PHONY: build
 build:
-	docker build -t kruise-wizard:latest .
+	docker build -t kruise-ui:latest .
 
 .PHONY: prod
 prod:
-	docker build -f ./Dockerfile.prod -t ryane/kruise-wizard:latest .
+	docker build -f ./Dockerfile.prod -t artifacts.mastercard.int/docker-internal-unstable/mc-docker-pipeline/kubernetes/kruise-ui:${GIT_SHA} .
 
 run: build
 	docker run -it \
@@ -15,18 +22,18 @@ run: build
 		-v /usr/src/app/node_modules \
 		-p 3002:3000 \
 		--rm \
-		--name=kruise-wizard \
-		kruise-wizard:latest
+		--name=kruise-ui \
+		kruise-ui:latest
 
 bootstrap: build
 	docker run -it \
 		-v ${PWD}:/usr/src/app \
 		--rm \
-		kruise-wizard:latest npx create-react-app kruise-wizard
-	sudo chown -R ${USER}:${USER} kruise-wizard
-	mv kruise-wizard/.gitignore .
-	mv kruise-wizard/* .
-	rm -r kruise-wizard
+		kruise-ui:latest npx create-react-app kruise-ui
+	sudo chown -R ${USER}:${USER} kruise-ui
+	mv kruise-ui/.gitignore .
+	mv kruise-ui/* .
+	rm -r kruise-ui
 
 .PHONY: deps
 deps:
@@ -34,7 +41,7 @@ deps:
 		-v ${PWD}:/usr/src/app \
 		-v /usr/src/app/node_modules \
 		--rm \
-		kruise-wizard:latest npm install
+		kruise-ui:latest npm install
 
 .PHONY: shell
 shell:
@@ -42,4 +49,4 @@ shell:
 		-v ${PWD}:/usr/src/app \
 		-v /usr/src/app/node_modules \
 		--rm \
-		kruise-wizard:latest bash
+		kruise-ui:latest bash
