@@ -101,11 +101,14 @@ function Containers(props) {
   };
 
   const handleAdd = () => {
+    const nextContainerIdx = app.spec.components[0].containers.length + 1;
     setContainers(
       update(containers, {
         $push: [
           {
             _serviceName: services[0].name,
+            _componentIdx: 0,
+            _containerIdx: nextContainerIdx,
             name: "",
             image: "",
             imageTag: "",
@@ -152,7 +155,14 @@ function Containers(props) {
       </Grid>
     );
   } else {
-    view = <EmptyResourceView ui={ui} name="Container" onAdd={handleAdd} />;
+    view = (
+      <EmptyResourceView
+        ui={ui}
+        name="Container"
+        onSubmit={handleSubmit}
+        onAdd={handleAdd}
+      />
+    );
   }
 
   return (

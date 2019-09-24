@@ -214,7 +214,14 @@ function Volumes(props) {
       </Grid>
     );
   } else {
-    view = <EmptyResourceView ui={ui} name="Volume" onAdd={handleAdd} />;
+    view = (
+      <EmptyResourceView
+        ui={ui}
+        name="Volume"
+        onSubmit={handleSubmit}
+        onAdd={handleAdd}
+      />
+    );
   }
 
   return (

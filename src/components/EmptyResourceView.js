@@ -25,7 +25,7 @@ function EmptyResourceView(props) {
         </div>
       </Grid>
       <Grid item xs={2}>
-        <WizardNav routes={ui.routes} />
+        <WizardNav onSubmit={props.onSubmit} routes={ui.routes} />
       </Grid>
     </Grid>
   );
@@ -35,6 +35,7 @@ EmptyResourceView.propTypes = {
   name: PropTypes.string.isRequired,
   ui: PropTypes.object.isRequired,
   onAdd: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 
