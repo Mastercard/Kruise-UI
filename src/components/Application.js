@@ -12,9 +12,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import WizardNav from "./WizardNav";
 import useApplicationValidator from "../validation";
+import Config from "../config";
 
 function Application(props) {
   const { app, setApp, ui, setUi, classes } = props;
+  const { Environments, Regions } = Config;
   const metadata = app.metadata;
   const labels = metadata.labels;
   const destination = app.spec.destination;
@@ -58,12 +60,8 @@ function Application(props) {
   };
 
   const handleSubmit = () => {
-    return validate(app);
+    return validate(app, ["metadata"]);
   };
-
-  // TODO: this stuff need to be configurable
-  const envs = ["Dev", "Stage", "Prod"];
-  const regions = ["STL", "KCI", "BEL"];
 
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
@@ -105,7 +103,10 @@ function Application(props) {
                   required
                   error={hasError(["metadata", "labels"], "team")}
                 />
-                <FormControl className={classes.formControl}>
+                <FormControl
+                  className={classes.formControl}
+                  error={hasError(["metadata", "labels"], "env")}
+                >
                   <InputLabel htmlFor="environment">
                     Target Environment
                   </InputLabel>
@@ -113,19 +114,23 @@ function Application(props) {
                     value={labels.env}
                     required
                     onChange={handleLabelsChange}
+                    error={hasError(["metadata", "labels"], "env")}
                     inputProps={{
                       name: "env",
                       id: "env"
                     }}
                   >
-                    {envs.map(e => (
+                    {Environments.map(e => (
                       <MenuItem key={e} value={e}>
                         {e}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl className={classes.formControl}>
+                <FormControl
+                  className={classes.formControl}
+                  error={hasError(["metadata", "labels"], "region")}
+                >
                   <InputLabel htmlFor="environment">Target Region</InputLabel>
                   <Select
                     value={labels.region}
@@ -136,7 +141,7 @@ function Application(props) {
                       id: "region"
                     }}
                   >
-                    {regions.map(e => (
+                    {Regions.map(e => (
                       <MenuItem key={e} value={e}>
                         {e}
                       </MenuItem>

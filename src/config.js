@@ -1,6 +1,9 @@
 const Config = {
   Debug: false,
-  KruiseAPI: "http://localhost:9801"
+  UseSampleSpec: false,
+  KruiseAPI: "http://localhost:9801",
+  Environments: ["Dev", "Stage", "Prod"],
+  Regions: ["STL", "KCI", "BEL"]
 };
 
 export default Config;

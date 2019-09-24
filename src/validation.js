@@ -35,7 +35,7 @@ export default function useApplicationValidator(ui, setUi) {
     return response;
   };
 
-  const validate = async app => {
+  const validate = async (app, path = []) => {
     return fetch(`${Config.KruiseAPI}/app/validation`, {
       method: "post",
       body: JSON.stringify(app),
@@ -47,8 +47,14 @@ export default function useApplicationValidator(ui, setUi) {
       .then(response =>
         response.json().then(verrs => {
           if (Object.keys(verrs).length > 0) {
-            setUi({ ...ui, validationErrors: verrs });
-            return false;
+            const myerrors = path.reduce(
+              (acc, p) => ((acc && acc[p]) !== undefined ? acc[p] : undefined),
+              verrs.errors || {}
+            );
+            if (myerrors) {
+              setUi({ ...ui, validationErrors: verrs });
+              return false;
+            }
           }
           return true;
         })
