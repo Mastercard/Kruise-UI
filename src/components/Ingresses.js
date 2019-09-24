@@ -225,7 +225,14 @@ function Ingresses(props) {
       </Grid>
     );
   } else {
-    view = <EmptyResourceView ui={ui} name="Ingress" onAdd={addIngress} />;
+    view = (
+      <EmptyResourceView
+        ui={ui}
+        name="Ingress"
+        onSubmit={handleSubmit}
+        onAdd={addIngress}
+      />
+    );
   }
 
   return (

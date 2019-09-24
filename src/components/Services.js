@@ -94,7 +94,14 @@ function Services(props) {
       </Grid>
     );
   } else {
-    view = <EmptyResourceView ui={ui} name="Service" onAdd={addService} />;
+    view = (
+      <EmptyResourceView
+        ui={ui}
+        name="Service"
+        onSubmit={handleSubmit}
+        onAdd={addService}
+      />
+    );
   }
 
   return (
