@@ -1,5 +1,4 @@
 import update from "immutability-helper";
-import Config from "./config";
 
 export default function useApplicationValidator(ui, setUi) {
   const hasError = (path, field) => {
@@ -36,7 +35,7 @@ export default function useApplicationValidator(ui, setUi) {
   };
 
   const validate = async (app, path = []) => {
-    return fetch(`${Config.KruiseAPI}/app/validation`, {
+    return fetch(`${window.KruiseConfig.API}/app/validation`, {
       method: "post",
       body: JSON.stringify(app),
       headers: {

@@ -1,7 +1,5 @@
-import Config from "./config";
-
 const releaseApplication = (ui, setUi) => async app => {
-  return fetch(`${Config.KruiseAPI}/app/release`, {
+  return fetch(`${window.KruiseConfig.API}/app/release`, {
     method: "post",
     body: JSON.stringify(app),
     headers: {

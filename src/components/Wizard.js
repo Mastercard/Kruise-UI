@@ -17,7 +17,6 @@ import PreviewDialog from "./PreviewDialog";
 import ErrorNotifications from "./ErrorNotifications";
 import WizardTabs from "./WizardTabs";
 import { loadStore, saveStore } from "../store";
-import Config from "../config";
 
 function Wizard(props) {
   const store = loadStore();
@@ -84,7 +83,7 @@ function Wizard(props) {
           open={ui.showPreview}
           onClose={() => showPreview(false)}
         />
-        {Config.Debug && (
+        {window.KruiseConfig.Debug && (
           <section>
             <Button color="primary" onClick={() => setError("testing 1 2 3")}>
               Error

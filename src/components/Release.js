@@ -19,7 +19,7 @@ function Release(props) {
 
   const handleReleaseClick = async event => {
     if (event) event.preventDefault();
-    let msgs = messages.slice();
+    let msgs = [];
     msgs = msgs.concat("Creating release...");
     setMessages(msgs);
     setShowStatus(true);

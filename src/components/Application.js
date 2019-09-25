@@ -12,11 +12,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import WizardNav from "./WizardNav";
 import useApplicationValidator from "../validation";
-import Config from "../config";
 
 function Application(props) {
   const { app, setApp, ui, setUi, classes } = props;
-  const { Environments, Regions } = Config;
+  const { Environments, Regions } = window.KruiseConfig;
   const metadata = app.metadata;
   const labels = metadata.labels;
   const destination = app.spec.destination;

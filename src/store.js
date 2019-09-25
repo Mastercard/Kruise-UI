@@ -1,5 +1,4 @@
 import sampleSpec from "./spec.sample.json";
-import Config from "./config";
 import Application from "./components/Application";
 import Services from "./components/Services";
 import Ingresses from "./components/Ingresses";
@@ -8,7 +7,7 @@ import Containers from "./components/Containers";
 import Release from "./components/Release";
 
 const loadApp = () => {
-  if (Config.UseSampleSpec) {
+  if (window.KruiseConfig.UseSampleSpec) {
     return sampleSpec;
   }
 
@@ -57,8 +56,8 @@ const newApp = () => {
         labels: {
           version: "",
           team: "",
-          env: Config.Environments[0],
-          region: Config.Regions[0]
+          env: window.KruiseConfig.Environments[0],
+          region: window.KruiseConfig.Regions[0]
         }
       },
       spec: {

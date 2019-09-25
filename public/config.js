@@ -1,9 +1,7 @@
-const Config = {
+window.KruiseConfig = {
   Debug: false,
   UseSampleSpec: false,
-  KruiseAPI: "http://localhost:9801",
+  API: "http://localhost:9802",
   Environments: ["Dev", "Stage", "Prod"],
   Regions: ["STL", "KCI", "BEL"]
 };
-
-export default Config;
