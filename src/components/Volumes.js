@@ -10,7 +10,7 @@ import useApplicationValidator from "../validation";
 
 const volumeTypes = ["PersistentVolume", "ConfigMap"];
 const accessModes = ["ReadWriteOnce", "ReadOnlyMany", "ReadWriteMany"];
-const storageClasses = ["SSD", "NFS"];
+const storageClasses = window.KruiseConfig.StorageClasses;
 
 function Volumes(props) {
   const { app, setApp, ui, setUi, classes } = props;
