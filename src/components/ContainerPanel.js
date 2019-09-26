@@ -90,13 +90,19 @@ function ContainerPanel(props) {
 
   const handleVolumeChange = idx => event => {
     const { name, value } = event.target;
+
+    let setval = value;
+    if (name === "readOnly") {
+      setval = !container.volumes[idx].readOnly;
+    }
+
     props.onChange(
       update(container, {
         volumes: {
           [idx]: {
             $set: {
               ...container.volumes[idx],
-              [name]: value
+              [name]: setval
             }
           }
         }
@@ -336,9 +342,9 @@ function ContainerPanel(props) {
                             <Checkbox
                               color="primary"
                               name="readOnly"
-                              checked={vol.readOnly === true}
+                              checked={vol.readOnly}
                               onChange={handleVolumeChange(volIdx)}
-                              value={vol.readOnly === true}
+                              value={vol.readOnly}
                             />
                           }
                           label="Read Only?"
