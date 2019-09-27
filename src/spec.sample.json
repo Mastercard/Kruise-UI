@@ -1,0 +1,116 @@
+{
+  "application": {
+    "metadata": {
+      "name": "sampleapp",
+      "namespace": "dna",
+      "labels": {
+        "version": "v1",
+        "team": "dna",
+        "env": "Dev",
+        "region": "STL"
+      }
+    },
+    "spec": {
+      "destination": {
+        "url": "https://github.com/ryane/sampleapp.git",
+        "path": "/deploy",
+        "targetRevision": "HEAD"
+      },
+      "configMaps": [
+        {
+          "name": "config",
+          "data": "myconfig"
+        }
+      ],
+      "persistentVolumes": [
+        {
+          "name": "datavol",
+          "accessMode": "ReadWriteOnce",
+          "capacity": 30,
+          "storageClassName": "SSD"
+        }
+      ],
+      "components": [
+        {
+          "service": {
+            "name": "api",
+            "type": "ClusterIP",
+            "ports": [
+              {
+                "name": "http",
+                "port": 8080,
+                "targetPort": 80
+              },
+              {
+                "name": "metrics",
+                "port": 9080
+              }
+            ]
+          },
+          "ingresses": [
+            {
+              "host": "example.com",
+              "paths": [
+                {
+                  "path": "/",
+                  "portName": "http"
+                }
+              ]
+            }
+          ],
+          "containers": [
+            {
+              "name": "http",
+              "image": "nginx",
+              "imageTag": "alpine",
+              "imagePullPolicy": "Always",
+              "command": "",
+              "portNames": ["http", "metrics"],
+              "volumes": [
+                {
+                  "name": "config",
+                  "type": "ConfigMap",
+                  "mountPath": "/config",
+                  "subPath": "",
+                  "readOnly": true
+                },
+                {
+                  "name": "datavol",
+                  "type": "PersistentVolume",
+                  "mountPath": "/data",
+                  "subPath": "test",
+                  "readOnly": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "service": {
+            "name": "sidecar",
+            "type": "ClusterIP",
+            "ports": [
+              {
+                "name": "http",
+                "port": 8080,
+                "targetPort": 80
+              }
+            ]
+          },
+          "ingresses": [],
+          "containers": [
+            {
+              "name": "http",
+              "image": "nginx",
+              "imageTag": "alpine",
+              "imagePullPolicy": "Always",
+              "command": "",
+              "portNames": ["http"],
+              "volumes": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
