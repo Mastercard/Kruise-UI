@@ -1,9 +1,0 @@
-export const ROUTE_APP_DETAILS = "/";
-export const ROUTE_SERVICE     = "/service";
-export const ROUTE_INGRESS     = "/ingress";
-export const ROUTE_VOLUMES     = "/volumes";
-export const ROUTE_PERFORMANCE = "/performance";
-export const ROUTE_HEALTH      = "/health";
-export const ROUTE_CONTAINER   = "/container";
-export const ROUTE_OPTIMIZE    = "/optimize";
-export const ROUTE_SUBMIT      = "/submit";
