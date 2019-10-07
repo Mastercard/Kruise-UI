@@ -11,19 +11,40 @@ Fork, then clone the repo:
 
 Set up your machine:
 
-    please add what needs to be done here
+* Docker
 
-Build the code:
-  
-   make
+Rather than setting up a Node environment locally, we use Docker for building
+and running the code in development.
+
+Build the latest docker image:
+
+```
+make build
+```
+
+Run the server:
+
+```
+make run
+```
+
+Get a shell into the latest build image:
+
+```
+make shell
+```
 
 Make sure the tests pass:
 
-    ????
+```
+make test
+```
 
 Make your change. Add tests for your change. Make the tests pass:
 
-    ????
+```
+make test
+```
 
 Push to your fork and [submit a pull request][pr].
 
