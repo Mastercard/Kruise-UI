@@ -3,7 +3,7 @@
 We love pull requests from everyone. By participating in this project, you
 agree to abide by the Kruise [code of conduct].
 
-[code of conduct]: https://thoughtbot.com/open-source-code-of-conduct
+[code of conduct]: https://github.com/cncf/foundation/blob/master/code-of-conduct.md
 
 Fork, then clone the repo:
 
