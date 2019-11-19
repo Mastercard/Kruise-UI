@@ -14,7 +14,7 @@ build:
 
 .PHONY: prod
 prod:
-	docker build -f ./Dockerfile.prod -t artifacts.mastercard.int/docker-internal-unstable/mc-docker-pipeline/kubernetes/kruise-ui:${GIT_SHA} .
+	docker build -f ./Dockerfile.prod -t ryane/kruise-ui:${GIT_SHA} .
 
 run: build
 	docker run -it \

@@ -8,6 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import releaseApplication from "../release";
 
 function Release(props) {
@@ -15,6 +16,17 @@ function Release(props) {
 
   const [showStatus, setShowStatus] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const timer = React.useRef();
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(timer.current);
+    };
+  }, []);
+  timer.current = setTimeout(() => {
+    setLoading(false);
+  }, 2000);
+
   const release = releaseApplication(ui, setUi);
 
   const handleReleaseClick = async event => {
@@ -50,19 +62,37 @@ function Release(props) {
               <Typography variant="overline" align="left" gutterBottom>
                 Analysis
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                OK. TODO: Analyze app for any problems
-              </Typography>
             </CardContent>
             <CardActions>
               <Button
                 size="small"
                 variant="contained"
                 color="primary"
+                disabled={loading}
                 onClick={handleReleaseClick}
               >
                 Release
               </Button>
+              {loading && (
+                <>
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    component="p"
+                  >
+                    Analyzing application...
+                  </Typography>
+                </>
+              )}
+              {!loading && (
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Verified.
+                </Typography>
+              )}
             </CardActions>
           </Card>
         </Grid>

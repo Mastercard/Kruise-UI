@@ -13,23 +13,16 @@
     "spec": {
       "destination": {
         "url": "https://github.com/ryane/sampleapp.git",
-        "path": "/deploy",
+        "path": "deploy",
         "targetRevision": "HEAD"
       },
       "configMaps": [
         {
           "name": "config",
-          "data": "myconfig"
+          "data": "Hello"
         }
       ],
-      "persistentVolumes": [
-        {
-          "name": "datavol",
-          "accessMode": "ReadWriteOnce",
-          "capacity": 30,
-          "storageClassName": "SSD"
-        }
-      ],
+      "persistentVolumes": [],
       "components": [
         {
           "service": {
@@ -39,7 +32,7 @@
               {
                 "name": "http",
                 "port": 8080,
-                "targetPort": 80
+                "targetPort": 8080
               },
               {
                 "name": "metrics",
@@ -49,7 +42,7 @@
           },
           "ingresses": [
             {
-              "host": "example.com",
+              "host": "app.kruise-demo.com",
               "paths": [
                 {
                   "path": "/",
@@ -61,8 +54,8 @@
           "containers": [
             {
               "name": "http",
-              "image": "nginx",
-              "imageTag": "alpine",
+              "image": "ryane/sampleapp",
+              "imageTag": "7a34fb5",
               "imagePullPolicy": "Always",
               "command": "",
               "portNames": ["http", "metrics"],
@@ -73,13 +66,6 @@
                   "mountPath": "/config",
                   "subPath": "",
                   "readOnly": true
-                },
-                {
-                  "name": "datavol",
-                  "type": "PersistentVolume",
-                  "mountPath": "/data",
-                  "subPath": "test",
-                  "readOnly": false
                 }
               ]
             }
